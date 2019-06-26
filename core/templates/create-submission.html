@@ -71,12 +71,8 @@
   </div>
 </section>
 
-<div class="next-prev">
-
-</div>
-
 <script type="text/javascript">
-  var file = document.getElementById("id_csv");
+  var file = document.getElementById("id_test_prediction_file");
   file.onchange = function(){
     if(file.files.length > 0) {
       document.getElementById('file-name').innerHTML = file.files[0].name;
