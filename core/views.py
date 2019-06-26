@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 
 from core.forms import AcceptInvitationForm, CreateApproachForm, CreateTeamForm
-from core.models import Approach, Score, Submission, Task, Team, TeamInvitation, Challenge
+from core.models import Approach, Submission, Task, Team, TeamInvitation, Challenge
 from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
 from django.db import transaction
 from django.db.models import Count, Q
@@ -64,14 +64,6 @@ class SubmissionDetail(LoginRequiredMixin, DetailView):
             queryset = queryset.filter(user=self.request.user)
 
         return queryset
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data()
-        if self.object:
-            context_data["all_scores"] = (
-                Score.objects.filter(submission=self.object).order_by("-created").all()
-            )
-        return context_data
 
 
 class TaskDetail(DetailView):

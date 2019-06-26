@@ -89,6 +89,51 @@ class TeamInvitation(models.Model):
         return f"{self.team} invite"
 
 
+SUBMISSION_STATUS_CHOICES = {
+    "queued": "Queued for scoring",
+    "scoring": "Scoring",
+    "internal_failure": "Internal failure",
+    "failed": "Failed",
+    "succeeded": "Succeeded",
+}
+
+
+class Submission(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
+    accepted_terms = models.BooleanField(default=False)
+    test_prediction_file = models.FileField(upload_to=submission_csv_file_upload_to)
+    test_prediction_file_name = models.CharField(max_length=200)
+    status = models.CharField(
+        max_length=20,
+        default="queued",
+        choices=[(x, y) for x, y in SUBMISSION_STATUS_CHOICES.items()],
+    )
+    score = JSONField(blank=True, null=True)
+    overall_score = models.FloatField(blank=True, null=True)
+    fail_reason = models.TextField(blank=True)
+
+    ordering = ['-created']
+
+    def __str__(self):
+        return f"{self.approach.name}/{self.creator.email}"
+
+    def get_absolute_url(self):
+        return reverse("submission-detail", args=[self.id])
+
+
+class ScoreHistory(models.Model):
+    submission = models.ForeignKey(
+        Submission, on_delete=models.CASCADE, related_name='score_history'
+    )
+    created = models.DateTimeField(auto_now_add=True)
+    score = JSONField()
+    overall_score = models.FloatField()
+
+    ordering = ['-created']
+
+
 class Approach(models.Model):
     class Meta:
         verbose_name_plural = "approaches"
@@ -114,47 +159,10 @@ class Approach(models.Model):
     def latest_submission(self):
         return Submission.objects.filter(approach=self).order_by("-created").first()
 
-
-SUBMISSION_STATUS_CHOICES = {
-    "queued": "Queued for scoring",
-    "scoring": "Scoring",
-    "internal_failure": "Internal failure",
-    "failed": "Failed",
-    "succeeded": "Succeeded",
-}
-
-
-class Submission(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    approach = models.ForeignKey(Approach, on_delete=models.CASCADE)
-    accepted_terms = models.BooleanField(default=False)
-    test_prediction_file = models.FileField(upload_to=submission_csv_file_upload_to)
-    test_prediction_file_name = models.CharField(max_length=200)
-    status = models.CharField(
-        max_length=20,
-        default="queued",
-        choices=[(x, y) for x, y in SUBMISSION_STATUS_CHOICES.items()],
-    )
-
-    ordering = ['-created']
-
-    def __str__(self):
-        return f"{self.approach.name}/{self.creator.email}"
-
-    def get_absolute_url(self):
-        return reverse("submission-detail", args=[self.id])
+    @property
+    def friendly_status(self):
+        return SUBMISSION_STATUS_CHOICES[self.latest_submission.status]
 
     @property
     def score(self):
-        return self.score_set.order_by('-created').first()
-
-
-class Score(models.Model):
-    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
-    score = JSONField(blank=True, null=True)
-    overall_score = models.FloatField()
-    fail_reason = models.TextField(blank=True)
-
-    ordering = ['-created']
+        return self.latest_submission.overall_score
