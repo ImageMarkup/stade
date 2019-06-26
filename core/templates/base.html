@@ -27,6 +27,8 @@
       </div>
     </header>
     <div class="main-content">
+      {% load invites %}
+      {% show_pending_invites request %}
 
       {% block content %}{% endblock %}
 

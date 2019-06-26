@@ -1,0 +1,14 @@
+{% for pending_invite, form in pending_invite_forms %}
+    <div class="user-notification">
+    <div class="notification-text">
+        pending invite from <span>{{ pending_invite.team.name }}</span>
+    </div>
+    <form id="invite-form-{{ pending_invite.id }}" action="{% url 'accept-invitation' %}" method="POST">
+    {{ form.as_p }}
+    {% csrf_token %}
+        <a href="#"
+            onclick="document.getElementById('invite-form-{{ pending_invite.id}}').submit()"
+            class="button btn-blue">Accept</a>
+    </form>
+    </div>
+{% endfor %}

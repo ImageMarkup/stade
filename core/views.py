@@ -87,11 +87,6 @@ class TaskDashboard(DetailView):
             context_data["teams"] = Team.objects.filter(
                 challenge=kwargs['object'].challenge, users__in=[self.request.user]
             )
-            context_data["pending_invite_forms"] = []
-
-            for pending_invite in self.request.user.received_invites.all():
-                form = AcceptInvitationForm(initial={"invitation_id": pending_invite.id})
-                context_data["pending_invite_forms"].append([pending_invite, form])
         return context_data
 
 
