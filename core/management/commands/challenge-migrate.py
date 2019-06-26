@@ -169,7 +169,8 @@ def download_file(url, token):
             r = requests.get(url, allow_redirects=True, headers={'girder-token': token})
         else:
             r = requests.get(url, allow_redirects=True)
-
+        r.raise_for_status()
+        
         if "Content-Disposition" in r.headers.keys():
             fname = re.findall("filename=(.+)", r.headers["Content-Disposition"])[0].strip('"')
         else:
