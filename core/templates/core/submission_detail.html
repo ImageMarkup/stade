@@ -7,11 +7,7 @@
   file: <a href="{{submission.test_prediction_file.url}}">download</a><br>
 
 
-  {{submission.score.score|pprint}}
-  {{submission.score.fail_reason|pprint}}
-
-  {% if request.user.is_staff %}
-  {{all_scores|pprint}}
-  {% endif %}
+  {{submission.overall_score}}
+  {{submission.fail_reason|pprint}}
 </section>
 {% endblock %}
