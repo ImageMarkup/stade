@@ -8,12 +8,24 @@
       <div class="step active">
         <div class="step-num"><i class="material-icons">check</i></div>
         <h3>Team</h3>
-        <p>{{ approach.team.name }}</p>
+        <p>
+          <a href="{% url 'create-team' approach.task.id %}" class="change">
+            <span class="tooltip">change team</span>
+            {{ approach.team.name }}
+            <i class="material-icons">cached</i>
+          </a>
+        </p>
       </div>
       <div class="step active">
         <div class="step-num"><i class="material-icons">check</i></div>
         <h3>Approach</h3>
-        <p>{{ approach.name }}</p>
+        <p>
+          <a href="{% url 'create-approach' approach.task.id approach.team.id %}" class="change">
+            <span class="tooltip">change approach</span>
+            {{ approach.name }}
+            <i class="material-icons">cached</i>
+          </a>
+        </p>
       </div>
       <div class="step active">
         <div class="step-num">3</div>

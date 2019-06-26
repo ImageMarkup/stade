@@ -8,7 +8,13 @@
       <div class="step active">
         <div class="step-num"><i class="material-icons">check</i></div>
         <h3>Team</h3>
-        <p>{{ team.name }}</p>
+        <p>
+          <a href="{% url 'create-team' task.id %}" class="change">
+            <span class="tooltip">change team</span>
+            {{ team.name }}
+            <i class="material-icons">create</i>
+          </a>
+        </p>
       </div>
       <div class="step active">
         <div class="step-num">2</div>
@@ -95,7 +101,7 @@
         {% if existing_approaches %}
         <ul class="approaches">
           {% for approach in existing_approaches %}
-          <li><a href="{% url 'create-submission' approach.id %}">{{ approach.name }}</a></li>
+          <li><a href="{% url 'create-submission' approach.id %}"><i class="material-icons">import_contacts</i> {{ approach.name }}</a></li>
           {% endfor %}
         </ul>
         {% else %}

@@ -146,6 +146,7 @@ class CreateApproachView(CreateApproachPermissionMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["team"] = get_object_or_404(Team, pk=self.kwargs["team"])
+        context["task"] = get_object_or_404(Task, pk=self.kwargs["task"])
         context["existing_approaches"] = Approach.objects.filter(team=context["team"])
         return context
 

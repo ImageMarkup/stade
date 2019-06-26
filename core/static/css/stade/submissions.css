@@ -23,6 +23,50 @@
   margin: 0;
 }
 
+.wizard .steps .step p .change {
+  align-items: center;
+  color: white;
+  display: inline-flex;
+  font-size: 18px;
+  opacity: .7;
+  position: relative;
+  transition: all .35s ease-in-out;
+}
+
+.wizard .steps .step p .change:hover {
+  opacity: 1;
+}
+
+.wizard .steps .step p .change:hover:after {
+  display: none;
+}
+
+.wizard .steps .step p .change i {
+  font-size: 20px;
+  margin-left: 4px;
+  opacity: .6;
+  transition: all .35s ease-in-out;
+}
+
+.wizard .steps .step p .change:hover i {
+  transform: rotate(180deg);
+}
+
+.wizard .steps .step p .change .tooltip {
+  background: rgba(0, 0, 0, .8);
+  border-radius: 3px;
+  display: none;
+  font-size: 14px;
+  padding: 1px 6px 4px;
+  position: absolute;
+  left: 104%;
+  white-space: nowrap;
+}
+
+.wizard .steps .step p .change:hover .tooltip {
+  display: inline-block;
+}
+
 .wizard .steps .step.active {
   color: white;
 }
@@ -104,18 +148,6 @@
   border-right: 1px solid #e3e6e8;
 }
 
-form.create-team .fields,
-form.create-approach .fields,
-form.create-submission .fields {
-  border-bottom: 1px solid #e3e6e8;
-  margin-bottom: 20px;
-  padding: 10px 0 20px;
-}
-
-.wizard form.create-submission {
-  max-width: 480px;
-}
-
 .wizard .existing-team ul,
 .wizard .existing-approach ul {
   list-style: none;
@@ -165,6 +197,24 @@ form.create-submission .fields {
 .wizard .existing-team ul li a i,
 .wizard .existing-approach ul li a i {
   margin-right: 10px;
+}
+
+/* next/prev styles */
+
+
+
+/* form styles */
+
+form.create-team .fields,
+form.create-approach .fields,
+form.create-submission .fields {
+  border-bottom: 1px solid #e3e6e8;
+  margin-bottom: 20px;
+  padding: 10px 0 20px;
+}
+
+.wizard form.create-submission {
+  max-width: 480px;
 }
 
 .wizard form .field.external-data {
