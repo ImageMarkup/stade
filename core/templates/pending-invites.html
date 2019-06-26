@@ -1,14 +1,24 @@
-{% for pending_invite, form in pending_invite_forms %}
-    <div class="user-notification">
-    <div class="notification-text">
-        pending invite from <span>{{ pending_invite.team.name }}</span>
+<div class="notification-wrapper">
+  <div class="container">
+    <h1 class="title is-5">You have pending team invites!</h1>
+    <div class="columns is-multiline is-variable is-3">
+      {% for pending_invite, form in pending_invite_forms %}
+      <div class="column is-one-third">
+        <div class="user-notification">
+          <i class="material-icons">supervised_user_circle</i>
+          <div class="notification-text">
+            pending invite from <span>{{ pending_invite.team.name }}</span>
+          </div>
+          <form id="invite-form-{{ pending_invite.id }}" action="{% url 'accept-invitation' %}" method="POST">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <a href="#"
+              onclick="document.getElementById('invite-form-{{ pending_invite.id}}').submit()"
+              class="button btn-blue">Accept</a>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
     </div>
-    <form id="invite-form-{{ pending_invite.id }}" action="{% url 'accept-invitation' %}" method="POST">
-    {{ form.as_p }}
-    {% csrf_token %}
-        <a href="#"
-            onclick="document.getElementById('invite-form-{{ pending_invite.id}}').submit()"
-            class="button btn-blue">Accept</a>
-    </form>
-    </div>
-{% endfor %}
+  </div>
+</div>

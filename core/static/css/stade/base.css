@@ -283,3 +283,38 @@ h6 {
 .tasks-list .task a:after {
   display: none;
 }
+
+/* Notifications */
+
+.notification-wrapper {
+  background: #ece8e8;
+  padding: 30px;
+}
+
+.user-notification {
+  align-items: center;
+  background: white;
+  border-radius: 3px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
+  display: flex;
+  justify-content: left;
+  padding: 11px 18px 14px;
+}
+
+.user-notification i {
+  color: #;
+}
+
+.user-notification form {
+  margin: 2px 0 0 auto;
+}
+
+.user-notification .notification-text {
+  line-height: 1.2em;
+  padding: 0 20px;
+}
+
+.user-notification .notification-text span {
+  display: block;
+  font-weight: 600;
+}
