@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section container">
+  {% for submission in object_list %}
+    {{ submission.created }}<br >
+    {{ submission.approach.name }}<br>
+    {{ submission.friendly_status }}
+    {% if submission.friendly_status == 'Succeeded' %}
+      <span class="score">0.802</span>
+    {% else %}
+      <span class="score">--</span>
+    {% endif %}
+    <hr>
+  {% endfor %}
+</section>
+{% endblock %}

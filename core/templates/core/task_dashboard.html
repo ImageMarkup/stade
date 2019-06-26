@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section container">
+  <div class="section-header">
+    <h1>{{ task.name }}</h1>
+    <div class="create-submission">
+      {% if task.active %}
+      <a href="{% url 'create-team' task.id %}" class="button is-medium">new submission</a>
+      {% endif %}
+    </div>
+    {% if pending_invite_forms %}
+      <div class="notification-container" tabindex="0">
+        <input id="invite-checkbox" type="checkbox" name="notifications">
+        <label for="invite-checkbox" class="invite-label"><i class="material-icons">notifications_active</i></label>
+        <div class="drawer">
+          <div class="notification-wrapper">
+            {% for pending_invite, form in pending_invite_forms %}
+              <div class="user-notification">
+                <div class="notification-text">
+                  pending invite from <span>{{ pending_invite.team.name }}</span>
+                </div>
+                <form id="invite-form-{{ pending_invite.id }}" action="{% url 'accept-invitation' %}" method="POST">
+                {{ form.as_p }}
+                {% csrf_token %}
+                    <a href="#"
+                       onclick="document.getElementById('invite-form-{{ pending_invite.id}}').submit()"
+                       class="button btn-blue">Accept</a>
+                </form>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="section-content columns is-variable is-8">
+    <div class="tasks column">
+      <div class="text">
+        <h2 class="title is-5">Task description</h2>
+        <p>{{ task.description }}</p>
+      </div>
+    </div>
+    <div class="teams column is-half">
+      <h2 class="title is-5">Team (with submissions)</h2>
+        {% for team in teams %}
+        <div class="team">
+          <h3>{{ team.name }}</h3>
+
+          {% if team.approach_set.all %}
+            {% for approach in team.approach_set.all %}
+            <div class="approach">
+              <span class="approach-name">{{ approach.name }}</span>
+              {% if approach.latest_submission %}
+                <span class="status">{{ approach.latest_submission.friendly_status }}</span>
+                {% if approach.latest_submission.friendly_status == 'Succeeded' %}
+                  <span class="score">0.802</span>
+                {% else %}
+                  <span class="score">--</span>
+                {% endif %}
+              <a href="{% url 'submission-detail' approach.latest_submission.id %}" class="button btn-blue is-small">details</a>
+              {%  endif %}
+            </div>
+            {% endfor %}
+            <div class="footer">
+              <div class="footnote">
+                <i class="material-icons">info</i>
+                <span>approach details based on latest submission only</span>
+              </div>
+              <a href="{% url 'submission-list' team.id %}" class="button">View all submissions</a>
+            </div>
+          {% else %}
+            <div class="no-approach">
+              <p>There are no submissions for this team – <a href="{% url 'create-approach' object.id team.id %}">create one</a></p>
+            </div>
+          {% endif %}
+
+        </div>
+      {% empty %}
+      <div class="noteam">
+        <h5>You are not on any teams. You must either be invited to an existing team or create a new team.</h5>
+        <p>Creating a <a href="{% url 'create-team' task.id %}"><strong>new submission</strong></a> will allow you to create a team.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

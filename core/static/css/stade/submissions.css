@@ -1,0 +1,191 @@
+/* Progress Bar Styles
+ * ================================ */
+
+.wizard .section-header {
+  display: block;
+  padding: 60px 60px 35px;
+}
+
+.wizard .steps {
+  display: flex;
+  justify-content: space-between;
+}
+
+.wizard .steps .step {
+  color: #9aa5ad;
+  padding-top: 15px;
+  position: relative;
+  width: 175px;
+}
+
+.wizard .steps .step h3 {
+  color: white;
+  margin: 0;
+}
+
+.wizard .steps .step.active {
+  color: white;
+}
+
+.wizard .steps .step.active .step-num {
+  background: #00d1b2;
+  color: #1c776a;
+}
+
+.wizard .steps .step.active h3 {
+  color: #00d1b2;
+  font-weight: 600;
+}
+
+.wizard .steps .step .step-num {
+  background: #dbdbdb;
+  border-radius: 100px;
+  color: #616161;
+  font-size: 36px;
+  font-weight: 600;
+  height: 60px;
+  line-height: .45em;
+  padding: 20px;
+  position: absolute;
+  text-align: center;
+  top: -62px;
+  width: 60px;
+}
+
+.wizard .steps .step .step-num i {
+  font-size: 42px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 1st step */
+.wizard .steps .step:first-of-type {
+  text-align: left;
+}
+
+.wizard .steps .step:first-of-type .step-num {
+  left: -10px;
+}
+
+/* 2nd step */
+.wizard .steps .step:nth-child(2) {
+  text-align: center;
+}
+
+.wizard .steps .step:nth-child(2) .step-num {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* 3rd step */
+.wizard .steps .step:last-of-type {
+  text-align: right;
+}
+
+.wizard .steps .step:last-of-type .step-num {
+  right: -10px;
+}
+
+/* Submission Wizard Styles
+ * ================================ */
+
+.wizard .new-team,
+.wizard .existing-team,
+.wizard .new-approach,
+.wizard .existing-approach,
+.wizard .new-submission {
+  padding: 30px 50px;
+}
+
+.wizard .new-team,
+.wizard .new-approach {
+  border-right: 1px solid #e3e6e8;
+}
+
+form.create-team .fields,
+form.create-approach .fields,
+form.create-submission .fields {
+  border-bottom: 1px solid #e3e6e8;
+  margin-bottom: 20px;
+  padding: 10px 0 20px;
+}
+
+.wizard form.create-submission {
+  max-width: 480px;
+}
+
+.wizard .existing-team ul,
+.wizard .existing-approach ul {
+  list-style: none;
+  margin: 0;
+}
+
+.wizard .existing-team ul li,
+.wizard .existing-approach ul li {
+  background: #79858e;
+  border: 1px solid #58636b;
+}
+
+.wizard .existing-team ul li:first-of-type,
+.wizard .existing-approach ul li:first-of-type {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 3px !important;
+  border-top-right-radius: 3px !important;
+}
+
+.wizard .existing-team ul li:last-of-type,
+.wizard .existing-approach ul li:last-of-type {
+  border-bottom-left-radius: 3px !important;
+  border-bottom-right-radius: 3px !important;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.wizard .existing-team ul li a,
+.wizard .existing-approach ul li a {
+  align-items: center;
+  color: white;
+  display: flex;
+  font-weight: 600;
+  padding: 10px 15px;
+}
+
+.wizard .existing-team ul li a:hover,
+.wizard .existing-approach ul li a:hover {
+  background: #58636b;
+}
+
+.wizard ul li a:hover:after {
+  display: none;
+}
+
+.wizard .existing-team ul li a i,
+.wizard .existing-approach ul li a i {
+  margin-right: 10px;
+}
+
+.wizard form .field.external-data {
+  padding-bottom: 15px;
+}
+
+.wizard form .file {
+  display: block;
+}
+
+.wizard form .file .file-icon i {
+  font-size: 20px;
+}
+
+.wizard form .file .help {
+  font-size: 16px;
+  padding: 10px;
+  text-align: center;
+}
+
+.wizard form .file .help ul {
+  list-style: none;
+  margin: 0;
+}

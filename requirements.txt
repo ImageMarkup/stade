@@ -1,0 +1,16 @@
+gunicorn
+faker
+psycopg2-binary
+django-heroku
+boto3
+django
+django-cors-headers
+djangorestframework
+django-storages
+celery
+django-allauth
+coreapi
+sentry-sdk==0.7.10
+isic-challenge-scoring==4.0.0
+django-import-export
+requests

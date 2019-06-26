@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section container">
+  {{submission}}<br>
+  {{  submission.status }}<br>
+  file: <a href="{{submission.test_prediction_file.url}}">download</a><br>
+
+
+  {{submission.score.score|pprint}}
+  {{submission.score.fail_reason|pprint}}
+
+  {% if request.user.is_staff %}
+  {{all_scores|pprint}}
+  {% endif %}
+</section>
+{% endblock %}

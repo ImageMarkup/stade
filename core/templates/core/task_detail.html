@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section container">
+  {{task.name}}<br>
+
+  {% if task.accepting_submissions %}
+    <a href="{% url 'create-submission' task.id %}" >submit</a>
+  {% endif %}
+</section>
+{% endblock %}

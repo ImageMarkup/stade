@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section container wizard">
+  <div class="section-header">
+    <progress class="progress is-primary" value="0" max="100"></progress>
+    <div class="steps">
+      <div class="step active">
+        <div class="step-num">1</div>
+        <h3>Team</h3>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Approach</h3>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Upload</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-content">
+    <div class="columns">
+      <div class="column new-team">
+        <h2>Create New Team</h2>
+        <form action="" class="create-team" method="post">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+          <div class="help is-danger">
+            <i class="material-icons">error</i>
+            {{ form.non_field_errors }}
+          </div>
+          {% endif %}
+
+          <div class="fields">
+
+            <div class="field name">
+              <p class="control has-icons-left">
+                <input autofocus class="input" id="id_name" name="name" maxlength="100" placeholder="Team Name" required type="text">
+                <span class="icon is-small is-left">
+                  <i class="material-icons">people</i>
+                </span>
+              </p>
+              {% if form.name.errors %}
+              <p class="help is-danger">
+                {{ form.name.errors }}
+              </p>
+              {% endif %}
+            </div>
+
+              <div class="field institution">
+                <p class="control has-icons-left">
+                  <input autofocus class="input" id="id_institution" name="institution" maxlength="100" placeholder="Institution Name" required type="text">
+                  <span class="icon is-small is-left">
+                    <i class="material-icons">business</i>
+                  </span>
+                </p>
+                {% if form.institution.errors %}
+                <p class="help is-danger">
+                  {{ form.institution.errors }}
+                </p>
+                {% endif %}
+              </div>
+
+          </div>
+
+          <input class="button" type="submit" value="Use this team"/>
+        </form>
+      </div>
+      <div class="column existing-team">
+        <h2>Choose Existing Team</h2>
+        {% if request.user.teams.all %}
+        <ul class="teams">
+          {% for team in request.user.teams.all %}
+          <li><a href="{% url 'create-approach' task.id team.id %}"><i class="material-icons">group</i> {{ team.name }}</a></li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>No existing teams to choose from</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

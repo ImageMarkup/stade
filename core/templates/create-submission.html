@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section container wizard">
+  <div class="section-header">
+    <progress class="progress is-primary" value="100" max="100"></progress>
+    <div class="steps">
+      <div class="step active">
+        <div class="step-num"><i class="material-icons">check</i></div>
+        <h3>Team</h3>
+        <p>{{ approach.team.name }}</p>
+      </div>
+      <div class="step active">
+        <div class="step-num"><i class="material-icons">check</i></div>
+        <h3>Approach</h3>
+        <p>{{ approach.name }}</p>
+      </div>
+      <div class="step active">
+        <div class="step-num">3</div>
+        <h3>Upload</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-content">
+
+    <div class="new-submission">
+      <h2>Upload Submission Data</h2>
+
+      <form action="" class="create-submission" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="help is-danger">
+          <i class="material-icons">error</i>
+          {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <div class="fields">
+
+          <div class="field file-upload">
+            <div class="file has-name is-medium is-fullwidth is-right{% if form.test_prediction_file.errors %} is-danger{% endif %}">
+              <label class="file-label">
+                <input class="file-input" id="id_test_prediction_file" name="test_prediction_file" required type="file">
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="material-icons">file_copy</i>
+                  </span>
+                  <span class="file-label">
+                    Choose a file..
+                  </span>
+                </span>
+                <span class="file-name" id="file-name">
+                  No file chosen
+                </span>
+              </label>
+              {% if form.test_prediction_file.errors %}
+              <div class="help is-danger">
+                {{ form.test_prediction_file.errors }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+        <input class="button" type="submit" value="Use this Data"/>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<div class="next-prev">
+
+</div>
+
+<script type="text/javascript">
+  var file = document.getElementById("id_csv");
+  file.onchange = function(){
+    if(file.files.length > 0) {
+      document.getElementById('file-name').innerHTML = file.files[0].name;
+    }
+  };
+</script>
+{% endblock %}

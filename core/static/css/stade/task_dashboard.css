@@ -1,0 +1,245 @@
+/* Notifications Dropdown
+ * ================================ */
+
+.notification-container {
+  margin-left: 20px;
+  outline: 0;
+  position: relative;
+}
+
+.notification-container #invite-checkbox {
+  display: none;
+}
+
+.notification-container .invite-label {
+  color: #fff;
+  cursor: pointer;
+  display: block;
+  font-size: 22px;
+  padding: 5px;
+}
+
+.notification-container .invite-label:before {
+  background: red;
+  border: 2px solid #58636b;
+  border-radius: 100px;
+  content: '';
+  height: 10px;
+  pointer-events: none;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 10px;
+}
+
+.invite-label:after {
+    border-color: transparent transparent #292f36 transparent;
+    border-style: solid;
+    border-width: 0 8px 6px 8px;
+    bottom: -3px;
+    content: '';
+    display: none;
+    height: 0;
+    position: absolute;
+    right: 8px;
+    width: 0;
+}
+
+.notification-container .drawer {
+  background: #292F36;
+  border-radius: 3px;
+  color: #fff;
+  max-height: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 110%;
+  transition: max-height .25s ease-in-out;
+  width: 250px;
+  z-index: 10;
+}
+
+#invite-checkbox:checked ~ .drawer {
+  overflow-y: auto;
+  max-height: 375px;
+}
+
+#invite-checkbox:checked ~ .invite-label {
+  background: #889096;
+  border-radius: 100px;
+}
+
+#invite-checkbox:checked ~ .invite-label:before {
+  border-color: #889096;
+}
+
+#invite-checkbox:checked ~ .invite-label:after {
+  display: block;
+}
+
+.drawer .notification-wrapper {
+  max-height: 235px;
+  overflow-y: auto;
+}
+
+.drawer .user-notification {
+  align-items: center;
+  border-bottom: 1px solid #444d56;
+  display: flex;
+  font-size: 14px;
+  padding: 6px 10px 10px;
+}
+
+.drawer .user-notification:last-of-type {
+  border-bottom: 0;
+}
+
+.drawer .user-notification .notification-text {
+  color: #9099a2;
+  flex: 3;
+  padding-right: 5px;
+}
+
+.drawer .user-notification .notification-text span {
+  color: #fff;
+  display: block;
+}
+
+.drawer .user-notification form {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.drawer .user-notification form a {
+  font-size: 12px;
+  padding: 3px 8px 5px;
+  position: unset !important;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Task Dashboard Styles
+ * ================================ */
+
+ .tasks .text .title,
+ .teams .title:first-of-type {
+   border-bottom: 1px solid #e3e6e8;
+   margin-bottom: 15px;
+   padding-bottom: 10px;
+ }
+
+ .data-download {
+   align-items: center;
+   background: #f4f7f9;
+   border: 2px solid #eceeef;
+   border-radius: 5px;
+   display: flex;
+   justify-content: space-between;
+   margin-top: 30px;
+   padding: 20px 30px 24px;
+ }
+
+ .data-download .title {
+   color: #889096;
+   margin: 0;
+ }
+
+ .teams .noteam {
+   color: #989898;
+   padding: 60px;
+   text-align: center;
+ }
+
+ .teams .noteam h5 {
+   color: #989898;
+ }
+
+ .teams .team {
+   border-top: 5px solid #00A9A5;
+   border-radius: 3px;
+   box-shadow: 0 3px 6px rgba(0, 0, 0, .15);
+   margin-bottom: 20px;
+   padding: 20px 20px 25px;
+ }
+
+ .team .approach {
+   border-bottom: 1px solid #e3e6e8;
+   display: flex;
+   padding: 10px 15px;
+ }
+
+ .team .approach:first-of-type {
+   border-top: 1px solid #e3e6e8;
+ }
+
+ .team .approach .approach-name {
+   flex: 5;
+ }
+
+ .team .approach .score {
+   font-weight: 600;
+ }
+
+ .team .approach .status,
+ .team .approach .score {
+   text-align: center;
+ }
+
+ .team .approach .status,
+ .team .approach .score,
+ .team .approach .button {
+   flex: 1;
+   padding: 0 10px;
+ }
+
+ .team .approach .help {
+   display: inline;
+   font-size: inherit;
+ }
+
+ .team .approach .help .material-icons {
+   font-size: 16px;
+   vertical-align: middle;
+ }
+
+ .team .no-approach {
+   align-items: center;
+   background: #fafafa;
+   display: flex;
+   justify-content: center;
+   padding: 30px;
+   text-align: center;
+ }
+
+ .team .no-approach p {
+   margin: 0 10px 0 0;
+   padding: 0;
+ }
+
+ .team .no-approach a {
+   font-weight: 600;
+ }
+
+ .team .footer {
+   align-items: center;
+   color: #00A9A5;
+   display: flex;
+   justify-content: space-between;
+   padding: 15px;
+ }
+
+ .team .footer .footnote {
+   display: flex;
+   font-size: 14px;
+   font-style: italic;
+ }
+
+ .team .footer .footnote .material-icons {
+   font-size: 20px;
+   margin-right: 5px;
+ }
+
+ .team .footer .button {
+   justify-self: right;
+ }

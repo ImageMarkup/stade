@@ -1,0 +1,52 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: stade
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - .docker/pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - primary
+
+  rabbitmq:
+    image: rabbitmq:latest
+    restart: always
+    ports:
+      - 5672:5672
+    networks:
+      - primary
+
+  web:
+      build: .
+      environment:
+        DJANGO_SETTINGS_MODULE: stade.settings.development
+        POSTGRES_HOST: "db"
+        CLOUDAMQP_URL: "amqp://rabbitmq/"
+      volumes:
+        - .:/code
+        - .docker/uploads:/uploads
+      ports:
+        - 8000:8000
+      networks:
+        - primary
+
+  worker:
+    build: .
+    environment:
+      DJANGO_SETTINGS_MODULE: stade.settings.development
+      POSTGRES_HOST: "db"
+      CLOUDAMQP_URL: "amqp://rabbitmq/"
+    volumes:
+      - .:/code
+      - .docker/uploads:/uploads
+    networks:
+      - primary
+    entrypoint: celery worker --app stade.celery --concurrency 2 --loglevel info
+
+networks:
+  primary:

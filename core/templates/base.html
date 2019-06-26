@@ -1,0 +1,35 @@
+{% load static %}
+<html>
+  <title>stade</title>
+  <head>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+  </head>
+  <body class="content">
+    <header class="main-header">
+      <div class="container">
+        <div class="logo">
+          <h1><a href="/">stade</a></h1>
+        </div>
+        <div class="navigation">
+          <ul class="navbar">
+            <!-- <li class="nav-item"><a href="/">Tasks</a></li> -->
+            {% if user.is_authenticated %}
+              <li class="logout"> <strong>{{ request.user.email }}</strong> <a href="/accounts/logout" class="button btn-blue is-small">Logout</a></li>
+            {% else %}
+              <li class="login"><a href="/accounts/login" class="button btn-blue">Login</a></li>
+              <li class="signup"><a href="/accounts/signup" class="button">Sign up</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div class="main-content">
+
+      {% block content %}{% endblock %}
+
+    </div>
+  </body>
+</html>
