@@ -15,7 +15,7 @@ body {
 }
 
 body {
-  background: #F7F0F0;
+  background: #f9f5f5;
   height: 100%;
   width: 100%;
 }
@@ -254,6 +254,8 @@ h6 {
 .section.container .section-content {
   padding: 20px;
 }
+
+/* Front page specific */
 
 .tasks-list .task {
   padding: 20px;
