@@ -106,6 +106,7 @@ h6 {
   background: #00A9A5;
   border: none;
   color: #fff;
+  padding-bottom: 7px;
   text-transform: uppercase;
   transition: all .15s ease-in-out;
 }
@@ -130,9 +131,19 @@ h6 {
   display: none;
 }
 
+/* Override some Bulma stuff */
+
 .button.is-text {
   text-transform: none;
   text-decoration: none;
+}
+
+.button.is-small {
+  padding-bottom: 5px;
+}
+
+.button.is-medium {
+  padding-bottom: 10px;
 }
 
 /* Site structure
@@ -197,10 +208,6 @@ h6 {
 .main-header .navbar li.signup,
 .main-header .navbar li.logout {
   padding-left: 10px;
-}
-
-.main-header .navbar li.login a {
-  padding: 5px 18px 7px;
 }
 
 .main-header .navbar li.logout {
