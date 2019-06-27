@@ -31,42 +31,24 @@ class Command(BaseCommand):
                     username=fake.user_name(), email=fake.email(), password="letmein"
                 )
             )
-        challenge2017 = Challenge.objects.create(name='2017', position=1, active=True)
-        challenge2018 = Challenge.objects.create(name='2018', active=True)
+        localdev = Challenge.objects.create(name='local dev', position=1, active=True)
         with open("/code/etc/data/example_groundtruth.csv", "rb") as test_ground_truth_file:
             Task.objects.create(
-                challenge=challenge2018,
-                name="Diagnosis (images only)",
+                challenge=localdev,
+                name="Local development",
                 description=''.join(fake.paragraphs(nb=5)),
+                short_description=''.join(fake.paragraphs(nb=1)),
                 active=True,
                 public=True,
                 test_ground_truth_file=File(test_ground_truth_file),
             )
-            Task.objects.create(
-                challenge=challenge2018,
-                name="Diagnosis (images w/ metadata)",
-                description=''.join(fake.paragraphs(nb=5)),
-                active=True,
-                public=True,
-                test_ground_truth_file=File(test_ground_truth_file),
+        for _ in range(2):
+            team = Team.objects.create(
+                name=fake.company(),
+                institution=fake.company(),
+                challenge=localdev,
+                creator=users[0],
             )
-            Task.objects.create(
-                challenge=challenge2017,
-                name="Segmentation",
-                description=''.join(fake.paragraphs(nb=5)),
-                active=False,
-                public=True,
-                test_ground_truth_file=File(test_ground_truth_file),
-            )
-
-        for challenge in challenge2017, challenge2018:
-            for _ in range(2):
-                team = Team.objects.create(
-                    name=fake.company(),
-                    institution=fake.company(),
-                    challenge=challenge,
-                    creator=users[0],
-                )
-                for u in users:
-                    team.users.add(u)
-                TeamInvitation.objects.create(sender=users[0], recipient=admin, team=team)
+            for u in users:
+                team.users.add(u)
+            TeamInvitation.objects.create(sender=users[0], recipient=admin, team=team)
