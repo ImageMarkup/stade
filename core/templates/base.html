@@ -19,8 +19,8 @@
             {% if user.is_authenticated %}
               <strong>{{ request.user.email }}</strong>
               {% if user.is_staff %}
-              <li class="logout">
-                  <a href="/admin" class="button btn-blue is-small">Admin</a>
+              <li class="admin">
+                  <a href="/admin" class="button is-small">Admin</a>
               </li>
               {% endif %}
               <li class="logout">
