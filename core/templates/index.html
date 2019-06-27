@@ -14,6 +14,7 @@
               <a href="{% url 'task-dashboard' task.id %}">
                 <i class="material-icons">assignment</i>
                 {{ task.name }}
+                <p>{{ task.short_description }}</p>
                 {% if not task.active %}
                   not accepting submissions
                 {% endif %}
