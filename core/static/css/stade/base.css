@@ -106,13 +106,18 @@ h6 {
   background: #00A9A5;
   border: none;
   color: #fff;
-  padding-bottom: 7px;
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  padding-bottom: 6px;
   text-transform: uppercase;
   transition: all .15s ease-in-out;
 }
 
 .button:hover {
   background: #5CC8C5;
+  color: #fff;
+}
+
+.button:focus {
   color: #fff;
 }
 
@@ -143,7 +148,7 @@ h6 {
 }
 
 .button.is-medium {
-  padding-bottom: 10px;
+  padding-bottom: 9px;
 }
 
 /* Site structure
