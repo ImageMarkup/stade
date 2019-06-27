@@ -25,7 +25,7 @@ class AcceptInvitationForm(forms.Form):
 class CreateTeamForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ["name", "institution"]
+        fields = ["name", "institution", "institution_url"]
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)

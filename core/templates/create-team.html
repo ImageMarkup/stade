@@ -64,6 +64,20 @@
                 {% endif %}
               </div>
 
+              <div class="field institution-url">
+                  <p class="control has-icons-left">
+                      <input autofocus class="input" id="id_institution_url" name="institution_url" maxlength="100" placeholder="Institution URL" type="text">
+                      <span class="icon is-small is-left">
+                    <i class="material-icons">business</i>
+                  </span>
+                  </p>
+                  {% if form.institution_url.errors %}
+                      <p class="help is-danger">
+                          {{ form.institution_url.errors }}
+                      </p>
+                  {% endif %}
+              </div>
+
           </div>
 
           <input class="button" type="submit" value="Use this team"/>
