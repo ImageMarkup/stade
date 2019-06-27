@@ -1,29 +1,30 @@
 /* Progress Bar Styles
  * ================================ */
 
-.wizard .section-header {
+.stepper {
+  background: #424b52;
   display: block;
   padding: 60px 60px 35px;
 }
 
-.wizard .steps {
+.stepper .steps {
   display: flex;
   justify-content: space-between;
 }
 
-.wizard .steps .step {
+.stepper .steps .step {
   color: #9aa5ad;
   padding-top: 15px;
   position: relative;
   width: 175px;
 }
 
-.wizard .steps .step h3 {
+.stepper .steps .step h3 {
   color: white;
   margin: 0;
 }
 
-.wizard .steps .step p .change {
+.stepper .steps .step p .change {
   align-items: center;
   color: white;
   display: inline-flex;
@@ -31,28 +32,29 @@
   opacity: .7;
   position: relative;
   transition: all .35s ease-in-out;
+  white-space: nowrap;
 }
 
-.wizard .steps .step p .change:hover {
+.stepper .steps .step p .change:hover {
   opacity: 1;
 }
 
-.wizard .steps .step p .change:hover:after {
+.stepper .steps .step p .change:hover:after {
   display: none;
 }
 
-.wizard .steps .step p .change i {
+.stepper .steps .step p .change i {
   font-size: 20px;
   margin-left: 4px;
   opacity: .6;
   transition: all .35s ease-in-out;
 }
 
-.wizard .steps .step p .change:hover i {
+.stepper .steps .step p .change:hover i {
   transform: rotate(180deg);
 }
 
-.wizard .steps .step p .change .tooltip {
+.stepper .steps .step p .change .tooltip {
   background: rgba(0, 0, 0, .8);
   border-radius: 3px;
   display: none;
@@ -63,25 +65,25 @@
   white-space: nowrap;
 }
 
-.wizard .steps .step p .change:hover .tooltip {
+.stepper .steps .step p .change:hover .tooltip {
   display: inline-block;
 }
 
-.wizard .steps .step.active {
+.stepper .steps .step.active {
   color: white;
 }
 
-.wizard .steps .step.active .step-num {
+.stepper .steps .step.active .step-num {
   background: #00d1b2;
   color: #1c776a;
 }
 
-.wizard .steps .step.active h3 {
+.stepper .steps .step.active h3 {
   color: #00d1b2;
   font-weight: 600;
 }
 
-.wizard .steps .step .step-num {
+.stepper .steps .step .step-num {
   background: #dbdbdb;
   border-radius: 100px;
   color: #616161;
@@ -96,7 +98,7 @@
   width: 60px;
 }
 
-.wizard .steps .step .step-num i {
+.stepper .steps .step .step-num i {
   font-size: 42px;
   left: 50%;
   position: absolute;
@@ -105,30 +107,30 @@
 }
 
 /* 1st step */
-.wizard .steps .step:first-of-type {
+.stepper .steps .step:first-of-type {
   text-align: left;
 }
 
-.wizard .steps .step:first-of-type .step-num {
+.stepper .steps .step:first-of-type .step-num {
   left: -10px;
 }
 
 /* 2nd step */
-.wizard .steps .step:nth-child(2) {
+.stepper .steps .step:nth-child(2) {
   text-align: center;
 }
 
-.wizard .steps .step:nth-child(2) .step-num {
+.stepper .steps .step:nth-child(2) .step-num {
   left: 50%;
   transform: translateX(-50%);
 }
 
 /* 3rd step */
-.wizard .steps .step:last-of-type {
+.stepper .steps .step:last-of-type {
   text-align: right;
 }
 
-.wizard .steps .step:last-of-type .step-num {
+.stepper .steps .step:last-of-type .step-num {
   right: -10px;
 }
 
@@ -198,10 +200,6 @@
 .wizard .existing-approach ul li a i {
   margin-right: 10px;
 }
-
-/* next/prev styles */
-
-
 
 /* form styles */
 
