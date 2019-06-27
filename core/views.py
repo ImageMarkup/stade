@@ -13,17 +13,18 @@ from django.views.generic.edit import CreateView, FormView
 
 
 def index(request):
-    # only pass active challenges with visible tasks
-    return render(
-        request,
-        "index.html",
-        {
-            "challenges": Challenge.objects.filter(active=True)
-            .annotate(num_visible_tasks=Count("tasks", filter=Q(tasks__visible=True)))
-            .filter(num_visible_tasks__gt=0)
-            .all()
-        },
-    )
+    challenges = Challenge.objects.filter(active=True)
+
+    # for admins, show challenges with > 0 tasks,
+    # for users, only show challenges with > 0 visible tasks
+    if request.user.is_staff:
+        challenges = challenges.annotate(num_tasks=Count('tasks')).filter(num_tasks__gt=0)
+    else:
+        challenges = challenges.annotate(
+            num_visible_tasks=Count("tasks", filter=Q(tasks__visible=True))
+        ).filter(num_visible_tasks__gt=0)
+
+    return render(request, "index.html", {"challenges": challenges.all()})
 
 
 class AcceptInvitationView(LoginRequiredMixin, FormView):
