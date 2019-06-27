@@ -44,6 +44,7 @@ class Task(models.Model):
     short_description = models.TextField()
     active = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
+    submissions_public = models.BooleanField(default=False)
     test_ground_truth_file = models.FileField(upload_to=task_data_file_upload_to)
 
     def __str__(self):
