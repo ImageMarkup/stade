@@ -175,6 +175,10 @@ h6 {
   margin: 10px 0;
 }
 
+.main-header .logo a:hover:after {
+  display: none;
+}
+
 .main-header .logo img {
   height: auto;
   width: 224px;
