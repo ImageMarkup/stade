@@ -6,7 +6,7 @@ from django.conf import settings
 
 from core.models import Submission, Task
 from django.core.mail import send_mail
-from isic_challenge_scoring.exception import ScoreException
+from isic_challenge_scoring.types import ScoreException
 from isic_challenge_scoring.task3 import compute_metrics
 
 
