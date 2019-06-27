@@ -68,8 +68,18 @@
  .team .approach .status,
  .team .approach .score,
  .team .approach .button {
+   display: flex;
+   align-items: center;
    flex: 1;
    padding: 0 10px;
+ }
+
+ .team .approach .status .material-icons {
+   margin-left: 5px;
+  }
+
+ .team .approach .status a::after {
+	 margin-left: 5px;
  }
 
  .team .approach .help {

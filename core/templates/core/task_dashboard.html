@@ -29,7 +29,13 @@
             <div class="approach">
               <span class="approach-name">{{ approach.name }}</span>
               {% if approach.latest_submission %}
-                <span class="status">{{ approach.friendly_status }}</span>
+                <span class="status">{{ approach.friendly_status }}
+                  {% if approach.friendly_status == 'Failed' %}
+                    <a href="{% url 'create-submission' approach.id %}">
+                      <i class="material-icons">refresh</i>
+                    </a>
+                  {% endif %}
+                </span>
                 {% if approach.friendly_status == 'Succeeded' %}
                   <span class="score">{{ approach.score|floatformat:3 }}</span>
                 {% else %}
