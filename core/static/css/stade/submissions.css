@@ -20,13 +20,13 @@
 }
 
 .stepper .steps .step h3 {
-  color: white;
+  color: #fff;
   margin: 0;
 }
 
 .stepper .steps .step p .change {
   align-items: center;
-  color: white;
+  color: #fff;
   display: inline-flex;
   font-size: 18px;
   opacity: .7;
@@ -70,7 +70,7 @@
 }
 
 .stepper .steps .step.active {
-  color: white;
+  color: #fff;
 }
 
 .stepper .steps .step.active .step-num {
@@ -181,7 +181,7 @@
 .wizard .existing-team ul li a,
 .wizard .existing-approach ul li a {
   align-items: center;
-  color: white;
+  color: #fff;
   display: flex;
   font-weight: 600;
   padding: 10px 15px;

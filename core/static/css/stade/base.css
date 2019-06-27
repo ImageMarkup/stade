@@ -310,7 +310,7 @@ h6 {
 
 .user-notification {
   align-items: center;
-  background: white;
+  background: #fff;
   border-radius: 3px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
   display: flex;
