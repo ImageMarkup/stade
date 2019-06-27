@@ -54,6 +54,21 @@
 
         <div class="fields">
 
+          <div class="field accepted-terms">
+            <div class="control">
+              <label class="checkbox">
+                <input id="id_accepted_terms" name="accepted_terms" type="checkbox">
+                Data sharing policy
+                <p>We agree to allow this submission to be shared and used for additional research.</p>
+              </label>
+              {% if form.accepted_terms.errors %}
+              <div class="help is-danger">
+                {{ form.accepted_terms.errors }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
           <div class="field file-upload">
             <div class="file has-name is-medium is-fullwidth is-right{% if form.test_prediction_file.errors %} is-danger{% endif %}">
               <label class="file-label">

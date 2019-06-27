@@ -185,7 +185,7 @@ class CreateSubmissionPermissionMixin(AccessMixin):
 
 class CreateSubmissionView(CreateSubmissionPermissionMixin, CreateView):
     model = Submission
-    fields = ["test_prediction_file"]
+    fields = ["test_prediction_file", "accepted_terms"]
     template_name = "create-submission.html"
 
     def get_context_data(self, **kwargs):
