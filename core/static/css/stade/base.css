@@ -253,10 +253,17 @@ h6 {
 }
 
 .section-header h1 {
+  align-items: center;
   color: #ffffff;
+  display: inline-flex;
   flex: 6;
   font-size: 24px;
   margin: 0;
+}
+
+.section-header h1 i {
+  font-size: 28px;
+  margin: 3px 4px 0 0;
 }
 
 .section.container .section-content {
