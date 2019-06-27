@@ -17,7 +17,15 @@
           <ul class="navbar">
             <!-- <li class="nav-item"><a href="/">Tasks</a></li> -->
             {% if user.is_authenticated %}
-              <li class="logout"> <strong>{{ request.user.email }}</strong> <a href="/accounts/logout" class="button btn-blue is-small">Logout</a></li>
+              <strong>{{ request.user.email }}</strong>
+              {% if user.is_staff %}
+              <li class="logout">
+                  <a href="/admin" class="button btn-blue is-small">Admin</a>
+              </li>
+              {% endif %}
+              <li class="logout">
+                  <a href="/accounts/logout" class="button btn-blue is-small">Logout</a>
+              </li>
             {% else %}
               <li class="login"><a href="/accounts/login" class="button btn-blue">Login</a></li>
               <li class="signup"><a href="/accounts/signup" class="button">Sign up</a></li>
