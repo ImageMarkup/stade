@@ -271,8 +271,9 @@ h6 {
 /* Front page specific */
 
 .tasks-list .task {
-  padding: 20px;
   height: 175px;
+  padding: 20px;
+  position: relative;
 }
 
 .tasks-list .task a {
@@ -285,6 +286,56 @@ h6 {
   height: 100%;
   justify-content: center;
   width: 100%;
+}
+
+.tasks-list .task.inactive a {
+  background: #bbbfc3;
+  color: #58636b;
+}
+
+.tasks-list .task.inactive a:hover {
+  background: #d8dadc;
+}
+
+.tasks-list .task.inactive .badge {
+  background: #427AA1;
+  border-radius: 3px 3px 0 0;
+  display: inline-block;
+  padding: 10px 5px 15px;
+  position: absolute;
+  right: 28px;
+  top: 18px;
+  transition: all .15s ease-in-out;
+  z-index: 2;
+}
+
+.tasks-list .task.inactive .badge i {
+  color: #fff;
+  font-size: 16px;
+  margin: 0;
+}
+
+.tasks-list .task.inactive .badge:after {
+  content: "";
+  border-color: transparent transparent #bbbfc3 transparent;
+  border-style: solid;
+  border-width: 0 13px 6px 13px;
+  bottom: 0;
+  height: 0;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  transition: all .15s ease-in-out;
+  width: 0;
+}
+
+.tasks-list .task.inactive a:hover ~ .badge {
+  padding-bottom: 20px;
+}
+
+.tasks-list .task.inactive a:hover ~ .badge:after {
+  content: "";
+  border-color: transparent transparent #d8dadc transparent;
 }
 
 .tasks-list .task a .material-icons {
