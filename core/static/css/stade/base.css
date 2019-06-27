@@ -171,14 +171,16 @@ h6 {
   padding: 0;
 }
 
-.main-header .logo {}
-
 .main-header .logo h1 {
-  font-size: 28px;
-  line-height: 1em;
-  margin: 0;
-  padding-bottom: 7px;
+  margin: 10px 0;
 }
+
+.main-header .logo img {
+  height: auto;
+  width: 224px;
+}
+
+/* Navbar */
 
 .main-header .navbar {
   align-items: center;
