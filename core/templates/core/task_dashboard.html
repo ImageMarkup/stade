@@ -31,7 +31,7 @@
               {% if approach.latest_submission %}
                 <span class="status">{{ approach.friendly_status }}</span>
                 {% if approach.friendly_status == 'Succeeded' %}
-                  <span class="score">{{ approach.score }}</span>
+                  <span class="score">{{ approach.score|floatformat:3 }}</span>
                 {% else %}
                   <span class="score">--</span>
                 {% endif %}
