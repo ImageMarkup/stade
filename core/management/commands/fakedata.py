@@ -39,7 +39,7 @@ class Command(BaseCommand):
                 name="Diagnosis (images only)",
                 description=''.join(fake.paragraphs(nb=5)),
                 active=True,
-                visible=True,
+                public=True,
                 test_ground_truth_file=File(test_ground_truth_file),
             )
             Task.objects.create(
@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 name="Diagnosis (images w/ metadata)",
                 description=''.join(fake.paragraphs(nb=5)),
                 active=True,
-                visible=True,
+                public=True,
                 test_ground_truth_file=File(test_ground_truth_file),
             )
             Task.objects.create(
@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 name="Segmentation",
                 description=''.join(fake.paragraphs(nb=5)),
                 active=False,
-                visible=True,
+                public=True,
                 test_ground_truth_file=File(test_ground_truth_file),
             )
 

@@ -9,7 +9,7 @@
       <div class="section-content">
         <div class="tasks-list columns is-multiline is-vcentered">
           {% for task in challenge.tasks.all %}
-            {% if task.visible or request.user.is_staff %}
+            {% if task.public or request.user.is_staff %}
             <div class="task column is-one-third">
               <a href="{% url 'task-dashboard' task.id %}">
                 <i class="material-icons">assignment</i>

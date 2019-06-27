@@ -16,13 +16,13 @@ def index(request):
     challenges = Challenge.objects.filter(active=True)
 
     # for admins, show challenges with > 0 tasks,
-    # for users, only show challenges with > 0 visible tasks
+    # for users, only show challenges with > 0 public tasks
     if request.user.is_staff:
         challenges = challenges.annotate(num_tasks=Count('tasks')).filter(num_tasks__gt=0)
     else:
         challenges = challenges.annotate(
-            num_visible_tasks=Count("tasks", filter=Q(tasks__visible=True))
-        ).filter(num_visible_tasks__gt=0)
+            num_public_tasks=Count("tasks", filter=Q(tasks__public=True))
+        ).filter(num_public_tasks__gt=0)
 
     return render(request, "index.html", {"challenges": challenges.all()})
 
