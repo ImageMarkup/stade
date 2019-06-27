@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import Submission, Task, Challenge
-from core.models import Approach, Score, Team, TeamInvitation
+from core.models import Approach, Team, TeamInvitation
 from core.tasks import rescore_task_submissions
 
 
@@ -13,17 +13,13 @@ def rescore_task(modeladmin, request, queryset):
 rescore_task.short_description = "Rescore task submissions"
 
 
-class ScoreInline(admin.TabularInline):
-    model = Score
-
-
 class SubmissionInline(admin.TabularInline):
     model = Submission
 
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    inlines = [ScoreInline]
+    pass
 
 
 @admin.register(Task)
@@ -34,11 +30,6 @@ class TaskAdmin(admin.ModelAdmin):
 @admin.register(Challenge)
 class ChallengeAdmin(admin.ModelAdmin):
     model = Challenge
-
-
-@admin.register(Score)
-class ScoreAdmin(admin.ModelAdmin):
-    model = Score
 
 
 @admin.register(Team)
