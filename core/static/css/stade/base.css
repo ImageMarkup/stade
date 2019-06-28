@@ -149,6 +149,10 @@ h6 {
   padding-bottom: 9px;
 }
 
+.button.is-large {
+  padding-bottom: 10px;
+}
+
 /* Site structure
 ** ================================ */
 
