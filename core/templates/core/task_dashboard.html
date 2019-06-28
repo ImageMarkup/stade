@@ -11,61 +11,63 @@
     </div>
   </div>
 
-  <div class="section-content columns is-variable is-8">
-    <div class="tasks column">
-      <div class="text">
-        <h2 class="title is-5">Task description</h2>
-        <p>{{ task.description }}</p>
-      </div>
-    </div>
-    <div class="teams column is-half">
-      <h2 class="title is-5">Team (with submissions)</h2>
-        {% for team in teams %}
-        <div class="team">
-          <h3>{{ team.name }}</h3>
-          <p>{{ team.user_emails|join:", " }}</p>
-
-          {% if team.approach_set.all %}
-            {% for approach in team.approach_set.all %}
-            <div class="approach">
-              <span class="approach-name">{{ approach.name }}</span>
-              {% if approach.latest_submission %}
-                <span class="status">{{ approach.friendly_status }}
-                  {% if approach.friendly_status == 'Failed' %}
-                    <a href="{% url 'create-submission' approach.id %}">
-                      <i class="material-icons is-trans-rotate is-180">cached</i>
-                    </a>
-                  {% endif %}
-                </span>
-                {% if approach.friendly_status == 'Succeeded' %}
-                  <span class="score">{{ approach.score|floatformat:3 }}</span>
-                {% else %}
-                  <span class="score">--</span>
-                {% endif %}
-              <a href="{% url 'submission-detail' approach.latest_submission.id %}" class="button btn-blue is-small">details</a>
-              {%  endif %}
-            </div>
-            {% endfor %}
-            <div class="footer">
-              <div class="footnote">
-                <i class="material-icons">info</i>
-                <span>approach details based on latest submission only</span>
-              </div>
-              <a href="{% url 'submission-list' task.id team.id %}" class="button">Submission History</a>
-            </div>
-          {% else %}
-            <div class="no-approach">
-              <p>There are no submissions for this team – <a href="{% url 'create-approach' object.id team.id %}">create one</a></p>
-            </div>
-          {% endif %}
-
+  <div class="section-content">
+    <div class="dashboard-wrapper columns is-variable is-8">
+      <div class="tasks column">
+        <div class="text">
+          <h2 class="title is-5">Task description</h2>
+          <p>{{ task.description }}</p>
         </div>
-      {% empty %}
-      <div class="noteam">
-        <h5>You are not on any teams. You must either be invited to an existing team or create a new team.</h5>
-        <p>Creating a <a href="{% url 'create-team' task.id %}"><strong>new submission</strong></a> will allow you to create a team.</p>
       </div>
-      {% endfor %}
+      <div class="teams column is-half">
+        <h2 class="title is-5">Team (with submissions)</h2>
+          {% for team in teams %}
+          <div class="team">
+            <h3>{{ team.name }}</h3>
+            <p>{{ team.user_emails|join:", " }}</p>
+
+            {% if team.approach_set.all %}
+              {% for approach in team.approach_set.all %}
+              <div class="approach">
+                <span class="approach-name">{{ approach.name }}</span>
+                {% if approach.latest_submission %}
+                  <span class="status">{{ approach.friendly_status }}
+                    {% if approach.friendly_status == 'Failed' %}
+                      <a href="{% url 'create-submission' approach.id %}">
+                        <i class="material-icons is-trans-rotate is-180">cached</i>
+                      </a>
+                    {% endif %}
+                  </span>
+                  {% if approach.friendly_status == 'Succeeded' %}
+                    <span class="score">{{ approach.score|floatformat:3 }}</span>
+                  {% else %}
+                    <span class="score">--</span>
+                  {% endif %}
+                <a href="{% url 'submission-detail' approach.latest_submission.id %}" class="button btn-blue is-small">details</a>
+                {%  endif %}
+              </div>
+              {% endfor %}
+              <div class="footer">
+                <div class="footnote">
+                  <i class="material-icons">info</i>
+                  <span>approach details based on latest submission only</span>
+                </div>
+                <a href="{% url 'submission-list' task.id team.id %}" class="button">Submission History</a>
+              </div>
+            {% else %}
+              <div class="no-approach">
+                <p>There are no submissions for this team – <a href="{% url 'create-approach' object.id team.id %}">create one</a></p>
+              </div>
+            {% endif %}
+
+          </div>
+        {% empty %}
+        <div class="noteam">
+          <h5>You are not on any teams. You must either be invited to an existing team or create a new team.</h5>
+          <p>Creating a <a href="{% url 'create-team' task.id %}"><strong>new submission</strong></a> will allow you to create a team.</p>
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </section>
