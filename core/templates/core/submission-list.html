@@ -2,16 +2,51 @@
 
 {% block content %}
 <section class="section container">
-  {% for submission in object_list %}
-    {{ submission.created }}<br >
-    {{ submission.approach.name }}<br>
-    {{ submission.friendly_status }}
-    {% if submission.friendly_status == 'Succeeded' %}
-      <span class="score">0.802</span>
-    {% else %}
-      <span class="score">--</span>
-    {% endif %}
-    <hr>
-  {% endfor %}
+  <div class="section-header">
+    <h1><i class="material-icons">assignment</i> {{ task.name }}</h1>
+  </div>
+
+  <div class="section-content">
+    <h2>{{ team.name }}'s Submissions</h2>
+
+    <div class="submissions-wrapper">
+
+      <div class="submissions-list">
+
+        <div class="submission submission-header columns is-mobile">
+          <div class="created column is-one-fifth-desktop is-two-fifths-mobile">
+            Creation date
+          </div>
+          <div class="approach-name column is-three-fifths-desktop is-two-fifths-mobile">
+            Approach Name
+          </div>
+          <div class="status column is-one-fifth">
+            Score
+          </div>
+        </div>
+
+        {% for submission in object_list %}
+          <div class="submission columns is-mobile">
+            <div class="created column is-one-fifth-desktop is-two-fifths-mobile">
+              {{ submission.created }}
+            </div>
+            <div class="approach-name column is-three-fifths-desktop is-two-fifths-mobile">
+              <strong>{{ submission.approach.name }}</strong>
+            </div>
+            <div class="status column is-one-fifth">
+              {{ submission.friendly_status }}
+              {% if submission.friendly_status == 'Succeeded' %}
+                <span class="score">0.802</span>
+              {% else %}
+                <span class="score">--</span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+
+    </div>
+  </div>
 </section>
 {% endblock %}

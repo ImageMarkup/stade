@@ -1,0 +1,31 @@
+.submissions-wrapper {
+  padding: 25px 3% 3%;
+}
+
+.submissions-list {}
+
+.submissions-list .submission.submission-header > div {
+  background: #00A9A5;
+  color: #fff;
+  font-weight: 600;
+}
+
+.submissions-list .submission.submission-header > div:first-of-type {
+  border-top-left-radius: 3px;
+}
+
+.submissions-list .submission.submission-header > div:last-of-type {
+  border-top-right-radius: 3px;
+}
+
+.submissions-list .submission.submission-header > div:nth-child(odd) {
+  background: #009e9b;
+}
+
+.submissions-list .submission {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.submissions-list .submission > div:nth-child(odd) {
+  background: #f9f9f9;
+}
