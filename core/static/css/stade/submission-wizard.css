@@ -47,11 +47,6 @@
   font-size: 20px;
   margin-left: 4px;
   opacity: .6;
-  transition: all .35s ease-in-out;
-}
-
-.stepper .steps .step p .change:hover i {
-  transform: rotate(180deg);
 }
 
 .stepper .steps .step p .change .tooltip {
@@ -160,22 +155,7 @@
 .wizard .existing-approach ul li {
   background: #79858e;
   border: 1px solid #58636b;
-}
-
-.wizard .existing-team ul li:first-of-type,
-.wizard .existing-approach ul li:first-of-type {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-left-radius: 3px !important;
-  border-top-right-radius: 3px !important;
-}
-
-.wizard .existing-team ul li:last-of-type,
-.wizard .existing-approach ul li:last-of-type {
-  border-bottom-left-radius: 3px !important;
-  border-bottom-right-radius: 3px !important;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  border-radius: 3px;
 }
 
 .wizard .existing-team ul li a,
@@ -199,6 +179,17 @@
 .wizard .existing-team ul li a i,
 .wizard .existing-approach ul li a i {
   margin-right: 10px;
+}
+
+.wizard .existing-team ul li a p {
+  line-height: 1.2em;
+  margin: 0;
+}
+
+.wizard .existing-team ul li a p span {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 /* form styles */
@@ -236,4 +227,13 @@ form.create-submission .fields {
 .wizard form .file .help ul {
   list-style: none;
   margin: 0;
+}
+
+label.checkbox {
+  align-items: center;
+  display: flex;
+}
+
+label.checkbox p {
+  padding-left: 10px;
 }
