@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect
 from core.forms import AcceptInvitationForm, CreateApproachForm, CreateTeamForm
 from core.models import Approach, Submission, Task, Team, TeamInvitation, Challenge
 from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
-from django.db import transaction
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -154,10 +153,17 @@ class CreateApproachView(CreateApproachPermissionMixin, CreateView):
 class SubmissionListView(ListView):
     template_name = "core/submission-list.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["team"] = self.team
+        context["task"] = self.task
+        return context
+
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
 
+        self.task = get_object_or_404(Task, pk=kwargs['task'])
         self.team = get_object_or_404(Team, pk=kwargs['team'])
 
         if self.team not in request.user.teams.all():
