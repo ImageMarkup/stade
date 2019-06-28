@@ -66,6 +66,9 @@ class Team(models.Model):
     def __str__(self):
         return f'{self.challenge.name}: {self.name}'
 
+    def user_emails(self):
+        return sorted([x.email for x in self.users.all()])
+
     # todo, this doesn't work at all
     @transaction.atomic
     def save(self, *args, **kwargs):

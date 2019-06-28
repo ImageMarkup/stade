@@ -23,6 +23,7 @@
         {% for team in teams %}
         <div class="team">
           <h3>{{ team.name }}</h3>
+          <p>{{ team.user_emails|join:", " }}</p>
 
           {% if team.approach_set.all %}
             {% for approach in team.approach_set.all %}
