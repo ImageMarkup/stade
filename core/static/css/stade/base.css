@@ -157,8 +157,10 @@ h6 {
 ** ================================ */
 
 .container {
+  background: none;
   margin: 0 auto;
   max-width: 1335px;
+  padding: 0 20px;
 }
 
 .main-header {
@@ -232,16 +234,9 @@ h6 {
   padding:45px 0;
 }
 
-.main-content > .container {
-  background: #fff;
-  border-radius: 3px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, .15);
-  padding: 20px;
-}
-
 .section.container {
   margin-bottom: 40px;
-  padding: 0;
+  padding: 0 20px;
 }
 
 .section-header {
@@ -269,7 +264,11 @@ h6 {
 }
 
 .section.container .section-content {
-  padding: 20px;
+  background: #fff;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, .15);
+  padding: 40px;
 }
 
 /* Front page specific */
