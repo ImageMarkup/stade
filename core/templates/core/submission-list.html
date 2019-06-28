@@ -3,7 +3,7 @@
 {% block content %}
 <section class="section container">
   <div class="section-header">
-    <h1><i class="material-icons">assignment</i> {{ task.name }}</h1>
+    <h1><i class="material-icons">assignment</i> <a href="{% url 'task-dashboard' task.id %}">{{ task.name }}</a></h1>
   </div>
 
   <div class="section-content">
