@@ -2,12 +2,29 @@
 
 {% block content %}
 <section class="section container">
-  {{submission}}<br>
-  {{  submission.status }}<br>
-  file: <a href="{{submission.test_prediction_file.url}}">download</a><br>
+  <div class="section-header">
+    <h1><i class="material-icons">assignment</i> {{ submission.approach.task.name }}</h1>
+  </div>
 
+  <div class="team-details">
+    <h2 class="team-name"><i class="material-icons">people</i> {{ submission.approach.team.name }}</h2>
+    <p class="overall-score">
+      <span class="score"><i class="material-icons">stars</i> {{ submission.overall_score|floatformat:3 }}</span>
+      Overall Score
+    </p>
+  </div>
 
-  {{submission.overall_score}}
-  {{submission.fail_reason|pprint}}
+  <div class="section-content">
+    <h3>Submission Details</h3>
+    <ul class="submission-details">
+      <li class="approach-name"><strong>Approach:</strong> {{ submission.approach.name }}</li>
+      <li class="submitted-by"><strong>Submitted by:</strong> {{ user }}</li>
+      <li class="status"><strong>Status:</strong> <span class="is-success">{{  submission.status }}</span></li>
+    </ul>
+    <div class="data-download">
+      <h3 class="title">Download the data file</h3>
+      <a href="{{submission.test_prediction_file.url}}" class="button is-large">download <i class="material-icons">get_app</i></a>
+    </div>
+  </div>
 </section>
 {% endblock %}

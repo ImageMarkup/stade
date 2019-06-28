@@ -1,5 +1,8 @@
+/* All Submissions
+** ================================ */
+
 .submissions-wrapper {
-  padding: 25px 3% 3%;
+  padding: 25px 10px 10px;
 }
 
 .submissions-list {}
@@ -29,6 +32,56 @@
 .submissions-list .submission > div:nth-child(odd) {
   background: #f9f9f9;
 }
+
+/* Single Submission Details
+** ================================ */
+
+.team-details {
+  align-items: center;
+  background: #424b52;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  padding: 35px 40px;
+}
+
+.team-details .team-name {
+  color: #fff;
+  margin: 0;
+}
+
+.team-details .overall-score {
+  color: #b5c1ca;
+  line-height: 1.65em;
+  text-align: right;
+}
+
+.team-details .overall-score .score {
+  color: #fff;
+  font-size: 42px;
+}
+
+.team-details .team-name,
+.team-details .overall-score .score {
+  align-items: center;
+  display: flex;
+}
+
+.team-details .team-name i {
+  font-size: 32px;
+}
+
+.team-details .overall-score i {
+  color: #00A9A5;
+  font-size: 32px;
+  margin-top: 4px;
+}
+
+.team-details .team-name i,
+.team-details .overall-score .score i {
+  margin-right: 5px;
+}
+
 .data-download {
   align-items: center;
   background: #f4f7f9;
