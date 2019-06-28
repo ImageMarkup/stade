@@ -1,6 +1,7 @@
 @import url('dist/bulma.css');
 
 @import url('stade/base.css'); /* fonts, links, headings, structure */
+@import url('stade/transitions.css'); /* transition classes */
 
 @import url('stade/account.css'); /* login/logout styles */
 @import url('stade/task_dashboard.css'); /* task dashboard styles */

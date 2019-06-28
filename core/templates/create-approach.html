@@ -12,10 +12,10 @@
         <div class="step-num"><i class="material-icons">check</i></div>
         <h3>Team</h3>
         <p>
-          <a href="{% url 'create-team' task.id %}" class="change">
+          <a href="{% url 'create-team' task.id %}" class="change is-trans-parent">
             <span class="tooltip">change team</span>
             {{ team.name }}
-            <i class="material-icons">cached</i>
+            <i class="material-icons is-trans-rotate is-180">cached</i>
           </a>
         </p>
       </div>
