@@ -3,7 +3,16 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 
+from allauth.account.forms import SignupForm
 from core.models import Approach, TeamInvitation, Team
+
+
+class CustomSignupForm(SignupForm):
+    def save(self, request):
+        user = super().save(request)
+        user.email = user.email.lower()
+        user.save()
+        return user
 
 
 class AcceptInvitationForm(forms.Form):

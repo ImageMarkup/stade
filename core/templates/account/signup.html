@@ -42,14 +42,14 @@
 
       <div class="field username">
         <p class="control has-icons-left">
-          <input class="input{% if form.login.errors %} is-danger{% endif %}" id="id_login" name="login" maxlength="150" minlength="1" placeholder="Username" required type="text">
+          <input class="input{% if form.username.errors %} is-danger{% endif %}" id="id_username" name="username" maxlength="150" minlength="1" placeholder="Username" required type="text">
           <span class="icon is-small is-left">
             <i class="material-icons">person</i>
           </span>
         </p>
-        {% if form.login.errors %}
+        {% if form.username.errors %}
         <div class="help is-danger">
-          {{ form.login.errors }}
+          {{ form.username.errors }}
         </div>
         {% endif %}
       </div>
