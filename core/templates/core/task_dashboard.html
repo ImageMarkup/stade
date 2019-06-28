@@ -32,7 +32,7 @@
                 <span class="status">{{ approach.friendly_status }}
                   {% if approach.friendly_status == 'Failed' %}
                     <a href="{% url 'create-submission' approach.id %}">
-                      <i class="material-icons">refresh</i>
+                      <i class="material-icons is-trans-rotate is-180">cached</i>
                     </a>
                   {% endif %}
                 </span>
