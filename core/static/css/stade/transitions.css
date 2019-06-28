@@ -1,5 +1,5 @@
 /* Rotate Transitions
- * ================================ */
+** ================================ */
 
 .is-trans-rotate {
   transition: transform .35s ease-in-out;

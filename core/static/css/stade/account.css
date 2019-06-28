@@ -1,5 +1,5 @@
 /* Login/Logout Styles
- * ================================ */
+** ================================ */
 
 .section.container.login,
 .section.container.signup,
@@ -30,7 +30,7 @@ form.login .fields .rememberme input[type="checkbox"] {
 }
 
 /* Form Validation Styles
- * ================================ */
+** ================================ */
 
 form > .help {
   align-items: center;
