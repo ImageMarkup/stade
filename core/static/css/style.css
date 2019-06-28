@@ -5,4 +5,5 @@
 
 @import url('stade/account.css'); /* login/logout styles */
 @import url('stade/task_dashboard.css'); /* task dashboard styles */
-@import url('stade/submissions.css'); /* submission wizard styles */
+@import url('stade/submission-wizard.css'); /* submission wizard styles */
+@import url('stade/submission-details.css'); /* submission detail styles */
