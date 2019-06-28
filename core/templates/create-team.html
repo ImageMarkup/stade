@@ -41,7 +41,7 @@
 
             <div class="field name">
               <p class="control has-icons-left">
-                <input autofocus class="input" id="id_name" name="name" maxlength="100" placeholder="Team Name" required type="text">
+                <input autofocus class="input" id="id_name" name="name" maxlength="100" placeholder="Team Name" required type="text" value="{{ request.POST.name }}">
                 <span class="icon is-small is-left">
                   <i class="material-icons">people</i>
                 </span>
@@ -55,7 +55,7 @@
 
               <div class="field institution">
                 <p class="control has-icons-left">
-                  <input autofocus class="input" id="id_institution" name="institution" maxlength="100" placeholder="Institution Name" type="text">
+                  <input autofocus class="input" id="id_institution" name="institution" maxlength="100" placeholder="Institution Name" type="text" value="{{ request.POST.institution }}">
                   <span class="icon is-small is-left">
                     <i class="material-icons">business</i>
                   </span>
@@ -69,7 +69,7 @@
 
               <div class="field institution-url">
                   <p class="control has-icons-left">
-                      <input autofocus class="input" id="id_institution_url" name="institution_url" maxlength="100" placeholder="Institution URL" type="text">
+                      <input autofocus class="input" id="id_institution_url" name="institution_url" maxlength="100" placeholder="Institution URL" type="text" value="{{ request.POST.institution_url }}">
                       <span class="icon is-small is-left">
                     <i class="material-icons">link</i>
                   </span>

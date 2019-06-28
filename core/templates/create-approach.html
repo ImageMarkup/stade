@@ -49,7 +49,7 @@
 
             <div class="field is-two-thirds name">
               <p class="control has-icons-left">
-                <input autofocus class="input{% if form.name.errors %} is-danger{% endif %}" id="id_name" name="name" maxlength="100" placeholder="Approach Name" required type="text">
+                <input autofocus class="input{% if form.name.errors %} is-danger{% endif %}" id="id_name" name="name" maxlength="100" placeholder="Approach Name" required type="text" value="{{ request.POST.name }}">
                 <span class="icon is-small is-left">
                   <i class="material-icons">label</i>
                 </span>
@@ -64,7 +64,7 @@
             <div class="field external-data">
               <div class="control">
                 <label class="checkbox">
-                  <input id="id_uses_external_data" name="uses_external_data" type="checkbox">
+                  <input id="id_uses_external_data" {% if request.POST.uses_external_data %}checked {% endif %}name="uses_external_data" type="checkbox">
                   <p>Uses external data</p>
                 </label>
               </div>

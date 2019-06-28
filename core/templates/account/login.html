@@ -51,7 +51,8 @@
 
         <div class="field username">
           <p class="control has-icons-left">
-            <input autofocus class="input{% if form.login.errors %} is-danger{% endif %}" id="id_login" name="login" maxlength="150" placeholder="Email Address" required type="text">
+            <input autofocus class="input{% if form.login.errors %} is-danger{% endif %}" id="id_login"
+                   value="{{ request.POST.login }}" name="login" maxlength="150" placeholder="Email Address" required type="text">
             <span class="icon is-small is-left">
               <i class="material-icons">person</i>
             </span>
@@ -80,7 +81,7 @@
         <div class="field rememberme">
           <div class="control">
             <label class="checkbox">
-              <input id="id_remember" name="remember" type="checkbox">
+              <input id="id_remember" {% if request.POST.remember %}checked{% endif %} name="remember" type="checkbox">
               Remember me
             </label>
           </div>
