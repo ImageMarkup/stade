@@ -91,7 +91,15 @@
         {% if request.user.teams.all %}
         <ul class="teams">
           {% for team in request.user.teams.all %}
-          <li><a href="{% url 'create-approach' task.id team.id %}"><i class="material-icons">group</i> {{ team.name }}</a></li>
+          <li>
+            <a href="{% url 'create-approach' task.id team.id %}">
+              <i class="material-icons">group</i>
+              <p>
+                {{ team.name }}
+                <span>Person name, Person name, Person name</span>
+              </p>
+            </a>
+          </li>
           {% endfor %}
         </ul>
         {% else %}
