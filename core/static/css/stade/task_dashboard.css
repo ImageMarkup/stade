@@ -8,22 +8,6 @@
    padding-bottom: 10px;
  }
 
- .data-download {
-   align-items: center;
-   background: #f4f7f9;
-   border: 2px solid #eceeef;
-   border-radius: 5px;
-   display: flex;
-   justify-content: space-between;
-   margin-top: 30px;
-   padding: 20px 30px 24px;
- }
-
- .data-download .title {
-   color: #889096;
-   margin: 0;
- }
-
  .teams .noteam {
    color: #989898;
    padding: 60px;

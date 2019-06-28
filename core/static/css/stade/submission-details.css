@@ -29,3 +29,28 @@
 .submissions-list .submission > div:nth-child(odd) {
   background: #f9f9f9;
 }
+.data-download {
+  align-items: center;
+  background: #f4f7f9;
+  border: 2px solid #eceeef;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding: 20px 30px 24px;
+}
+
+.data-download .title {
+  color: #889096;
+  margin: 0;
+}
+
+.data-download .button {
+  align-items: center;
+  display: flex;
+  padding-right: 15px;
+}
+
+.data-download .button i {
+  margin-left: 15px;
+}
