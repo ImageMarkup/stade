@@ -55,6 +55,7 @@ class AcceptInvitationView(LoginRequiredMixin, FormView):
 
 class SubmissionDetail(LoginRequiredMixin, DetailView):
     model = Submission
+    template_name = 'submission-detail.html'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -65,13 +66,9 @@ class SubmissionDetail(LoginRequiredMixin, DetailView):
         return queryset
 
 
-class TaskDetail(DetailView):
-    model = Task
-
-
 class TaskDashboard(DetailView):
     model = Task
-    template_name = "core/task_dashboard.html"
+    template_name = "task-detail.html"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()
@@ -101,7 +98,7 @@ def create_team(request, task):
     else:
         form = CreateTeamForm()
 
-    return render(request, 'create-team.html', {'form': form, 'task': task})
+    return render(request, 'wizard/create-team.html', {'form': form, 'task': task})
 
 
 class CreateApproachPermissionMixin(AccessMixin):
@@ -121,7 +118,7 @@ class CreateApproachPermissionMixin(AccessMixin):
 
 class CreateApproachView(CreateApproachPermissionMixin, CreateView):
     form_class = CreateApproachForm
-    template_name = "create-approach.html"
+    template_name = "wizard/create-approach.html"
 
     def form_valid(self, form):
         team = get_object_or_404(Team, pk=self.kwargs["team"])
@@ -151,7 +148,7 @@ class CreateApproachView(CreateApproachPermissionMixin, CreateView):
 
 
 class SubmissionListView(ListView):
-    template_name = "core/submission-list.html"
+    template_name = "submission-list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -192,7 +189,7 @@ class CreateSubmissionPermissionMixin(AccessMixin):
 class CreateSubmissionView(CreateSubmissionPermissionMixin, CreateView):
     model = Submission
     fields = ["test_prediction_file", "accepted_terms"]
-    template_name = "create-submission.html"
+    template_name = "wizard/create-submission.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
