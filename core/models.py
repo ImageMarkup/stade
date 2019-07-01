@@ -67,10 +67,10 @@ class Team(models.Model):
     challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.challenge.name}: {self.name}'
+        return f'{self.name}'
 
-    def user_emails(self):
-        return sorted([x.email for x in self.users.all()])
+    def user_full_names(self):
+        return sorted([x.get_full_name() for x in self.users.all()])
 
     # todo, this doesn't work at all
     @transaction.atomic
