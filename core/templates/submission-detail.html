@@ -8,10 +8,16 @@
 
   <div class="team-details">
     <h2 class="team-name"><i class="material-icons">people</i> {{ submission.approach.team.name }}</h2>
+    {% if submission.status != 'succeeded' %}
+    <p class="overall-score">
+        --
+    </p>
+    {% else %}
     <p class="overall-score">
       <span class="score"><i class="material-icons">stars</i> {{ submission.overall_score|floatformat:3 }}</span>
       Overall Score
     </p>
+    {% endif %}
   </div>
 
   <div class="section-content">
@@ -19,7 +25,7 @@
     <ul class="submission-details">
       <li class="approach-name"><strong>Approach:</strong> {{ submission.approach.name }}</li>
       <li class="submitted-by"><strong>Submitted by:</strong> {{ user }}</li>
-      <li class="status"><strong>Status:</strong> <span class="is-success">{{  submission.status }}</span></li>
+      <li class="status"><strong>Status:</strong> <span class="is-success">{{  submission.get_status_display }}</span></li>
     </ul>
     <div class="data-download">
       <h3 class="title">Download the submission</h3>
