@@ -3,7 +3,7 @@
 {% block content %}
 <section class="section container">
   <div class="section-header">
-    <h1><i class="material-icons">assignment</i> <a href="{% url 'task-dashboard' task.id %}">{{ task.name }}</a></h1>
+    <h1><i class="material-icons">assignment</i> <a href="{{ task.get_absolute_url }}">{{ task.name }}</a></h1>
     <div class="create-submission">
       {% if task.active %}
       <a href="{% url 'create-team' task.id %}" class="button is-medium">new submission</a>
@@ -43,7 +43,7 @@
                   {% else %}
                     <span class="score">--</span>
                   {% endif %}
-                <a href="{% url 'submission-detail' approach.latest_submission.id %}" class="button btn-blue is-small">details</a>
+                <a href="{{ approach.latest_submission.get_absolute_url }}" class="button btn-blue is-small">details</a>
                 {%  endif %}
               </div>
               {% endfor %}

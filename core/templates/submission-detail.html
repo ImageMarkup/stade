@@ -3,7 +3,7 @@
 {% block content %}
 <section class="section container">
   <div class="section-header">
-    <h1><i class="material-icons">assignment</i> <a href="{% url 'task-dashboard' submission.approach.task.id %}">{{ submission.approach.task.name }}</a></h1>
+    <h1><i class="material-icons">assignment</i> <a href="{{ submission.approach.task.get_absolute_url }}">{{ submission.approach.task.name }}</a></h1>
   </div>
 
   <div class="team-details">

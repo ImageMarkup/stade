@@ -50,6 +50,9 @@ class Task(models.Model):
     def __str__(self):
         return f'{self.challenge.name}: {self.name}'
 
+    def get_absolute_url(self):
+        return reverse('task-detail', args=[self.id])
+
 
 class Team(models.Model):
     class Meta:

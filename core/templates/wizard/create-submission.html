@@ -3,7 +3,7 @@
 {% block content %}
 <section class="section container wizard">
   <div class="section-header">
-    <h1><i class="material-icons">assignment</i> <a href="{% url 'task-dashboard' approach.task.id %}">{{ approach.task.name }}</a></h1>
+    <h1><i class="material-icons">assignment</i> <a href="{{ approach.task.get_absolute_url }}">{{ approach.task.name }}</a></h1>
   </div>
   <div class="stepper">
     <progress class="progress is-primary" value="100" max="100"></progress>

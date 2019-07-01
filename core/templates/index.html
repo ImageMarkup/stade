@@ -11,7 +11,7 @@
           {% for task in challenge.tasks.all %}
             {% if task.public or request.user.is_staff %}
             <div class="task column is-one-third{% if not task.active %} inactive{% endif %}">
-              <a href="{% url 'task-dashboard' task.id %}">
+              <a href="{{ task.get_absolute_url }}">
                 <span class="task-name"><i class="material-icons">assignment</i> {{ task.name }}</span>
                 {% if task.short_description %}
                 <span class="task-desc">
