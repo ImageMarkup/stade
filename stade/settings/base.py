@@ -72,7 +72,6 @@ USE_L10N = True
 USE_TZ = True
 STATIC_URL = "/static/"
 ACCOUNT_EMAIL_REQUIRED = True
-EMAIL_SUBJECT_PREFIX = "[ISIC Challenge] "
 DEFAULT_FROM_EMAIL = "ISIC Challenge <support@isic-archive.com>"
 
 # Stade settings
