@@ -35,6 +35,7 @@ class ChallengeAdmin(admin.ModelAdmin):
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     model = Team
+    list_filter = ('challenge__name',)
 
 
 @admin.register(TeamInvitation)
