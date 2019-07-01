@@ -8,6 +8,11 @@ from core.models import Approach, TeamInvitation, Team
 
 
 class CustomSignupForm(SignupForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'] = forms.CharField()
+        self.fields['last_name'] = forms.CharField()
+
     def save(self, request):
         user = super().save(request)
         user.email = user.email.lower()

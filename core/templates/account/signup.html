@@ -41,6 +41,36 @@
         {% endif %}
       </div>
 
+      <div class="field first_name">
+          <p class="control has-icons-left">
+              <input class="input{% if form.first_name.errors %} is-danger{% endif %}" id="id_first_name"
+                     name="first_name" maxlength="150" minlength="1" placeholder="First_Name" required type="text" value="{{ request.POST.first_name }}">
+              <span class="icon is-small is-left">
+                  <i class="material-icons">person</i>
+              </span>
+          </p>
+          {% if form.first_name.errors %}
+          <div class="help is-danger">
+              {{ form.first_name.errors }}
+          </div>
+          {% endif %}
+      </div>
+
+      <div class="field last_name">
+          <p class="control has-icons-left">
+              <input class="input{% if form.last_name.errors %} is-danger{% endif %}" id="id_last_name"
+                     name="last_name" maxlength="150" minlength="1" placeholder="Last_Name" required type="text" value="{{ request.POST.last_name }}">
+              <span class="icon is-small is-left">
+                  <i class="material-icons">person</i>
+              </span>
+          </p>
+          {% if form.last_name.errors %}
+          <div class="help is-danger">
+              {{ form.last_name.errors }}
+          </div>
+          {% endif %}
+      </div>
+
       <div class="field username">
         <p class="control has-icons-left">
           <input class="input{% if form.username.errors %} is-danger{% endif %}" id="id_username"
