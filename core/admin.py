@@ -35,7 +35,12 @@ class ChallengeAdmin(admin.ModelAdmin):
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     model = Team
-    list_filter = ('challenge__name',)
+    list_display = ['challenge', 'name']
+    list_display_links = ['name']
+    list_filter = ['challenge__name']
+    list_per_page = 25
+
+    autocomplete_fields = ['creator', 'users']
 
 
 @admin.register(TeamInvitation)
