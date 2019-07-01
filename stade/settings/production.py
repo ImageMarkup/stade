@@ -35,4 +35,6 @@ MAILCHIMP_API_KEY = os.environ['MAILCHIMP_API_KEY']
 MAILCHIMP_API_URL = 'https://us17.api.mailchimp.com/'
 MAILCHIMP_LIST_ID = 'aa0e7aa1b1'
 
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
 django_heroku.settings(locals())
