@@ -1,11 +1,18 @@
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 
-from core.forms import AcceptInvitationForm, CreateApproachForm, CreateTeamForm
-from core.models import Approach, Submission, Task, Team, TeamInvitation, Challenge
-from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.db.models import Count, Q
+from django.http import Http404
 from django.shortcuts import get_object_or_404, render
+
+from core.forms import (
+    AcceptInvitationForm,
+    CreateApproachForm,
+    CreateSubmissionForm,
+    CreateTeamForm,
+)
+from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, FormView
@@ -172,45 +179,24 @@ class SubmissionListView(ListView):
         return Submission.objects.filter(approach__team=self.team)
 
 
-class CreateSubmissionPermissionMixin(AccessMixin):
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
+@login_required
+def create_submission(request, approach):
+    approach = get_object_or_404(Approach, pk=approach)
 
-        try:
-            approach = get_object_or_404(Approach, pk=self.kwargs["approach"])
-            request.user.teams.get(pk=approach.team.id)
-        except Team.DoesNotExist:
-            return self.handle_no_permission()
+    if not request.user.teams.filter(pk=approach.team.id).exists():
+        raise Http404()
 
-        return super().dispatch(request, *args, **kwargs)
+    if request.method == 'POST':
+        print(request.POST)
+        form = CreateSubmissionForm(request.POST, request.FILES)
+        form.instance.approach = approach
+        form.instance.creator = request.user
 
-
-class CreateSubmissionView(CreateSubmissionPermissionMixin, CreateView):
-    model = Submission
-    fields = ["test_prediction_file", "accepted_terms"]
-    template_name = "wizard/create-submission.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["approach"] = get_object_or_404(Approach, pk=self.kwargs["approach"])
-        return context
-
-    def get_success_url(self):
-        return reverse("submission-detail", args=[self.object.id])
-
-    def get(self, *args, **kwargs):
-        get_object_or_404(Approach, pk=self.kwargs["approach"])
-        return super().get(*args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
         if form.is_valid():
-            form.instance.approach = get_object_or_404(Approach, pk=self.kwargs["approach"])
-            form.instance.task = form.instance.approach.task
-            form.instance.creator = self.request.user
-            self.object = form.save()
-            score_submission.delay(self.object.id)
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+            form.save()
+            score_submission.delay(form.instance.id)
+            return HttpResponseRedirect(reverse('submission-detail', args=[form.instance.id]))
+    else:
+        form = CreateSubmissionForm()
+
+    return render(request, 'wizard/create-submission.html', {'form': form, 'approach': approach})

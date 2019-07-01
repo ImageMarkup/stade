@@ -1,10 +1,11 @@
+from allauth.account.forms import SignupForm
+
+from core.models import Approach, Submission, Team, TeamInvitation
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
-
-from allauth.account.forms import SignupForm
-from core.models import Approach, TeamInvitation, Team
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomSignupForm(SignupForm):
@@ -44,6 +45,24 @@ class CreateTeamForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
         super().__init__(*args, **kwargs)
+
+
+class CreateSubmissionForm(forms.ModelForm):
+    class Meta:
+        model = Submission
+        fields = ['accepted_terms', 'test_prediction_file']
+
+        error_messages = {
+            'test_prediction_file': {'required': _('You must provide a prediction file.')}
+        }
+
+    def clean_accepted_terms(self):
+        data = self.cleaned_data['accepted_terms']
+        print(data)
+        if not data:
+            raise forms.ValidationError('You must accept the data sharing policy terms.')
+
+        return data
 
 
 class CreateApproachForm(forms.ModelForm):
