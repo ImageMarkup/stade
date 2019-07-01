@@ -4,7 +4,7 @@
 .section.container.login,
 .section.container.signup,
 .section.container.pwreset {
-  max-width: 400px;
+  max-width: 420px;
 }
 
 .section.container.login form.login,
