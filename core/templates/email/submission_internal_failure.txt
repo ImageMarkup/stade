@@ -1,0 +1,14 @@
+We made a mistake when processing your submission.
+
+Task: {{ submission.approach.task.name }}
+Team: {{ submission.approach.team.name }}
+Approach: {{ submission.approach.name }}
+
+This was a mistake on our part. We've been notified of the issue and are working
+on a solution. **We have your data and no further action is necessary on your
+part.** If any further information is required, an administrator will contact
+you.
+
+You can always view the details of the submission here: {{ url }}{{ submission.get_absolute_url }},
+though you don't have to -- you'll receive a follow up email when your
+submission is rescored.

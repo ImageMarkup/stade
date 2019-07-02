@@ -1,0 +1,14 @@
+There was a problem with your submission.
+
+Task: {{ submission.approach.task.name }}
+Team: {{ submission.approach.team.name }}
+Approach: {{ submission.approach.name }}
+
+See the failure reason below:
+---------------------------------------
+{{ submission.fail_reason }}
+---------------------------------------
+
+You can view submission details: {{ url }}{{ submission.get_absolute_url }}
+
+You can upload a new submission: {{ url }}{% url 'create-submission' submission.approach.id %}

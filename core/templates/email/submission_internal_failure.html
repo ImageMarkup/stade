@@ -1,0 +1,34 @@
+<html>
+<body style="width: 500px; color: #525151; background-color: #f9f5f5; font-family: helvetica;">
+    <img src="https://stade.challenge.isic-archive.com/static/img/isic_logo.7bea84b2a1e8.svg">
+    <center>
+        <table>
+            <tr>
+                <td width="30%">Task</td>
+                <td class="value" style="font-weight: bold;">{{ submission.approach.task.name }}</td>
+            </tr>
+            <tr>
+                <td width="30%">Team</td>
+                <td class="value" style="font-weight: bold;">{{ submission.approach.team.name }}</td>
+            </tr>
+            <tr>
+                <td width="30%">Approach</td>
+                <td class="value" style="font-weight: bold;">{{ submission.approach.name }}</td>
+            </tr>
+        </table>
+
+        <div>
+            <p class="failure" style="background-color: #e72929d1; color: #fff; padding: 20px; width: 64%; border-radius: 3px;">We made a mistake when processing your submission.</p>
+
+            <p class="explanation" style="width: 73%; text-align: left;">
+                This was a mistake on our part. We've been notified of
+                the issue and are working on a solution. <strong>We have your data and no further
+                    action is necessary on your part.</strong> If any further information is required,
+                an administrator will contact you.
+            </p>
+        </div>
+    </center>
+
+</body>
+
+</html>
