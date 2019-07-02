@@ -48,7 +48,7 @@ def score_submission(submission_id, notify=True):
             message = render_to_string('email/submission_succeeded.txt', context)
             html_message = render_to_string('email/submission_succeeded.html', context)
             send_mail(
-                f'{submission.approach.task.name} | Submission succeeded',
+                f'{submission.approach.task.name} | Submission succeeded (#{submission.id})',
                 message,
                 settings.DEFAULT_FROM_EMAIL,
                 [submission.creator.email],
