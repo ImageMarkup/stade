@@ -1,0 +1,27 @@
+<html>
+<body style="width: 500px; color: #525151; background-color: #f9f5f5; font-family: helvetica;">
+    <img src="https://stade.challenge.isic-archive.com/static/img/isic_logo.7bea84b2a1e8.svg">
+    <center>
+        <table>
+            <tr>
+                <td width="30%">Task</td>
+                <td class="value" style="font-weight: bold;">{{ submission.approach.task.name }}</td>
+            </tr>
+            <tr>
+                <td width="30%">Team</td>
+                <td class="value" style="font-weight: bold;">{{ submission.approach.team.name }}</td>
+            </tr>
+            <tr>
+                <td width="30%">Approach</td>
+                <td class="value" style="font-weight: bold;">{{ submission.approach.name }}</td>
+            </tr>
+        </table>
+
+        <div>
+            <p class="success" style="background-color: #4caf50d1; color: #fff; padding: 20px; width: 64%; border-radius: 3px;">Your submission has been scored!</p>
+            <p class="score" style="font-size: 30px;">{{ submission.overall_score|floatformat:3 }}</p>
+            <a href="{{ submission.get_absolute_url }}">View submission details</a>
+        </div>
+    </center>
+</body>
+</html>

@@ -38,11 +38,18 @@ def score_submission(submission_id, notify=True):
             score=submission.score, overall_score=submission.overall_score
         )
         if notify:
+            from django.template.loader import render_to_string
+
+            message = render_to_string('email/submission_succeeded.txt', {'submission': submission})
+            html_message = render_to_string(
+                'email/submission_succeeded.html', {'submission': submission}
+            )
             send_mail(
-                f"{settings.EMAIL_SUBJECT_PREFIX}Submission succeeded",
-                f"It did!{json.dumps(results)}",
+                f'{submission.approach.task.name} | Submission succeeded',
+                message,
                 settings.DEFAULT_FROM_EMAIL,
                 [submission.creator.email],
+                html_message=html_message,
             )
     except ScoreException as e:
         submission.status = "failed"

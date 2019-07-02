@@ -1,0 +1,8 @@
+Your submission has been scored!
+
+Task: {{ submission.approach.task.name }}
+Team: {{ submission.approach.team.name }}
+Approach: {{ submission.approach.name }}
+
+Score: {{ submission.overall_score|floatformat:3 }}
+View Submission: {{ submission.get_absolute_url }}
