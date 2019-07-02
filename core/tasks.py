@@ -3,6 +3,7 @@ import json
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.conf import settings
+from django.contrib.sites.models import Site
 
 from core.models import Submission, Task
 from django.core.mail import send_mail
@@ -40,10 +41,12 @@ def score_submission(submission_id, notify=True):
         if notify:
             from django.template.loader import render_to_string
 
-            message = render_to_string('email/submission_succeeded.txt', {'submission': submission})
-            html_message = render_to_string(
-                'email/submission_succeeded.html', {'submission': submission}
-            )
+            context = {
+                'submission': submission,
+                'url': f'https://{Site.objects.get_current().domain}',
+            }
+            message = render_to_string('email/submission_succeeded.txt', context)
+            html_message = render_to_string('email/submission_succeeded.html', context)
             send_mail(
                 f'{submission.approach.task.name} | Submission succeeded',
                 message,
