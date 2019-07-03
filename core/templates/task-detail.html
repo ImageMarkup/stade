@@ -30,21 +30,23 @@
               {% for approach in team.approach_set.all %}
               <div class="approach">
                 <span class="approach-name">{{ approach.name }}</span>
-                {% if approach.latest_submission %}
-                  <span class="status">{{ approach.friendly_status }}
-                    {% if approach.friendly_status == 'Failed' %}
-                      <a href="{% url 'create-submission' approach.id %}">
-                        <i class="material-icons is-trans-rotate is-180">cached</i>
-                      </a>
+                {% with latest_submission=approach.latest_submission %}
+                    {% if latest_submission %}
+                    <span class="status">{{ latest_submission.get_status_display }}
+                        {% if latest_submission.status == 'failed' %}
+                        <a href="{% url 'create-submission' approach.id %}">
+                            <i class="material-icons is-trans-rotate is-180">cached</i>
+                        </a>
+                        {% endif %}
+                    </span>
+                    {% if latest_submission.status == 'succeeded' %}
+                        <span class="score">{{ latest_submission.score|floatformat:3 }}</span>
+                    {% else %}
+                        <span class="score">--</span>
                     {% endif %}
-                  </span>
-                  {% if approach.friendly_status == 'Succeeded' %}
-                    <span class="score">{{ approach.score|floatformat:3 }}</span>
-                  {% else %}
-                    <span class="score">--</span>
-                  {% endif %}
-                <a href="{{ approach.latest_submission.get_absolute_url }}" class="button btn-blue is-small">details</a>
-                {%  endif %}
+                    <a href="{{ latest_submission.get_absolute_url }}" class="button btn-blue is-small">details</a>
+                    {% endif %}
+                {% endwith %}
               </div>
               {% endfor %}
               <div class="footer">

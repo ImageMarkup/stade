@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Prefetch, Max
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
@@ -73,17 +73,17 @@ class SubmissionDetail(LoginRequiredMixin, DetailView):
         return queryset
 
 
-class TaskDashboard(DetailView):
-    model = Task
-    template_name = "task-detail.html"
+@login_required
+def task_detail(request, task):
+    task = get_object_or_404(Task.objects.select_related('challenge'), pk=task)
+    context = {
+        'task': task,
+        'teams': request.user.teams.filter(challenge=task.challenge).prefetch_related(
+            'users', 'approach_set'
+        ),
+    }
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data()
-        if self.object and self.request.user.is_authenticated:
-            context_data["teams"] = Team.objects.filter(
-                challenge=kwargs['object'].challenge, users__in=[self.request.user]
-            )
-        return context_data
+    return render(request, 'task-detail.html', context)
 
 
 from .tasks import score_submission

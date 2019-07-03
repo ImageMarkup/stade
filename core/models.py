@@ -125,7 +125,7 @@ class Submission(models.Model):
     ordering = ['-created']
 
     def __str__(self):
-        return f"{self.approach.name}/{self.creator.email}"
+        return f'{self.id}'
 
     def get_absolute_url(self):
         return reverse("submission-detail", args=[self.id])
