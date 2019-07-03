@@ -34,8 +34,8 @@
               <strong>{{ submission.approach.name }}</strong>
             </div>
             <div class="status column is-one-fifth">
-              {% if submission.approach.friendly_status == 'Succeeded' %}
-                <span class="score">{{ submission.approach.score|floatformat:3 }}</span>
+              {% if submission.status == 'succeeded' %}
+                <span class="score">{{ submission.overall_score|floatformat:3 }}</span>
               {% else %}
                 <span class="score">--</span>
               {% endif %}

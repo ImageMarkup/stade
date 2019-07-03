@@ -19,7 +19,7 @@ from django.views.generic.edit import CreateView, FormView
 
 
 def index(request):
-    challenges = Challenge.objects.filter(active=True)
+    challenges = Challenge.objects.filter(active=True).prefetch_related('tasks')
 
     # for admins, show challenges with > 0 tasks,
     # for users, only show challenges with > 0 public tasks
@@ -91,7 +91,7 @@ from .tasks import score_submission
 
 @login_required
 def create_team(request, task):
-    task = get_object_or_404(Task, pk=task)
+    task = get_object_or_404(Task.objects.select_related('challenge'), pk=task)
 
     if request.method == 'POST':
         form = CreateTeamForm(request.POST)
@@ -105,7 +105,17 @@ def create_team(request, task):
     else:
         form = CreateTeamForm()
 
-    return render(request, 'wizard/create-team.html', {'form': form, 'task': task})
+    return render(
+        request,
+        'wizard/create-team.html',
+        {
+            'form': form,
+            'task': task,
+            'teams': request.user.teams.prefetch_related('users')
+            .filter(challenge=task.challenge)
+            .all(),
+        },
+    )
 
 
 class CreateApproachPermissionMixin(AccessMixin):
@@ -154,29 +164,22 @@ class CreateApproachView(CreateApproachPermissionMixin, CreateView):
         )
 
 
-class SubmissionListView(ListView):
-    template_name = "submission-list.html"
+@login_required
+def submission_list(request, task, team):
+    task = get_object_or_404(Task, pk=task)
+    team = get_object_or_404(request.user.teams, pk=team)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["team"] = self.team
-        context["task"] = self.task
-        return context
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-
-        self.task = get_object_or_404(Task, pk=kwargs['task'])
-        self.team = get_object_or_404(Team, pk=kwargs['team'])
-
-        if self.team not in request.user.teams.all():
-            return self.handle_no_permission()
-
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_queryset(self):
-        return Submission.objects.filter(approach__team=self.team)
+    return render(
+        request,
+        'submission-list.html',
+        {
+            'task': task,
+            'team': team,
+            'submission_list': Submission.objects.prefetch_related('approach')
+            .filter(approach__team=team, approach__task=task)
+            .all(),
+        },
+    )
 
 
 @login_required

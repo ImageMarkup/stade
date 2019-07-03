@@ -88,9 +88,9 @@
       </div>
       <div class="column existing-team">
         <h2>Choose Existing Team</h2>
-        {% if request.user.teams.all %}
+        {% if teams %}
         <ul class="teams">
-          {% for team in request.user.teams.all %}
+          {% for team in teams %}
           <li>
             <a href="{% url 'create-approach' task.id team.id %}">
               <i class="material-icons">group</i>
