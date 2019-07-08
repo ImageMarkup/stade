@@ -13,6 +13,7 @@ from core.forms import (
     CreateTeamForm,
 )
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
+from core.tasks import score_submission
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, FormView
@@ -33,49 +34,9 @@ def index(request):
     return render(request, "index.html", {"challenges": challenges.all()})
 
 
-class AcceptInvitationView(LoginRequiredMixin, FormView):
-    template_name = "contact.html"  # fix, unused
-    form_class = AcceptInvitationForm
-
-    def get_success_url(self):
-        return reverse("index")  # todo redirect to correct task
-
-    def get_form(self, form_class=None):
-        if form_class is None:
-            form_class = self.get_form_class()
-        return form_class(**self.get_form_kwargs(), request=self.request)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["user"] = self.request.user
-        return context
-
-    def form_valid(self, form):
-        # add user to team, delete invitation
-        team_invitation = get_object_or_404(TeamInvitation, pk=form.cleaned_data["invitation_id"])
-
-        # try catch, inside transaction
-        team_invitation.team.users.add(team_invitation.recipient)
-        team_invitation.delete()
-        return super().form_valid(form)
-
-
-class SubmissionDetail(LoginRequiredMixin, DetailView):
-    model = Submission
-    template_name = 'submission-detail.html'
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-
-        if not self.request.user.is_staff:
-            queryset = queryset.filter(user=self.request.user)
-
-        return queryset
-
-
 @login_required
-def task_detail(request, task):
-    task = get_object_or_404(Task.objects.select_related('challenge'), pk=task)
+def task_detail(request, task_id):
+    task = get_object_or_404(Task.objects.select_related('challenge'), pk=task_id)
     context = {
         'task': task,
         'teams': request.user.teams.filter(challenge=task.challenge).prefetch_related(
@@ -86,7 +47,36 @@ def task_detail(request, task):
     return render(request, 'task-detail.html', context)
 
 
-from .tasks import score_submission
+@login_required
+def submission_detail(request, submission_id):
+    submission = get_object_or_404(
+        Submission.objects.filter(
+            approach__team_id__in=request.user.teams.only('id')
+        ).select_related('approach', 'approach__task', 'approach__team'),
+        pk=submission_id,
+    )
+    context = {'submission': submission}
+
+    return render(request, 'submission-detail.html', context)
+
+
+@login_required
+def submission_list(request, task_id, team_id):
+    # todo: filter out non public tasks?
+    task = get_object_or_404(Task, pk=task_id)
+    team = get_object_or_404(request.user.teams, pk=team_id)
+
+    return render(
+        request,
+        'submission-list.html',
+        {
+            'task': task,
+            'team': team,
+            'submissions': Submission.objects.filter(approach__team=team, approach__task=task)
+            .select_related('approach')
+            .all(),
+        },
+    )
 
 
 @login_required
@@ -116,6 +106,33 @@ def create_team(request, task):
             .all(),
         },
     )
+
+
+class AcceptInvitationView(LoginRequiredMixin, FormView):
+    template_name = "contact.html"  # fix, unused
+    form_class = AcceptInvitationForm
+
+    def get_success_url(self):
+        return reverse("index")  # todo redirect to correct task
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        return form_class(**self.get_form_kwargs(), request=self.request)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
+
+    def form_valid(self, form):
+        # add user to team, delete invitation
+        team_invitation = get_object_or_404(TeamInvitation, pk=form.cleaned_data["invitation_id"])
+
+        # try catch, inside transaction
+        team_invitation.team.users.add(team_invitation.recipient)
+        team_invitation.delete()
+        return super().form_valid(form)
 
 
 class CreateApproachPermissionMixin(AccessMixin):
@@ -162,24 +179,6 @@ class CreateApproachView(CreateApproachPermissionMixin, CreateView):
         return form_class(
             **self.get_form_kwargs(), request=self.request, team_id=self.kwargs['team']
         )
-
-
-@login_required
-def submission_list(request, task, team):
-    task = get_object_or_404(Task, pk=task)
-    team = get_object_or_404(request.user.teams, pk=team)
-
-    return render(
-        request,
-        'submission-list.html',
-        {
-            'task': task,
-            'team': team,
-            'submission_list': Submission.objects.prefetch_related('approach')
-            .filter(approach__team=team, approach__task=task)
-            .all(),
-        },
-    )
 
 
 @login_required

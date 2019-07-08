@@ -1,14 +1,14 @@
 from . import views
-from .views import AcceptInvitationView, SubmissionDetail
+from .views import AcceptInvitationView
 from core.views import CreateApproachView
 from django.urls import path
 
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("task/<int:task>", views.task_detail, name="task-detail"),
-    path("submission/<int:pk>", SubmissionDetail.as_view(), name="submission-detail"),
-    path("submissions/<int:task>/<int:team>", views.submission_list, name="submission-list"),
+    path("task/<int:task_id>", views.task_detail, name="task-detail"),
+    path("submission/<int:submission_id>", views.submission_detail, name="submission-detail"),
+    path("submissions/<int:task_id>/<int:team_id>", views.submission_list, name="submission-list"),
     path("team-invite/accept", AcceptInvitationView.as_view(), name="accept-invitation"),
     # wizard
     path("create-team/<int:task>", views.create_team, name="create-team"),
