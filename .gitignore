@@ -5,3 +5,5 @@ venv
 .DS_Store
 /.docker
 /env
+/.tox
+/.mypy_cache

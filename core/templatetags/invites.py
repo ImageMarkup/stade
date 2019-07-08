@@ -12,7 +12,7 @@ def show_pending_invites(request):
     if request.user.is_authenticated:
         for invite in request.user.received_invites.all():
             context['pending_invite_forms'].append(
-                [invite, AcceptInvitationForm(initial={"invitation_id": invite.id})]
+                [invite, AcceptInvitationForm(initial={'invitation_id': invite.id})]
             )
 
     return context

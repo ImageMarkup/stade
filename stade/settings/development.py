@@ -1,26 +1,28 @@
-from .base import *
+import os
 
-SECRET_KEY = "insecuresecret"
+from .base import *  # noqa: F401, F403
+
+SECRET_KEY = 'insecuresecret'
 DEBUG = True
 ALLOWED_HOSTS = []
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "stade",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": os.environ.get("POSTGRES_HOST", "127.0.0.1"),
-        "PORT": "5432",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'stade',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': os.environ.get('POSTGRES_HOST', '127.0.0.1'),
+        'PORT': '5432',
     }
 }
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 MEDIA_ROOT = '/uploads/'
 MEDIA_URL = '/uploads/'
-INSTALLED_APPS += ["debug_toolbar"]
+INSTALLED_APPS += ['debug_toolbar']  # noqa: F405
 
-MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
 
-INTERNAL_IPS = ["127.0.0.1", "0.0.0.0"]
+INTERNAL_IPS = ['127.0.0.1', '0.0.0.0']
 
 
 def show_toolbar(request):
