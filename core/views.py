@@ -1,10 +1,10 @@
-from django.http import HttpResponseRedirect
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
-from django.db.models import Count, Q, Prefetch, Max
-from django.http import Http404
+from django.db.models import Count, Q
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+from django.views.generic.edit import CreateView, FormView
 
 from core.forms import (
     AcceptInvitationForm,
@@ -14,9 +14,6 @@ from core.forms import (
 )
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from core.tasks import score_submission
-from django.urls import reverse
-from django.views.generic import DetailView, ListView
-from django.views.generic.edit import CreateView, FormView
 
 
 def index(request):
@@ -28,10 +25,10 @@ def index(request):
         challenges = challenges.annotate(num_tasks=Count('tasks')).filter(num_tasks__gt=0)
     else:
         challenges = challenges.annotate(
-            num_public_tasks=Count("tasks", filter=Q(tasks__public=True))
+            num_public_tasks=Count('tasks', filter=Q(tasks__public=True))
         ).filter(num_public_tasks__gt=0)
 
-    return render(request, "index.html", {"challenges": challenges.all()})
+    return render(request, 'index.html', {'challenges': challenges.all()})
 
 
 @login_required
@@ -109,11 +106,11 @@ def create_team(request, task):
 
 
 class AcceptInvitationView(LoginRequiredMixin, FormView):
-    template_name = "contact.html"  # fix, unused
+    template_name = 'contact.html'  # fix, unused
     form_class = AcceptInvitationForm
 
     def get_success_url(self):
-        return reverse("index")  # todo redirect to correct task
+        return reverse('index')  # todo redirect to correct task
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -122,12 +119,12 @@ class AcceptInvitationView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["user"] = self.request.user
+        context['user'] = self.request.user
         return context
 
     def form_valid(self, form):
         # add user to team, delete invitation
-        team_invitation = get_object_or_404(TeamInvitation, pk=form.cleaned_data["invitation_id"])
+        team_invitation = get_object_or_404(TeamInvitation, pk=form.cleaned_data['invitation_id'])
 
         # try catch, inside transaction
         team_invitation.team.users.add(team_invitation.recipient)
@@ -152,11 +149,11 @@ class CreateApproachPermissionMixin(AccessMixin):
 
 class CreateApproachView(CreateApproachPermissionMixin, CreateView):
     form_class = CreateApproachForm
-    template_name = "wizard/create-approach.html"
+    template_name = 'wizard/create-approach.html'
 
     def form_valid(self, form):
-        team = get_object_or_404(Team, pk=self.kwargs["team"])
-        task = get_object_or_404(Task, pk=self.kwargs["task"])
+        team = get_object_or_404(Team, pk=self.kwargs['team'])
+        task = get_object_or_404(Task, pk=self.kwargs['task'])
         approach = form.save(commit=False)
         approach.team = team
         approach.task = task
@@ -164,13 +161,13 @@ class CreateApproachView(CreateApproachPermissionMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("create-submission", args=[self.object.id])
+        return reverse('create-submission', args=[self.object.id])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["team"] = get_object_or_404(Team, pk=self.kwargs["team"])
-        context["task"] = get_object_or_404(Task, pk=self.kwargs["task"])
-        context["existing_approaches"] = Approach.objects.filter(team=context["team"])
+        context['team'] = get_object_or_404(Team, pk=self.kwargs['team'])
+        context['task'] = get_object_or_404(Task, pk=self.kwargs['task'])
+        context['existing_approaches'] = Approach.objects.filter(team=context['team'])
         return context
 
     def get_form(self, form_class=None):

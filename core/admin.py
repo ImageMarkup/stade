@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from .models import Submission, Task, Challenge
 from core.models import Approach, Team, TeamInvitation
 from core.tasks import rescore_task_submissions
+from .models import Challenge, Submission, Task
 
 
 def rescore_task(modeladmin, request, queryset):
@@ -10,7 +10,7 @@ def rescore_task(modeladmin, request, queryset):
         rescore_task_submissions.delay(task.id)
 
 
-rescore_task.short_description = "Rescore task submissions"
+rescore_task.short_description = 'Rescore task submissions'
 
 
 class SubmissionInline(admin.TabularInline):

@@ -6,8 +6,8 @@ import django.db.models.deletion
 
 
 def migrate_scores(apps, schema_editor):
-    Score = apps.get_model('core', 'Score')
-    ScoreHistory = apps.get_model('core', 'ScoreHistory')
+    Score = apps.get_model('core', 'Score')  # noqa: N806
+    ScoreHistory = apps.get_model('core', 'ScoreHistory')  # noqa: N806
     for score in Score.objects.all():
         score.submission.overall_score = score.overall_score
         score.submission.score = score.score

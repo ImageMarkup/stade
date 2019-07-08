@@ -1,27 +1,21 @@
 from pathlib import Path
 from uuid import uuid4
 
-from django.conf import settings
-from django.contrib import auth
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractBaseUser, AbstractUser, PermissionsMixin
 from django.contrib.postgres.fields.jsonb import JSONField
-from django.core.exceptions import ValidationError
-from django.db import models, transaction
-from django.utils.translation import gettext_lazy as _
-
 from django.core.validators import FileExtensionValidator
+from django.db import models, transaction
 from django.urls import reverse
 
 
 def task_data_file_upload_to(instance, filename):
     extension = Path(filename).suffix[1:].lower()
-    return f"{uuid4()}.{extension}"
+    return f'{uuid4()}.{extension}'
 
 
 def submission_csv_file_upload_to(instance, filename):
     extension = Path(filename).suffix[1:].lower()
-    return f"{uuid4()}.{extension}"
+    return f'{uuid4()}.{extension}'
 
 
 class Challenge(models.Model):
@@ -63,7 +57,7 @@ class Team(models.Model):
     name = models.CharField(max_length=100)
     institution = models.CharField(max_length=100, blank=True)
     institution_url = models.URLField(blank=True)
-    users = models.ManyToManyField(get_user_model(), related_name="teams")
+    users = models.ManyToManyField(get_user_model(), related_name='teams')
     challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -86,23 +80,23 @@ class Team(models.Model):
 class TeamInvitation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(
-        get_user_model(), related_name="sent_invites", on_delete=models.CASCADE
+        get_user_model(), related_name='sent_invites', on_delete=models.CASCADE
     )
     recipient = models.ForeignKey(
-        get_user_model(), related_name="received_invites", on_delete=models.CASCADE
+        get_user_model(), related_name='received_invites', on_delete=models.CASCADE
     )
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.team} invite"
+        return f'{self.team} invite'
 
 
 SUBMISSION_STATUS_CHOICES = {
-    "queued": "Queued for scoring",
-    "scoring": "Scoring",
-    "internal_failure": "Internal failure",
-    "failed": "Failed",
-    "succeeded": "Succeeded",
+    'queued': 'Queued for scoring',
+    'scoring': 'Scoring',
+    'internal_failure': 'Internal failure',
+    'failed': 'Failed',
+    'succeeded': 'Succeeded',
 }
 
 
@@ -115,7 +109,7 @@ class Submission(models.Model):
     test_prediction_file_name = models.CharField(max_length=200)
     status = models.CharField(
         max_length=20,
-        default="queued",
+        default='queued',
         choices=[(x, y) for x, y in SUBMISSION_STATUS_CHOICES.items()],
     )
     score = JSONField(blank=True, null=True)
@@ -128,7 +122,7 @@ class Submission(models.Model):
         return f'{self.id}'
 
     def get_absolute_url(self):
-        return reverse("submission-detail", args=[self.id])
+        return reverse('submission-detail', args=[self.id])
 
 
 class ScoreHistory(models.Model):
@@ -144,14 +138,14 @@ class ScoreHistory(models.Model):
 
 class Approach(models.Model):
     class Meta:
-        verbose_name_plural = "approaches"
+        verbose_name_plural = 'approaches'
 
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100)
     uses_external_data = models.BooleanField()
     manuscript = models.FileField(
         upload_to=submission_csv_file_upload_to,
-        validators=[FileExtensionValidator(allowed_extensions=["pdf"])],
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])],
         max_length=200,
         blank=True,
     )
@@ -165,7 +159,7 @@ class Approach(models.Model):
 
     @property
     def latest_submission(self):
-        return Submission.objects.filter(approach=self).order_by("-created").first()
+        return Submission.objects.filter(approach=self).order_by('-created').first()
 
     @property
     def friendly_status(self):

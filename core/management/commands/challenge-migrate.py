@@ -1,27 +1,25 @@
-from django.core.files import File
-from django.contrib.auth.models import User
-
-from core.models import Challenge, Task, Team, Approach, Submission, Score
-from django.core.management.base import BaseCommand
-
-import json
 from datetime import datetime
+import json
 import pprint
-import requests
 import re
-import io
+
+from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.management.base import BaseCommand
+import requests
+
+from core.models import Approach, Challenge, Score, Submission, Task, Team
 
 
 class Command(BaseCommand):
-    help = "Migrate Covalic data into Stade"
+    help = 'Migrate Covalic data into Stade'
 
     def add_arguments(self, parser):
         parser.add_argument('json_file', type=str)
         parser.add_argument('girder_token', type=str)
 
     def handle(self, *args, **options):
-        with open(options['json_file'], "rb") as data_file:
+        with open(options['json_file'], 'rb') as data_file:
             file_content = json.load(data_file)
             data = json.loads(file_content)
             users = data['users']
@@ -170,11 +168,11 @@ def download_file(url, token):
         else:
             r = requests.get(url, allow_redirects=True)
         r.raise_for_status()
-        
-        if "Content-Disposition" in r.headers.keys():
-            fname = re.findall("filename=(.+)", r.headers["Content-Disposition"])[0].strip('"')
+
+        if 'Content-Disposition' in r.headers.keys():
+            fname = re.findall('filename=(.+)', r.headers['Content-Disposition'])[0].strip('"')
         else:
-            fname = url.split("/")[-1]
+            fname = url.split('/')[-1]
         content = r.content
 
         return content, fname
