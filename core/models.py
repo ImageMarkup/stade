@@ -6,6 +6,7 @@ from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
 from django.urls import reverse
+from django.utils import timezone
 
 
 def task_data_file_upload_to(instance, filename):
@@ -19,7 +20,7 @@ def submission_csv_file_upload_to(instance, filename):
 
 
 class Challenge(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100, unique=True)
     locked = models.BooleanField(
         default=True, help_text='Whether users are blocked from making and editing teams.'
@@ -33,7 +34,7 @@ class Challenge(models.Model):
 
 
 class Task(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=timezone.now)
     challenge = models.ForeignKey(Challenge, on_delete=models.DO_NOTHING, related_name='tasks')
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -60,7 +61,7 @@ class Team(models.Model):
     class Meta:
         unique_together = ('challenge', 'name')
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=100)
     institution = models.CharField(max_length=100, blank=True)
@@ -86,7 +87,7 @@ class Team(models.Model):
 
 
 class TeamInvitation(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=timezone.now)
     sender = models.ForeignKey(
         get_user_model(), related_name='sent_invites', on_delete=models.CASCADE
     )
@@ -109,7 +110,7 @@ SUBMISSION_STATUS_CHOICES = {
 
 
 class Submission(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
     accepted_terms = models.BooleanField(default=False)
@@ -137,7 +138,7 @@ class ScoreHistory(models.Model):
     submission = models.ForeignKey(
         Submission, on_delete=models.CASCADE, related_name='score_history'
     )
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=timezone.now)
     score = JSONField()
     overall_score = models.FloatField()
 
@@ -148,7 +149,7 @@ class Approach(models.Model):
     class Meta:
         verbose_name_plural = 'approaches'
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100)
     uses_external_data = models.BooleanField()
     manuscript = models.FileField(

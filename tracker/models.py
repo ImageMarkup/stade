@@ -1,10 +1,11 @@
 from django.db import models
+from django.utils import timezone
 
 from tracker.tasks import add_mailchimp_subscriber
 
 
 class Email(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=timezone.now)
     email = models.EmailField(unique=True)
 
     def __str__(self):
