@@ -314,7 +314,7 @@ h6 {
   background: #d8dadc;
 }
 
-.tasks-list .task.inactive .badge {
+.tasks-list .task .badge {
   background: #427AA1;
   border-radius: 3px 3px 0 0;
   display: inline-block;
@@ -326,13 +326,13 @@ h6 {
   z-index: 2;
 }
 
-.tasks-list .task.inactive .badge i {
+.tasks-list .task .badge i {
   color: #fff;
   font-size: 16px;
   margin: 0;
 }
 
-.tasks-list .task.inactive .badge:after {
+.tasks-list .task .badge:after {
   content: "";
   border-color: transparent transparent #bbbfc3 transparent;
   border-style: solid;
@@ -346,11 +346,11 @@ h6 {
   width: 0;
 }
 
-.tasks-list .task.inactive a:hover ~ .badge {
+.tasks-list .task a:hover ~ .badge {
   padding-bottom: 20px;
 }
 
-.tasks-list .task.inactive a:hover ~ .badge:after {
+.tasks-list .task a:hover ~ .badge:after {
   content: "";
   border-color: transparent transparent #d8dadc transparent;
 }
