@@ -19,4 +19,5 @@ urlpatterns = [
         name='create-approach',
     ),
     path('create-submission/<int:approach>', views.create_submission, name='create-submission'),
+    path('api/leaderboard/<int:task_id>', views.leaderboard, name='leaderboard'),
 ]

@@ -1,10 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
+from django.db import connection
 from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic.edit import CreateView, FormView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from core.forms import (
     AcceptInvitationForm,
@@ -13,7 +16,43 @@ from core.forms import (
     CreateTeamForm,
 )
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
+from core.serializers import LeaderboardEntrySerializer
 from core.tasks import score_submission
+
+
+@api_view(['GET'])
+def leaderboard(request, task_id):
+    # todo limit to scores_published tasks
+    task = get_object_or_404(Task, pk=task_id)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            '''
+            SELECT t.submission_id
+            FROM core_task,
+            (SELECT core_approach.task_id,
+            core_submission.id AS submission_id,
+            row_number() OVER (PARTITION BY core_approach.id ORDER BY core_submission.created DESC) AS rn
+            FROM core_approach
+            INNER JOIN core_submission ON core_submission.approach_id = core_approach.id
+            WHERE core_submission.status = 'succeeded') t
+            WHERE core_task.id = t.task_id
+            AND t.task_id = %s
+            AND t.rn = 1
+            ''',
+            [task.id],
+        )
+        submission_ids = cursor.fetchall()
+
+    serializer = LeaderboardEntrySerializer(
+        Submission.objects.filter(
+            id__in=[x[0] for x in submission_ids], approach__task=task
+        ).order_by('-overall_score', 'created'),
+        many=True,
+        context={'request': request},
+    )
+
+    return Response(serializer.data)
 
 
 def index(request):
