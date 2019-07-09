@@ -53,7 +53,7 @@ class Command(BaseCommand):
                         created=challenge['created'],
                         name=challenge['name'],
                         position=challenge['position'],
-                        active=False,
+                        locked=True,
                     )
                 )
             print('challenges done')
@@ -66,7 +66,7 @@ class Command(BaseCommand):
                         challenge_id=challenge_objs[challenges.index(task['challenge'])].id,
                         name=task['name'][:100],
                         test_ground_truth_file=task['data_file'],
-                        active=False,
+                        locked=True,
                         visible=True,
                         description='',
                     )

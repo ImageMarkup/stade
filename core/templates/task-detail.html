@@ -5,7 +5,7 @@
   <div class="section-header">
     <h1><i class="material-icons">assignment</i> <a href="{{ task.get_absolute_url }}">{{ task.name }}</a></h1>
     <div class="create-submission">
-      {% if task.active %}
+      {% if not task.locked %}
       <a href="{% url 'create-team' task.id %}" class="button is-medium">new submission</a>
       {% endif %}
     </div>

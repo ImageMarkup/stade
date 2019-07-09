@@ -17,16 +17,16 @@ from core.tasks import score_submission
 
 
 def index(request):
-    challenges = Challenge.objects.filter(active=True).prefetch_related('tasks')
+    challenges = Challenge.objects.prefetch_related('tasks')
 
     # for admins, show challenges with > 0 tasks,
-    # for users, only show challenges with > 0 public tasks
+    # for users, only show challenges with > 0 non-hidden tasks
     if request.user.is_staff:
         challenges = challenges.annotate(num_tasks=Count('tasks')).filter(num_tasks__gt=0)
     else:
         challenges = challenges.annotate(
-            num_public_tasks=Count('tasks', filter=Q(tasks__public=True))
-        ).filter(num_public_tasks__gt=0)
+            num_visible_tasks=Count('tasks', filter=Q(tasks__hidden=False))
+        ).filter(num_visible_tasks__gt=0)
 
     return render(request, 'index.html', {'challenges': challenges.all()})
 
@@ -59,7 +59,7 @@ def submission_detail(request, submission_id):
 
 @login_required
 def submission_list(request, task_id, team_id):
-    # todo: filter out non public tasks?
+    # todo: filter out hidden tasks?
     task = get_object_or_404(Task, pk=task_id)
     team = get_object_or_404(request.user.teams, pk=team_id)
 

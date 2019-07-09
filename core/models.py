@@ -21,7 +21,9 @@ def submission_csv_file_upload_to(instance, filename):
 class Challenge(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100, unique=True)
-    active = models.BooleanField(default=False)
+    locked = models.BooleanField(
+        default=True, help_text='Whether users are blocked from making and editing teams.'
+    )
     position = models.PositiveSmallIntegerField(default=0)
 
     ordering = ['-position']
@@ -36,9 +38,15 @@ class Task(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     short_description = models.TextField()
-    active = models.BooleanField(default=False)
-    public = models.BooleanField(default=False)
-    submissions_public = models.BooleanField(default=False)
+    locked = models.BooleanField(
+        default=True,
+        help_text='Whether users are blocked from making and editing approaches and submissions.',
+    )
+    hidden = models.BooleanField(default=True, help_text='Whether the task is invisible to users.')
+    scores_published = models.BooleanField(
+        default=False,
+        help_text='Whether final scores are visible to submitters and the leaderboard is open.',
+    )
     test_ground_truth_file = models.FileField(upload_to=task_data_file_upload_to)
 
     def __str__(self):
