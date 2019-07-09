@@ -7,3 +7,4 @@ venv
 /env
 /.tox
 /.mypy_cache
+/pip-wheel-metadata
