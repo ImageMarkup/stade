@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 
 class LeaderboardEntrySerializer(serializers.Serializer):
+    submission_id = serializers.IntegerField(source='id')
     approach_name = serializers.CharField(source='approach.name')
     approach_manuscript_url = serializers.SerializerMethodField()
     approach_uses_external_data = serializers.BooleanField(source='approach.uses_external_data')

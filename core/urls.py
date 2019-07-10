@@ -19,5 +19,16 @@ urlpatterns = [
         name='create-approach',
     ),
     path('create-submission/<int:approach>', views.create_submission, name='create-submission'),
-    path('api/leaderboard/<int:task_id>', views.leaderboard, name='leaderboard'),
+    path(
+        'api/leaderboard/<int:task_id>/by-approach',
+        views.leaderboard,
+        {'cluster': 'approach'},
+        name='leaderboard-by-approach',
+    ),
+    path(
+        'api/leaderboard/<int:task_id>/by-team',
+        views.leaderboard,
+        {'cluster': 'team'},
+        name='leaderboard-by-team',
+    ),
 ]
