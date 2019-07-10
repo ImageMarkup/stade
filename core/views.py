@@ -15,39 +15,25 @@ from core.forms import (
     CreateSubmissionForm,
     CreateTeamForm,
 )
+from core.leaderboard import submissions_by_team, submissions_by_approach
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from core.serializers import LeaderboardEntrySerializer
 from core.tasks import score_submission
 
 
 @api_view(['GET'])
-def leaderboard(request, task_id):
-    # todo limit to scores_published tasks
-    task = get_object_or_404(Task, pk=task_id)
+def leaderboard(request, task_id, cluster):
+    task = get_object_or_404(Task.objects.filter(scores_published=True), pk=task_id)
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            '''
-            SELECT t.submission_id
-            FROM core_task,
-            (SELECT core_approach.task_id,
-            core_submission.id AS submission_id,
-            row_number() OVER (PARTITION BY core_approach.id ORDER BY core_submission.created DESC) AS rn
-            FROM core_approach
-            INNER JOIN core_submission ON core_submission.approach_id = core_approach.id
-            WHERE core_submission.status = 'succeeded') t
-            WHERE core_task.id = t.task_id
-            AND t.task_id = %s
-            AND t.rn = 1
-            ''',
-            [task.id],
-        )
-        submission_ids = cursor.fetchall()
+    if cluster == 'approach':
+        submission_ids = submissions_by_approach(task.id)
+    elif cluster == 'team':
+        submission_ids = submissions_by_team(task.id)
 
     serializer = LeaderboardEntrySerializer(
-        Submission.objects.filter(
-            id__in=[x[0] for x in submission_ids], approach__task=task
-        ).order_by('-overall_score', 'created'),
+        Submission.objects.select_related('approach', 'approach__team')
+        .filter(id__in=[x[0] for x in submission_ids], approach__task=task)
+        .order_by('-overall_score', 'created'),
         many=True,
         context={'request': request},
     )
@@ -225,7 +211,6 @@ def create_submission(request, approach):
         raise Http404()
 
     if request.method == 'POST':
-        print(request.POST)
         form = CreateSubmissionForm(request.POST, request.FILES)
         form.instance.approach = approach
         form.instance.creator = request.user
