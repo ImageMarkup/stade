@@ -39,11 +39,11 @@ FROM
    )
    f
 WHERE
-   tn = 1;
+   tn = 1
             ''',
             [task_id],
         )
-        return cursor.fetchall()
+        return (row[0] for row in cursor.fetchall())
 
 
 def submissions_by_approach(task_id):
@@ -75,4 +75,4 @@ WHERE
             ''',
             [task_id],
         )
-        return cursor.fetchall()
+        return (row[0] for row in cursor.fetchall())

@@ -6,9 +6,7 @@ import django.utils.timezone
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0021_auto_20190709_0439'),
-    ]
+    dependencies = [('core', '0021_auto_20190709_0439')]
 
     operations = [
         migrations.AlterField(

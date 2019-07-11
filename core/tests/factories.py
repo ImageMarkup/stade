@@ -21,14 +21,14 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
-    username = factory.Sequence(lambda n: "user_%d" % n)
+    username = factory.Sequence(lambda n: 'user_%d' % n)
 
 
 class TeamFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'core.team'
 
-    name = factory.Sequence(lambda n: "team_%d" % n)
+    name = factory.Sequence(lambda n: 'team_%d' % n)
     creator = factory.SubFactory(UserFactory)
 
 
@@ -36,7 +36,7 @@ class ApproachFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'core.approach'
 
-    name = factory.Sequence(lambda n: "approach_%d" % n)
+    name = factory.Sequence(lambda n: 'approach_%d' % n)
     uses_external_data = factory.Faker('boolean')
     manuscript = factory.django.FileField(filename='test-manuscript.pdf')
     task = factory.SubFactory(TaskFactory)

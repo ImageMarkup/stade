@@ -49,7 +49,7 @@ def test_leaderboard_by_approach(task_with_submissions, client):
     # team0 | approach0 | .95
     # team0 | approach1 | .80
     # team1 | approach1 | .78
-    first, second, third = resp.json()
+    first, second, third = resp.json()['results']
 
     assert first['team_name'] == 'team_0'
     assert first['approach_name'] == 'approach_0'
@@ -70,7 +70,7 @@ def test_leaderboard_by_team(task_with_submissions, client):
     # assert the by team leaderboard looks like
     # team3 | approach0 | .95
     # team4 | approach0 | .78
-    first, second = resp.json()
+    first, second = resp.json()['results']
 
     assert first['team_name'] == 'team_3'
     assert first['approach_name'] == 'approach_0'

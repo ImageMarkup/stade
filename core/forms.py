@@ -58,7 +58,6 @@ class CreateSubmissionForm(forms.ModelForm):
 
     def clean_accepted_terms(self):
         data = self.cleaned_data['accepted_terms']
-        print(data)
         if not data:
             raise forms.ValidationError('You must accept the data sharing policy terms.')
 

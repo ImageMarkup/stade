@@ -1,13 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
-from django.db import connection
 from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic.edit import CreateView, FormView
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 
 from core.forms import (
     AcceptInvitationForm,
@@ -24,21 +23,26 @@ from core.tasks import score_submission
 @api_view(['GET'])
 def leaderboard(request, task_id, cluster):
     task = get_object_or_404(Task.objects.filter(scores_published=True), pk=task_id)
+    paginator = LimitOffsetPagination()
+    paginator.default_limit = paginator.max_limit = 100
 
     if cluster == 'approach':
         submission_ids = submissions_by_approach(task.id)
     elif cluster == 'team':
         submission_ids = submissions_by_team(task.id)
+    else:
+        raise Http404()
 
-    serializer = LeaderboardEntrySerializer(
+    leaderboard_submissions = (
         Submission.objects.select_related('approach', 'approach__team')
-        .filter(id__in=[x[0] for x in submission_ids], approach__task=task)
-        .order_by('-overall_score', 'created'),
-        many=True,
-        context={'request': request},
+        .filter(id__in=submission_ids)
+        .order_by('-overall_score', 'created')
     )
 
-    return Response(serializer.data)
+    result_page = paginator.paginate_queryset(leaderboard_submissions, request)
+    serializer = LeaderboardEntrySerializer(result_page, many=True, context={'request': request})
+
+    return paginator.get_paginated_response(serializer.data)
 
 
 def index(request):
