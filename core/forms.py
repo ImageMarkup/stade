@@ -37,6 +37,25 @@ class AcceptInvitationForm(forms.Form):
         return invitation_id
 
 
+class CreateInvitationForm(forms.ModelForm):
+    class Meta:
+        model = TeamInvitation
+        fields = ['recipient']
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.team_id = kwargs.pop('team_id', None)
+        super().__init__(*args, **kwargs)
+
+    def clean_recipient(self):
+        return self.cleaned_data['recipient'].lower()
+
+    def clean(self):
+        team = get_object_or_404(self.request.user.teams, pk=self.team_id)
+        if team.users.filter(email=self.cleaned_data['recipient']).exists():
+            raise forms.ValidationError('User is already in the team')
+
+
 class CreateTeamForm(forms.ModelForm):
     class Meta:
         model = Team

@@ -51,4 +51,4 @@ class Command(BaseCommand):
             )
             for u in users:
                 team.users.add(u)
-            TeamInvitation.objects.create(sender=users[0], recipient=admin, team=team)
+            TeamInvitation.objects.create(sender=users[0], recipient=admin.email, team=team)

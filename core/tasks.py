@@ -1,6 +1,7 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -8,7 +9,7 @@ from django.template.loader import render_to_string
 from isic_challenge_scoring.task3 import compute_metrics
 from isic_challenge_scoring.types import ScoreException
 
-from core.models import Submission, Task
+from core.models import Submission, Task, TeamInvitation
 
 logger = get_task_logger(__name__)
 
@@ -73,3 +74,26 @@ def score_submission(submission_id, notify=True):
     finally:
         if notify and submission.status != 'scoring':
             notify_creator_of_scoring_attempt(submission)
+
+
+@shared_task
+def send_team_invitation(invite_id):
+    invite = TeamInvitation.objects.get(pk=invite_id)
+    existing = User.objects.filter(email=invite.recipient).exists()
+
+    if existing:
+        send_mail(
+            'Team Invitation',
+            f'Invitation to join {invite.team.name}',
+            settings.DEFAULT_FROM_EMAIL,
+            [invite.recipient],
+            fail_silently=False,
+        )
+    else:
+        send_mail(
+            'ISIC Registration',
+            'Register for ISIC at https://stade.challenge.isic-archive.com/accounts/signup/',
+            settings.DEFAULT_FROM_EMAIL,
+            [invite.recipient],
+            fail_silently=False,
+        )
