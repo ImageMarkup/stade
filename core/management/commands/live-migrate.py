@@ -1,7 +1,6 @@
 from datetime import datetime
 import json
 import re
-import warnings
 
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
