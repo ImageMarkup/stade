@@ -31,4 +31,9 @@ urlpatterns = [
         {'cluster': 'team'},
         name='leaderboard-by-team',
     ),
+    path(
+        'api/submission/<int:submission_id>/score',
+        views.submission_scores,
+        name='submission-scores',
+    )
 ]

@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.db.models import Count, Q
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic.edit import CreateView, FormView
@@ -43,6 +43,14 @@ def leaderboard(request, task_id, cluster):
     serializer = LeaderboardEntrySerializer(result_page, many=True, context={'request': request})
 
     return paginator.get_paginated_response(serializer.data)
+
+
+@api_view(['GET'])
+def submission_scores(request, submission_id):
+    submission = get_object_or_404(
+        Submission.objects.filter(approach__task__scores_published=True), pk=submission_id
+    )
+    return JsonResponse(submission.score)
 
 
 def index(request):
