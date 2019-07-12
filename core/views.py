@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView, FormView
 from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
+from rules.contrib.views import permission_required, objectgetter
 
 from core.forms import (
     AcceptInvitationForm,
@@ -112,9 +113,7 @@ def submission_list(request, task_id, team_id):
 @login_required
 def create_team(request, task):
     # Note: this permission checking is duplicated in the CreateTeamForm
-    task = get_object_or_404(
-        Task.objects.filter(challenge__locked=False), pk=task
-    )
+    task = get_object_or_404(Task.objects.filter(challenge__locked=False), pk=task)
 
     if request.method == 'POST':
         form = CreateTeamForm(request.POST, task_id=task.id)
@@ -223,14 +222,15 @@ def create_approach(request, task_id, team_id):
 
 
 @login_required
-def create_submission(request, approach):
-    approach = get_object_or_404(
-        Approach.objects.filter(task__locked=False, team__id__in=request.user.teams.only('id')),
-        pk=approach,
-    )
+@permission_required('approaches.add_submission', fn=objectgetter(Approach, 'approach_id'))
+def create_submission(request, approach_id):
+    approach = get_object_or_404(Approach, pk=approach_id)
 
     if request.method == 'POST':
-        form = CreateSubmissionForm(request.POST, request.FILES)
+        form = CreateSubmissionForm(
+            request.POST, request.FILES, approach_id=approach_id, request=request
+        )
+        # TODO: Is this the proper way to set these?
         form.instance.approach = approach
         form.instance.creator = request.user
 
@@ -239,6 +239,6 @@ def create_submission(request, approach):
             score_submission.delay(form.instance.id)
             return HttpResponseRedirect(reverse('submission-detail', args=[form.instance.id]))
     else:
-        form = CreateSubmissionForm()
+        form = CreateSubmissionForm(approach_id=approach_id, request=request)
 
     return render(request, 'wizard/create-submission.html', {'form': form, 'approach': approach})
