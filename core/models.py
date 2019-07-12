@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import PurePath
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
@@ -10,12 +10,12 @@ from django.utils import timezone
 
 
 def task_data_file_upload_to(instance, filename):
-    extension = Path(filename).suffix[1:].lower()
+    extension = PurePath(filename).suffix[1:].lower()
     return f'{uuid4()}.{extension}'
 
 
-    extension = Path(filename).suffix[1:].lower()
 def submission_file_upload_to(instance, filename):
+    extension = PurePath(filename).suffix[1:].lower()
     return f'{uuid4()}.{extension}'
 
 
