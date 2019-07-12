@@ -19,6 +19,9 @@ class SubmissionInline(admin.TabularInline):
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
+    list_display = ['approach', 'id', 'status']
+    list_display_links = ['id']
+    list_filter = ['status']
 
 
 @admin.register(Task)
@@ -47,3 +50,6 @@ class TeamInvitationAdmin(admin.ModelAdmin):
 
 @admin.register(Approach)
 class ApproachAdmin(admin.ModelAdmin):
+    list_display = ['task', 'team', 'name']
+    list_display_links = ['name']
+    list_filter = ['task']
