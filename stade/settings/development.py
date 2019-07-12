@@ -2,6 +2,7 @@ import os
 
 from .base import *  # noqa: F401, F403
 
+CORS_ORIGIN_ALLOW_ALL = True
 SECRET_KEY = 'insecuresecret'
 DEBUG = True
 ALLOWED_HOSTS = []
