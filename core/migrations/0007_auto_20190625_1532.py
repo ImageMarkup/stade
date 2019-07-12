@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='submission',
             name='test_prediction_file',
-            field=models.FileField(default='', upload_to=core.models.submission_csv_file_upload_to),
+            field=models.FileField(default='', upload_to=core.models.submission_file_upload_to),
             preserve_default=False,
         ),
         migrations.AddField(

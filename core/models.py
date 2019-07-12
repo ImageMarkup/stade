@@ -14,8 +14,8 @@ def task_data_file_upload_to(instance, filename):
     return f'{uuid4()}.{extension}'
 
 
-def submission_csv_file_upload_to(instance, filename):
     extension = Path(filename).suffix[1:].lower()
+def submission_file_upload_to(instance, filename):
     return f'{uuid4()}.{extension}'
 
 
@@ -114,7 +114,7 @@ class Submission(models.Model):
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
     accepted_terms = models.BooleanField(default=False)
-    test_prediction_file = models.FileField(upload_to=submission_csv_file_upload_to)
+    test_prediction_file = models.FileField(upload_to=submission_file_upload_to)
     test_prediction_file_name = models.CharField(max_length=200)
     status = models.CharField(
         max_length=20,
@@ -153,7 +153,7 @@ class Approach(models.Model):
     name = models.CharField(max_length=100)
     uses_external_data = models.BooleanField()
     manuscript = models.FileField(
-        upload_to=submission_csv_file_upload_to,
+        upload_to=submission_file_upload_to,
         validators=[FileExtensionValidator(allowed_extensions=['pdf'])],
         max_length=200,
         blank=True,
