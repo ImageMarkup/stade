@@ -15,4 +15,4 @@ RUN pip install -r /code/requirements-dev.txt
 RUN cd /usr/local/lib/python3.7/site-packages && python /code/setup.py develop
 
 COPY ./scripts/web-entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/entrypoint.sh"]
