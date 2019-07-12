@@ -33,7 +33,11 @@ class Challenge(models.Model):
         return self.name
 
 
+TASK_TYPE_CHOICES = {'segmentation': 'Segmentation', 'classification': 'Classification'}
+
+
 class Task(models.Model):
+    type = models.CharField(max_length=20, choices=TASK_TYPE_CHOICES.items())
     created = models.DateTimeField(default=timezone.now)
     challenge = models.ForeignKey(Challenge, on_delete=models.DO_NOTHING, related_name='tasks')
     name = models.CharField(max_length=100)
@@ -117,9 +121,7 @@ class Submission(models.Model):
     test_prediction_file = models.FileField(upload_to=submission_file_upload_to)
     test_prediction_file_name = models.CharField(max_length=200)
     status = models.CharField(
-        max_length=20,
-        default='queued',
-        choices=[(x, y) for x, y in SUBMISSION_STATUS_CHOICES.items()],
+        max_length=20, default='queued', choices=SUBMISSION_STATUS_CHOICES.items()
     )
     score = JSONField(blank=True, null=True)
     overall_score = models.FloatField(blank=True, null=True)
