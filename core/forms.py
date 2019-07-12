@@ -83,13 +83,13 @@ class CreateApproachForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     def clean(self):
-        get_object_or_404(self.request.user.teams, pk=self.team_id)
+        team = get_object_or_404(self.request.user.teams, pk=self.team_id)
         task = get_object_or_404(Task, pk=self.task_id)
 
         if task.locked:
             raise ValidationError(f'The task {task.name} is locked.')
 
-        if Approach.objects.filter(team=self.team).count() >= settings.MAX_APPROACHES:
+        if Approach.objects.filter(team=team, task=task).count() >= task.max_approaches:
             raise ValidationError(
-                f'Only {settings.MAX_APPROACHES} approaches are allowed per team.'
+                f'You\'ve reached the maximum number of approaches for {task.name}.'
             )

@@ -74,9 +74,6 @@ STATIC_URL = '/static/'
 ACCOUNT_EMAIL_REQUIRED = True
 DEFAULT_FROM_EMAIL = 'ISIC Challenge <support@isic-archive.com>'
 
-# Stade settings
-MAX_APPROACHES = 3
-
 
 def show_user_display_name(user):
     return user.email

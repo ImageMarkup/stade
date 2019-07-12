@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields.jsonb import JSONField
+from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
 from django.urls import reverse
@@ -47,6 +48,11 @@ class Task(models.Model):
     scores_published = models.BooleanField(
         default=False,
         help_text='Whether final scores are visible to submitters and the leaderboard is open.',
+    )
+    max_approaches = models.PositiveSmallIntegerField(
+        verbose_name='Maxium Approaches',
+        default=3,
+        help_text='The maximum number of approaches a team can make on this task.',
     )
     test_ground_truth_file = models.FileField(upload_to=task_data_file_upload_to)
 
