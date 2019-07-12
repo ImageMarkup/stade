@@ -65,7 +65,7 @@ def index(request):
 
 @login_required
 def task_detail(request, task_id):
-    task = get_object_or_404(Task.objects.select_related('challenge'), pk=task_id)
+    task = get_object_or_404(Task.objects, pk=task_id)
 
     context = {
         'task': task,
@@ -113,7 +113,7 @@ def submission_list(request, task_id, team_id):
 def create_team(request, task):
     # Note: this permission checking is duplicated in the CreateTeamForm
     task = get_object_or_404(
-        Task.objects.select_related('challenge').filter(challenge__locked=False), pk=task
+        Task.objects.filter(challenge__locked=False), pk=task
     )
 
     if request.method == 'POST':

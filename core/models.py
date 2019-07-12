@@ -20,6 +20,15 @@ def submission_file_upload_to(instance, filename):
     return f'{uuid4()}.{extension}'
 
 
+class SelectRelatedManager(models.Manager):
+    def __init__(self, *related_fields):
+        self.related_fields = related_fields
+        super().__init__()
+
+    def get_queryset(self):
+        return super().get_queryset().select_related(*self.related_fields)
+
+
 class Challenge(models.Model):
     created = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100, unique=True)
@@ -59,6 +68,10 @@ class Task(models.Model):
         help_text='The maximum number of approaches a team can make on this task.',
     )
     test_ground_truth_file = models.FileField(upload_to=task_data_file_upload_to)
+
+    # Define custom "objects" first, so it will be the "_default_manager", which is more efficient
+    # for many automatically generated queries
+    objects = SelectRelatedManager('challenge')
 
     def __str__(self):
         return f'{self.challenge.name}: {self.name}'
