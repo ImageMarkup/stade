@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.db.models import Count, Q
@@ -15,7 +16,7 @@ from core.forms import (
     CreateSubmissionForm,
     CreateTeamForm,
 )
-from core.leaderboard import submissions_by_team, submissions_by_approach
+from core.leaderboard import submissions_by_approach, submissions_by_team
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from core.serializers import LeaderboardEntrySerializer
 from core.tasks import score_submission, send_team_invitation
@@ -175,6 +176,9 @@ def create_invitation(request, team_id):
             invite.sender = request.user
             invite.save()
             send_team_invitation.delay(invite.id)
+            messages.add_message(
+                request, messages.SUCCESS, f'Successfully invited {form.cleaned_data["recipient"]}'
+            )
             return HttpResponseRedirect(reverse('index'))
     else:
         form = CreateInvitationForm(request=request)
