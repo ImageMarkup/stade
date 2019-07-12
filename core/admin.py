@@ -36,7 +36,6 @@ class TeamAdmin(admin.ModelAdmin):
     list_display = ['challenge', 'name']
     list_display_links = ['name']
     list_filter = ['challenge__name']
-    list_per_page = 25
 
     autocomplete_fields = ['creator', 'users']
 
