@@ -173,7 +173,9 @@ def create_approach(request, task_id, team_id):
     team = get_object_or_404(request.user.teams, pk=team_id)
 
     if request.method == 'POST':
-        form = CreateApproachForm(request.POST, request.FILES, task_id=task_id, team_id=team_id)
+        form = CreateApproachForm(
+            request.POST, request.FILES, request=request, task_id=task_id, team_id=team_id
+        )
         form.instance.team = team
         form.instance.task = task
 
@@ -181,7 +183,7 @@ def create_approach(request, task_id, team_id):
             form.save()
             return HttpResponseRedirect(reverse('create-submission', args=[form.instance.id]))
     else:
-        form = CreateApproachForm(task_id=task_id, team_id=team_id)
+        form = CreateApproachForm(request=request, task_id=task_id, team_id=team_id)
 
     return render(
         request,
