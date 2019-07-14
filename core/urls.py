@@ -1,6 +1,5 @@
 from django.urls import path
 
-from core.views import CreateApproachView
 from . import views
 from .views import AcceptInvitationView
 
@@ -14,9 +13,7 @@ urlpatterns = [
     # wizard
     path('create-team/<int:task>', views.create_team, name='create-team'),
     path(
-        'create-approach/<int:task>/<int:team>',
-        CreateApproachView.as_view(),
-        name='create-approach',
+        'create-approach/<int:task_id>/<int:team_id>', views.create_approach, name='create-approach'
     ),
     path('create-submission/<int:approach>', views.create_submission, name='create-submission'),
     path(
