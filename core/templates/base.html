@@ -34,7 +34,26 @@
         </div>
       </div>
     </header>
+    {% if messages %}
+      {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+          <div class="notification is-success">
+            <button class="delete"></button>
+            {{ message }}
+          </div>
+        {% endif %}
+
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+          <div class="notification is-danger">
+            <button class="delete"></button>
+            {{ message }}
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
     {% load invites %}
+
     {% show_pending_invites request %}
     <div class="main-content">
 

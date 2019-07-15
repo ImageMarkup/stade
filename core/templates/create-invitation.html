@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1> TEAM INVITATION </h1>
+inviting to {{team.name}}
+<form action="" method="post">
+  {% csrf_token %}
+  <input autofocus class="input" id="id_recipient" name="recipient" maxlength="100" placeholder="Recipient Email" type="text">
+  <br>
+  <input class="button" type="submit" value="Create invitation" name="create_invitation"/>
+</form>
+{% endblock %}

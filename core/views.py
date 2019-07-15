@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.db.models import Count, Q
@@ -11,13 +12,14 @@ from rest_framework.pagination import LimitOffsetPagination
 from core.forms import (
     AcceptInvitationForm,
     CreateApproachForm,
+    CreateInvitationForm,
     CreateSubmissionForm,
     CreateTeamForm,
 )
-from core.leaderboard import submissions_by_team, submissions_by_approach
+from core.leaderboard import submissions_by_approach, submissions_by_team
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from core.serializers import LeaderboardEntrySerializer
-from core.tasks import score_submission
+from core.tasks import score_submission, send_team_invitation
 
 
 @api_view(['GET'])
@@ -164,6 +166,29 @@ class AcceptInvitationView(LoginRequiredMixin, FormView):
         team_invitation.team.users.add(team_invitation.recipient)
         team_invitation.delete()
         return super().form_valid(form)
+
+
+@login_required
+def create_invitation(request, team_id):
+    team = get_object_or_404(request.user.teams, pk=team_id)
+
+    if request.method == 'POST':
+        form = CreateInvitationForm(request.POST, request=request, team_id=team_id)
+
+        if form.is_valid():
+            invite = form.save(commit=False)
+            invite.team = team
+            invite.sender = request.user
+            invite.save()
+            send_team_invitation.delay(invite.id)
+            messages.add_message(
+                request, messages.SUCCESS, f'Successfully invited {form.cleaned_data["recipient"]}'
+            )
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        form = CreateInvitationForm(request=request)
+
+    return render(request, 'create-invitation.html', {'form': form, 'team': team})
 
 
 @login_required

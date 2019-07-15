@@ -58,7 +58,7 @@
               </div>
             {% else %}
               <div class="no-approach">
-                <p>There are no submissions for this team – <a href="{% url 'create-approach' object.id team.id %}">create one</a></p>
+                <p>There are no submissions for this team – <a href="{% url 'create-approach' task.id team.id %}">create one</a></p>
               </div>
             {% endif %}
 
