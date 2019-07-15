@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 (
                     'manuscript',
                     models.FileField(
-                        upload_to=core.models.submission_csv_file_upload_to,
+                        upload_to=core.models.submission_file_upload_to,
                         validators=[
                             django.core.validators.FileExtensionValidator(
                                 allowed_extensions=['pdf']
@@ -129,7 +129,7 @@ class Migration(migrations.Migration):
                 (
                     'csv',
                     models.FileField(
-                        upload_to=core.models.submission_csv_file_upload_to,
+                        upload_to=core.models.submission_file_upload_to,
                         validators=[
                             django.core.validators.FileExtensionValidator(
                                 allowed_extensions=['csv']
