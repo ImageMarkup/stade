@@ -14,12 +14,14 @@ rescore_task.short_description = 'Rescore task submissions'
 
 
 class SubmissionInline(admin.TabularInline):
-    model = Submission
+    pass
 
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['approach', 'id', 'status']
+    list_display_links = ['id']
+    list_filter = ['status']
 
 
 @admin.register(Task)
@@ -29,25 +31,25 @@ class TaskAdmin(admin.ModelAdmin):
 
 @admin.register(Challenge)
 class ChallengeAdmin(admin.ModelAdmin):
-    model = Challenge
+    pass
 
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    model = Team
     list_display = ['challenge', 'name']
     list_display_links = ['name']
     list_filter = ['challenge__name']
-    list_per_page = 25
 
     autocomplete_fields = ['creator', 'users']
 
 
 @admin.register(TeamInvitation)
 class TeamInvitationAdmin(admin.ModelAdmin):
-    model = TeamInvitation
+    pass
 
 
 @admin.register(Approach)
 class ApproachAdmin(admin.ModelAdmin):
-    model = Approach
+    list_display = ['task', 'team', 'name']
+    list_display_links = ['name']
+    list_filter = ['task']

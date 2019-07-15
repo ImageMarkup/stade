@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Approach, Submission, Team, TeamInvitation
+from core.models import Approach, Submission, Team, TeamInvitation, Task
 
 
 class CustomSignupForm(SignupForm):
@@ -78,7 +78,14 @@ class CreateTeamForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
+        self.task_id = kwargs.pop('task_id', None)
         super().__init__(*args, **kwargs)
+
+    def clean(self):
+        task = get_object_or_404(Task.objects.select_related('challenge'), pk=self.task_id)
+
+        if task.challenge.locked:
+            raise ValidationError(f'The {task.challenge.name} challenge is locked.')
 
 
 class CreateSubmissionForm(forms.ModelForm):
@@ -104,13 +111,19 @@ class CreateApproachForm(forms.ModelForm):
         fields = ['name', 'uses_external_data', 'manuscript']
 
     def __init__(self, *args, **kwargs):
-        self.team = get_object_or_404(Team, pk=kwargs['team_id'])
+        self.team_id = kwargs.pop('team_id', None)
+        self.task_id = kwargs.pop('task_id', None)
         self.request = kwargs.pop('request', None)
-        kwargs.pop('team_id', None)
         super().__init__(*args, **kwargs)
 
     def clean(self):
-        if Approach.objects.filter(team=self.team).count() >= settings.MAX_APPROACHES:
+        team = get_object_or_404(self.request.user.teams, pk=self.team_id)
+        task = get_object_or_404(Task, pk=self.task_id)
+
+        if task.locked:
+            raise ValidationError(f'The task {task.name} is locked.')
+
+        if Approach.objects.filter(team=team, task=task).count() >= task.max_approaches:
             raise ValidationError(
-                f'Only {settings.MAX_APPROACHES} approaches are allowed per team.'
+                f'You\'ve reached the maximum number of approaches for {task.name}.'
             )
