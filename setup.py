@@ -13,5 +13,6 @@ setup(
         'celery',
         'isic-challenge-scoring',
         'requests',
+        'rules',
     ],
 )
