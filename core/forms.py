@@ -71,21 +71,25 @@ class CreateInvitationForm(forms.ModelForm):
             raise forms.ValidationError('User has already been invited')
 
 
-class CreateTeamForm(forms.ModelForm):
+class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ['name', 'institution', 'institution_url']
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
-        self.task_id = kwargs.pop('task_id', None)
+        self.team = kwargs.pop('instance', None)
+        if self.team is None:
+            self.task_id = kwargs.pop('task_id', None)
+
         super().__init__(*args, **kwargs)
 
     def clean(self):
-        task = get_object_or_404(Task.objects.select_related('challenge'), pk=self.task_id)
+        if self.team is None:
+            task = get_object_or_404(Task.objects.select_related('challenge'), pk=self.task_id)
 
-        if task.challenge.locked:
-            raise ValidationError(f'The {task.challenge.name} challenge is locked.')
+            if task.challenge.locked:
+                raise ValidationError(f'The {task.challenge.name} challenge is locked.')
 
 
 class CreateSubmissionForm(forms.ModelForm):

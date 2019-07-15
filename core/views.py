@@ -14,7 +14,7 @@ from core.forms import (
     CreateApproachForm,
     CreateInvitationForm,
     CreateSubmissionForm,
-    CreateTeamForm,
+    TeamForm,
 )
 from core.leaderboard import submissions_by_approach, submissions_by_team
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
@@ -111,13 +111,13 @@ def submission_list(request, task_id, team_id):
 
 @login_required
 def create_team(request, task):
-    # Note: this permission checking is duplicated in the CreateTeamForm
+    # Note: this permission checking is duplicated in the TeamForm
     task = get_object_or_404(
         Task.objects.select_related('challenge').filter(challenge__locked=False), pk=task
     )
 
     if request.method == 'POST':
-        form = CreateTeamForm(request.POST, task_id=task.id)
+        form = TeamForm(request.POST, task_id=task.id)
 
         if form.is_valid():
             team = form.save(commit=False)
@@ -126,7 +126,7 @@ def create_team(request, task):
             team.save()
             return HttpResponseRedirect(reverse('create-approach', args=[task.id, team.id]))
     else:
-        form = CreateTeamForm(task_id=task.id)
+        form = TeamForm(task_id=task.id)
 
     return render(
         request,
@@ -139,6 +139,26 @@ def create_team(request, task):
             .all(),
         },
     )
+
+
+@login_required
+def edit_team(request, team_id):
+    team = get_object_or_404(request.user.teams, pk=team_id)
+
+    if request.method == 'POST':
+        form = TeamForm(request.POST, instance=team)
+
+        if form.is_valid():
+            updated_team = form.save(commit=False)
+            team.name = updated_team.name
+            team.institution = updated_team.institution
+            team.institution_url = updated_team.institution_url
+            team.save()
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        form = TeamForm(instance=team)
+
+    return render(request, 'edit-team.html', {'form': form, 'team': team})
 
 
 class AcceptInvitationView(LoginRequiredMixin, FormView):

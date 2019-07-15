@@ -17,6 +17,7 @@ urlpatterns = [
     ),
     path('create-submission/<int:approach>', views.create_submission, name='create-submission'),
     path('create-invitation/<int:team_id>', views.create_invitation, name='create-invitation'),
+    path('edit-team/<int:team_id>', views.edit_team, name='edit-team'),
     path(
         'api/leaderboard/<int:task_id>/by-approach',
         views.leaderboard,
