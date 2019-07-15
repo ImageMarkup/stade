@@ -27,64 +27,7 @@
     <div class="columns">
       <div class="column new-team">
         <h2>Create New Team</h2>
-        <form action="" class="create-team" method="post">
-          {% csrf_token %}
-
-          {% if form.non_field_errors %}
-          <div class="help is-danger">
-            <i class="material-icons">error</i>
-            {{ form.non_field_errors }}
-          </div>
-          {% endif %}
-
-          <div class="fields">
-
-            <div class="field name">
-              <p class="control has-icons-left">
-                <input autofocus class="input" id="id_name" name="name" maxlength="100" placeholder="Team Name" required type="text" value="{{ request.POST.name }}">
-                <span class="icon is-small is-left">
-                  <i class="material-icons">people</i>
-                </span>
-              </p>
-              {% if form.name.errors %}
-              <p class="help is-danger">
-                {{ form.name.errors }}
-              </p>
-              {% endif %}
-            </div>
-
-              <div class="field institution">
-                <p class="control has-icons-left">
-                  <input autofocus class="input" id="id_institution" name="institution" maxlength="100" placeholder="Institution Name" type="text" value="{{ request.POST.institution }}">
-                  <span class="icon is-small is-left">
-                    <i class="material-icons">business</i>
-                  </span>
-                </p>
-                {% if form.institution.errors %}
-                <p class="help is-danger">
-                  {{ form.institution.errors }}
-                </p>
-                {% endif %}
-              </div>
-
-              <div class="field institution-url">
-                  <p class="control has-icons-left">
-                      <input autofocus class="input" id="id_institution_url" name="institution_url" maxlength="100" placeholder="Institution URL" type="text" value="{{ request.POST.institution_url }}">
-                      <span class="icon is-small is-left">
-                    <i class="material-icons">link</i>
-                  </span>
-                  </p>
-                  {% if form.institution_url.errors %}
-                      <p class="help is-danger">
-                          {{ form.institution_url.errors }}
-                      </p>
-                  {% endif %}
-              </div>
-
-          </div>
-
-          <input class="button" type="submit" value="Create team"/>
-        </form>
+        {% include "partial-team.html" %}
       </div>
       <div class="column existing-team">
         <h2>Choose Existing Team</h2>
