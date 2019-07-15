@@ -82,7 +82,7 @@ class CreateTeamForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     def clean(self):
-        task = get_object_or_404(Task.objects.select_related('challenge'), pk=self.task_id)
+        task = get_object_or_404(Task.objects, pk=self.task_id)
 
         if task.challenge.locked:
             raise ValidationError(f'The {task.challenge.name} challenge is locked.')
