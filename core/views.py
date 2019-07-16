@@ -11,7 +11,7 @@ from rest_framework.pagination import LimitOffsetPagination
 
 from core.forms import (
     AcceptInvitationForm,
-    CreateApproachForm,
+    ApproachForm,
     CreateInvitationForm,
     CreateSubmissionForm,
     TeamForm,
@@ -218,7 +218,7 @@ def create_approach(request, task_id, team_id):
     team = get_object_or_404(request.user.teams, pk=team_id)
 
     if request.method == 'POST':
-        form = CreateApproachForm(
+        form = ApproachForm(
             request.POST, request.FILES, request=request, task_id=task_id, team_id=team_id
         )
         form.instance.team = team
@@ -228,7 +228,7 @@ def create_approach(request, task_id, team_id):
             form.save()
             return HttpResponseRedirect(reverse('create-submission', args=[form.instance.id]))
     else:
-        form = CreateApproachForm(request=request, task_id=task_id, team_id=team_id)
+        form = ApproachForm(request=request, task_id=task_id, team_id=team_id)
 
     return render(
         request,
@@ -240,6 +240,22 @@ def create_approach(request, task_id, team_id):
             'existing_approaches': Approach.objects.filter(team=team, task=task),
         },
     )
+
+
+@login_required
+def edit_approach(request, approach_id):
+    approach = get_object_or_404(Approach.objects.filter(team__users=request.user), pk=approach_id)
+
+    if request.method == 'POST':
+        form = ApproachForm(request.POST, request.FILES, request=request, instance=approach)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        form = ApproachForm(request=request, instance=approach)
+
+    return render(request, 'edit-approach.html', {'form': form, 'approach': approach})
 
 
 @login_required

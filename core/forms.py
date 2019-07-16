@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Approach, Submission, Team, TeamInvitation, Task
+from core.models import Approach, Submission, Task, Team, TeamInvitation
 
 
 class CustomSignupForm(SignupForm):
@@ -109,25 +109,40 @@ class CreateSubmissionForm(forms.ModelForm):
         return data
 
 
-class CreateApproachForm(forms.ModelForm):
+class ApproachForm(forms.ModelForm):
     class Meta:
         model = Approach
         fields = ['name', 'uses_external_data', 'manuscript']
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.instance = kwargs.get('instance', None)
         self.team_id = kwargs.pop('team_id', None)
         self.task_id = kwargs.pop('task_id', None)
-        self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
+        if self.instance.pk is None:
+            self.fields['manuscript'].required = True
 
     def clean(self):
-        team = get_object_or_404(self.request.user.teams, pk=self.team_id)
-        task = get_object_or_404(Task, pk=self.task_id)
+        if self.instance.pk:
+            team = self.instance.team
+            task = self.instance.task
+            get_object_or_404(
+                Approach.objects.filter(team__users=self.request.user), pk=self.instance.id
+            )
+        else:
+            team = get_object_or_404(self.request.user.teams, pk=self.team_id)
+            task = get_object_or_404(Task, pk=self.task_id)
+
+            if Approach.objects.filter(team=team, task=task).count() >= task.max_approaches:
+                raise ValidationError(
+                    f"You\'ve reached the maximum number of approaches for {task.name}."
+                )
 
         if task.locked:
             raise ValidationError(f'The task {task.name} is locked.')
 
-        if Approach.objects.filter(team=team, task=task).count() >= task.max_approaches:
+        if Approach.objects.filter(team=team, task=task, name=self.cleaned_data['name']).exists():
             raise ValidationError(
-                f'You\'ve reached the maximum number of approaches for {task.name}.'
+                f'Team {team.name} already has an approach named \'{self.cleaned_data["name"]}\' for {task.name}'
             )
