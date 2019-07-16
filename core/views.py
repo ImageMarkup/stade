@@ -146,14 +146,10 @@ def edit_team(request, team_id):
     team = get_object_or_404(request.user.teams, pk=team_id)
 
     if request.method == 'POST':
-        form = TeamForm(request.POST, instance=team)
+        form = TeamForm(request.POST, request=request, instance=team)
 
         if form.is_valid():
-            updated_team = form.save(commit=False)
-            team.name = updated_team.name
-            team.institution = updated_team.institution
-            team.institution_url = updated_team.institution_url
-            team.save()
+            form.save()
             return HttpResponseRedirect(reverse('index'))
     else:
         form = TeamForm(instance=team)

@@ -78,8 +78,8 @@ class TeamForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
-        self.team = kwargs.pop('instance', None)
-        if self.team is None:
+        self.instance = kwargs.get('instance', None)
+        if self.instance is None:
             self.task_id = kwargs.pop('task_id', None)
 
         super().__init__(*args, **kwargs)
