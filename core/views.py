@@ -52,7 +52,7 @@ def leaderboard(request, task_id, cluster):
 
 
 def index(request):
-    challenges = Challenge.objects.prefetch_related('tasks').order_by('position')
+    challenges = Challenge.objects.prefetch_related('tasks')
 
     # for users, only show challenges with > 0 non-hidden tasks
     if not request.user.is_superuser:
