@@ -30,14 +30,15 @@ class SelectRelatedManager(models.Manager):
 
 
 class Challenge(models.Model):
+    class Meta:
+        ordering = ['position']
+
     created = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100, unique=True)
     locked = models.BooleanField(
         default=True, help_text='Whether users are blocked from making and editing teams.'
     )
     position = models.PositiveSmallIntegerField(default=0)
-
-    ordering = ['-position']
 
     def __str__(self):
         return self.name
@@ -131,6 +132,9 @@ SUBMISSION_STATUS_CHOICES = {
 
 
 class Submission(models.Model):
+    class Meta:
+        ordering = ['-created']
+
     created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
@@ -144,8 +148,6 @@ class Submission(models.Model):
     overall_score = models.FloatField(blank=True, null=True)
     fail_reason = models.TextField(blank=True)
 
-    ordering = ['-created']
-
     def __str__(self):
         return f'{self.id}'
 
@@ -154,14 +156,15 @@ class Submission(models.Model):
 
 
 class ScoreHistory(models.Model):
+    class Meta:
+        ordering = ['-created']
+
     submission = models.ForeignKey(
         Submission, on_delete=models.CASCADE, related_name='score_history'
     )
     created = models.DateTimeField(default=timezone.now)
     score = JSONField()
     overall_score = models.FloatField()
-
-    ordering = ['-created']
 
 
 class Approach(models.Model):
