@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'import_export',
     'rules.apps.AutodiscoverRulesConfig',
+    'markdownify',
 ]
 SITE_ID = 1
 

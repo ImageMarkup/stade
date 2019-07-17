@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load markdownify %}
+
 {% block content %}
 <section class="section container">
   <div class="section-header">
@@ -16,7 +18,7 @@
       <div class="tasks column">
         <div class="text">
           <h2 class="title is-5">Task description</h2>
-          <p>{{ task.description }}</p>
+          <p>{{ task.description | markdownify }}</p>
         </div>
       </div>
       <div class="teams column is-half">
