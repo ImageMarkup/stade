@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management.base import BaseCommand
 import requests
+import warnings
 
 from core.models import Approach, Challenge, Submission, Task, Team
 
@@ -18,6 +19,7 @@ class Command(BaseCommand):
         parser.add_argument('girder_token', type=str)
 
     def handle(self, *args, **options):
+        warnings.simplefilter("ignore")
         with open(options['json_file'], 'rb') as data_file:
             file_content = json.load(data_file)
             data = json.loads(file_content)
@@ -109,7 +111,9 @@ class Command(BaseCommand):
                 )
             print('approaches done')
 
+            count = 0
             for submission in submissions:
+                count += 1
                 if submission['test_prediction_file'] is None:
                     file = None
                     name = None
@@ -137,6 +141,8 @@ class Command(BaseCommand):
                     if submission['fail_reason'] is not None
                     else '',
                 )
+                print(count)
+            print('submissions done')
 
 
 def download_file(url, token):
