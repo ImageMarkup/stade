@@ -36,7 +36,7 @@ class Command(BaseCommand):
                         email=user['email'],
                         first_name=user['first_name'][:30],
                         last_name=user['last_name'][:150],
-                        is_active=False,
+                        is_active=True,
                         date_joined=datetime.utcfromtimestamp(user['created']['$date'] / 1000),
                     )
                     user_obj.set_unusable_password()
