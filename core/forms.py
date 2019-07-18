@@ -79,9 +79,7 @@ class TeamForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         self.instance = kwargs.get('instance', None)
-        if self.instance is None:
-            self.task_id = kwargs.pop('task_id', None)
-
+        self.task_id = kwargs.pop('task_id', None)
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -118,6 +116,8 @@ class ApproachForm(forms.ModelForm):
         model = Approach
         fields = ['name', 'uses_external_data', 'manuscript']
 
+        error_messages = {'manuscript': {'required': _('You must provide a manuscript file.')}}
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         self.instance = kwargs.get('instance', None)
@@ -131,22 +131,39 @@ class ApproachForm(forms.ModelForm):
         if self.instance.pk:
             team = self.instance.team
             task = self.instance.task
-            get_object_or_404(
+            approach = get_object_or_404(
                 Approach.objects.filter(team__users=self.request.user), pk=self.instance.id
             )
+            if (
+                'name' in self.cleaned_data
+                and Approach.objects.exclude(pk=approach.id)
+                .filter(team=team, task=task, name=self.cleaned_data['name'])
+                .exists()
+            ):
+                raise ValidationError(
+                    f"{team.name} already has an approach named \'{self.cleaned_data['name']}\'"
+                )
         else:
             team = get_object_or_404(self.request.user.teams, pk=self.team_id)
             task = get_object_or_404(Task, pk=self.task_id)
 
-            if Approach.objects.filter(team=team, task=task).count() >= task.max_approaches:
+            if (
+                task.max_approaches != 0
+                and Approach.objects.filter(team=team, task=task).count() >= task.max_approaches
+            ):
                 raise ValidationError(
                     f"You\'ve reached the maximum number of approaches for {task.name}."
                 )
 
+            if (
+                'name' in self.cleaned_data
+                and Approach.objects.filter(
+                    team=team, task=task, name=self.cleaned_data['name']
+                ).exists()
+            ):
+                raise ValidationError(
+                    f"{team.name} already has an approach named \'{self.cleaned_data['name']}\'"
+                )
+
         if task.locked:
             raise ValidationError(f'The task {task.name} is locked.')
-
-        if Approach.objects.filter(team=team, task=task, name=self.cleaned_data['name']).exists():
-            raise ValidationError(
-                f'Team {team.name} already has an approach named \'{self.cleaned_data["name"]}\' for {task.name}'
-            )
