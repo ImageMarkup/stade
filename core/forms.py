@@ -1,6 +1,5 @@
 from allauth.account.forms import SignupForm
 from django import forms
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
