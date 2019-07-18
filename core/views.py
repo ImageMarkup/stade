@@ -117,7 +117,7 @@ def create_team(request, task):
     )
 
     if request.method == 'POST':
-        form = TeamForm(request.POST, task_id=task.id)
+        form = TeamForm(request.POST, task_id=task.id, challenge_id=task.challenge_id)
 
         if form.is_valid():
             team = form.save(commit=False)
@@ -139,6 +139,25 @@ def create_team(request, task):
             .all(),
         },
     )
+
+
+@login_required
+def create_team_standalone(request, challenge_id):
+    challenge = get_object_or_404(Challenge.objects.filter(locked=False), pk=challenge_id)
+
+    if request.method == 'POST':
+        form = TeamForm(request.POST, challenge_id=challenge.id)
+
+        if form.is_valid():
+            team = form.save(commit=False)
+            team.creator = request.user
+            team.challenge = challenge
+            team.save()
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        form = TeamForm(request=request, challenge_id=challenge.id)
+
+    return render(request, 'create-team.html', {'form': form, 'challenge': challenge})
 
 
 @login_required
