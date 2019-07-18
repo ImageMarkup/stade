@@ -51,6 +51,7 @@ class CreateInvitationForm(forms.ModelForm):
         return self.cleaned_data['recipient'].lower()
 
     def clean(self):
+        super().clean()
         team = get_object_or_404(self.request.user.teams, pk=self.team_id)
         if team.users.filter(email=self.cleaned_data['recipient']).exists():
             raise forms.ValidationError(f'{self.cleaned_data["recipient"]} is already in the team')
