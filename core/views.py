@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -5,6 +6,7 @@ from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.http import is_safe_url
 from django.views.generic.edit import FormView
 from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
@@ -21,6 +23,15 @@ from core.leaderboard import submissions_by_approach, submissions_by_team
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from core.serializers import LeaderboardEntrySerializer
 from core.tasks import score_submission, send_team_invitation
+
+
+def safe_redirect(request, redirect_to):
+    url_is_safe = is_safe_url(
+        url=redirect_to, allowed_hosts=settings.ALLOWED_HOSTS, require_https=request.is_secure()
+    )
+    if url_is_safe and redirect_to:
+        return redirect(redirect_to)
+    return HttpResponseRedirect(reverse('index'))
 
 
 @api_view(['GET'])
@@ -161,14 +172,14 @@ def create_team_standalone(request, challenge_id):
             team.creator = request.user
             team.challenge = challenge
             team.save()
-            return redirect(request.POST.get('next', 'index'))
+            return safe_redirect(request, request.POST.get('next'))
     else:
         form = TeamForm(request=request, challenge_id=challenge.id)
 
     return render(
         request,
         'create-team.html',
-        {'form': form, 'challenge': challenge, 'next': request.GET.get('next', '')},
+        {'form': form, 'challenge': challenge, 'next': request.GET.get('next')},
     )
 
 
@@ -181,11 +192,13 @@ def edit_team(request, team_id):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('index'))
+            return safe_redirect(request, request.POST.get('next'))
     else:
         form = TeamForm(instance=team)
 
-    return render(request, 'edit-team.html', {'form': form, 'team': team})
+    return render(
+        request, 'edit-team.html', {'form': form, 'team': team, 'next': request.GET.get('next', '')}
+    )
 
 
 class AcceptInvitationView(LoginRequiredMixin, FormView):
@@ -233,11 +246,15 @@ def create_invitation(request, team_id):
                 messages.SUCCESS,
                 f'Successfully invited {form.cleaned_data["recipient"]} to {team.name}.',
             )
-            return HttpResponseRedirect(reverse('index'))
+            return safe_redirect(request, request.POST.get('next'))
     else:
         form = CreateInvitationForm(request=request)
 
-    return render(request, 'create-invitation.html', {'form': form, 'team': team})
+    return render(
+        request,
+        'create-invitation.html',
+        {'form': form, 'team': team, 'next': request.GET.get('next', '')},
+    )
 
 
 @login_required
@@ -280,11 +297,15 @@ def edit_approach(request, approach_id):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('index'))
+            return safe_redirect(request, request.POST.get('next'))
     else:
         form = ApproachForm(request=request, instance=approach)
 
-    return render(request, 'edit-approach.html', {'form': form, 'approach': approach})
+    return render(
+        request,
+        'edit-approach.html',
+        {'form': form, 'approach': approach, 'next': request.GET.get('next')},
+    )
 
 
 @login_required

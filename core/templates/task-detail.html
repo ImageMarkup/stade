@@ -22,16 +22,33 @@
         </div>
       </div>
       <div class="teams column is-half">
-        <h2 class="title is-5">Team (with submissions) {% if not task.locked and teams.count > 0 %} <a href="{% url 'create-team-standalone' task.challenge.id %}{% if current_path %}?next={{ current_path }}{% endif %}">Create a Team</a> {% endif %}</h2>
+        <h2 class="title is-5">
+          Team (with submissions)
+          {% if not task.locked and teams.count > 0 %}
+          <a href="{% url 'create-team-standalone' task.challenge.id %}{% if current_path %}?next={{ current_path }}{% endif %}">
+            Create a Team
+          </a>
+          {% endif %}
+        </h2>
           {% for team in teams %}
           <div class="team">
-            <h3>{{ team.name }} <a href="{% url 'edit-team' team.id %}">Edit</a></h3>
+            <h3>
+              {{ team.name }}
+              <a href="{% url 'edit-team' team.id %}{% if current_path %}?next={{ current_path }}{% endif %}">
+                <i class="material-icons">edit</i>
+              </a>
+            </h3>
             <p>{{ team.user_full_names|join:", " }}</p>
 
             {% if team.approach_set.all %}
               {% for approach in team.approach_set.all %}
               <div class="approach">
-                <span class="approach-name">{{ approach.name }} <a href="{% url 'edit-approach' approach.id %}">Edit</a></span>
+                <span class="approach-name">
+                  {{ approach.name }}
+                  <a href="{% url 'edit-approach' approach.id %}{% if current_path %}?next={{ current_path }}{% endif %}">
+                    Edit
+                  </a>
+                </span>
                 {% with latest_submission=approach.latest_submission %}
                     {% if latest_submission %}
                     <span class="status">{{ latest_submission.get_status_display }}
