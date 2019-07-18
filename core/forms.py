@@ -1,5 +1,6 @@
 from allauth.account.forms import SignupForm
 from django import forms
+from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
@@ -88,12 +89,25 @@ class CreateSubmissionForm(forms.ModelForm):
             'test_prediction_file': {'required': _('You must provide a prediction file.')}
         }
 
+    def __init__(self, *args, **kwargs):
+        self.approach_id = kwargs.pop('approach_id', None)
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+
     def clean_accepted_terms(self):
         data = self.cleaned_data['accepted_terms']
         if not data:
             raise forms.ValidationError('You must accept the data sharing policy terms.')
 
         return data
+
+    def clean(self):
+        super().clean()
+
+        if not self.request.user.has_perm(
+            'approaches.add_submission', Approach.objects.get(pk=self.approach_id)
+        ):
+            raise ValidationError('You don\'t have permissions to do that.')
 
 
 class CreateApproachForm(forms.ModelForm):
@@ -114,7 +128,10 @@ class CreateApproachForm(forms.ModelForm):
         if task.locked:
             raise ValidationError(f'The task {task.name} is locked.')
 
-        if Approach.objects.filter(team=team, task=task).count() >= task.max_approaches:
+        if (
+            task.max_approaches != 0
+            and Approach.objects.filter(team=team, task=task).count() >= task.max_approaches
+        ):
             raise ValidationError(
                 f'You\'ve reached the maximum number of approaches for {task.name}.'
             )

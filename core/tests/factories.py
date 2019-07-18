@@ -30,6 +30,7 @@ class TeamFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: 'team_%d' % n)
     creator = factory.SubFactory(UserFactory)
+    challenge = factory.SubFactory(ChallengeFactory)
 
 
 class ApproachFactory(factory.django.DjangoModelFactory):

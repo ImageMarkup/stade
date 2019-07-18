@@ -1,3 +1,4 @@
+from datetime import timedelta, datetime
 from pathlib import PurePath
 from uuid import uuid4
 
@@ -6,6 +7,7 @@ from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
+from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils import timezone
 
@@ -30,14 +32,15 @@ class SelectRelatedManager(models.Manager):
 
 
 class Challenge(models.Model):
+    class Meta:
+        ordering = ['position']
+
     created = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100, unique=True)
     locked = models.BooleanField(
         default=True, help_text='Whether users are blocked from making and editing teams.'
     )
     position = models.PositiveSmallIntegerField(default=0)
-
-    ordering = ['-position']
 
     def __str__(self):
         return self.name
@@ -63,9 +66,14 @@ class Task(models.Model):
         help_text='Whether final scores are visible to submitters and the leaderboard is open.',
     )
     max_approaches = models.PositiveSmallIntegerField(
-        verbose_name='Maxium Approaches',
+        verbose_name='Maximum approaches',
         default=3,
-        help_text='The maximum number of approaches a team can make on this task.',
+        help_text='The maximum number of approaches a team can make on this task. Set to 0 to disable.',
+    )
+    max_submissions_per_week = models.PositiveSmallIntegerField(
+        verbose_name='Maximum submissions per week',
+        default=10,
+        help_text='The maximum number of submissions a team can make to this task per week. Set to 0 to disable.',
     )
     test_ground_truth_file = models.FileField(upload_to=task_data_file_upload_to)
 
@@ -78,6 +86,32 @@ class Task(models.Model):
 
     def get_absolute_url(self):
         return reverse('task-detail', args=[self.id])
+
+    def pending_or_succeeded_submissions(self, team) -> QuerySet:
+        return Submission.objects.filter(
+            status__in=['queued', 'scoring', 'succeeded'], approach__task=self, approach__team=team
+        )
+
+    def next_available_submission(self, team) -> datetime:
+        """
+        Return a datetime of when the next submission can be made, or None if the
+        submission can be made now.
+        """
+        if self.max_submissions_per_week == 0:
+            return None
+
+        one_week_ago = timezone.now() - timedelta(weeks=1)
+
+        oldest_submission_in_last_week = (
+            self.pending_or_succeeded_submissions(team)
+            .filter(created__gte=one_week_ago)
+            .order_by('created')[0]
+        )
+
+        if oldest_submission_in_last_week:
+            return oldest_submission_in_last_week.created + timedelta(weeks=1)
+        else:
+            return None
 
 
 class Team(models.Model):
@@ -131,6 +165,9 @@ SUBMISSION_STATUS_CHOICES = {
 
 
 class Submission(models.Model):
+    class Meta:
+        ordering = ['-created']
+
     created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
@@ -144,8 +181,6 @@ class Submission(models.Model):
     overall_score = models.FloatField(blank=True, null=True)
     fail_reason = models.TextField(blank=True)
 
-    ordering = ['-created']
-
     def __str__(self):
         return f'{self.id}'
 
@@ -154,14 +189,15 @@ class Submission(models.Model):
 
 
 class ScoreHistory(models.Model):
+    class Meta:
+        ordering = ['-created']
+
     submission = models.ForeignKey(
         Submission, on_delete=models.CASCADE, related_name='score_history'
     )
     created = models.DateTimeField(default=timezone.now)
     score = JSONField()
     overall_score = models.FloatField()
-
-    ordering = ['-created']
 
 
 class Approach(models.Model):
