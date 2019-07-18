@@ -58,9 +58,9 @@
             </span>
           </p>
           {% if form.login.errors %}
-          <p class="help is-danger">
+          <div class="help is-danger">
             {{ form.login.errors }}
-          </p>
+          </div>
           {% endif %}
         </div>
 
@@ -72,9 +72,9 @@
             </span>
           </p>
           {% if form.password.errors %}
-          <p class="help is-danger">
+          <div class="help is-danger">
             {{ form.password.errors }}
-          </p>
+          </div>
           {% endif %}
         </div>
 

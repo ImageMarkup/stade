@@ -9,9 +9,11 @@ setup(
         'django',
         'django-cors-headers',
         'djangorestframework',
+        'django-markdownify',
         'django-storages',
         'celery',
         'isic-challenge-scoring',
         'requests',
+        'rules',
     ],
 )
