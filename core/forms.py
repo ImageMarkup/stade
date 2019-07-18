@@ -83,6 +83,7 @@ class TeamForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     def clean(self):
+        super().clean()
         if self.instance.pk:
             get_object_or_404(self.request.user.teams, pk=self.instance.id)
             challenge = self.instance.challenge
@@ -128,6 +129,7 @@ class ApproachForm(forms.ModelForm):
             self.fields['manuscript'].required = True
 
     def clean(self):
+        super().clean()
         if self.instance.pk:
             team = self.instance.team
             task = self.instance.task
