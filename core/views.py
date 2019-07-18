@@ -1,11 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import FormView
 from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
 
@@ -72,6 +72,7 @@ def task_detail(request, task_id):
         'teams': request.user.teams.filter(challenge=task.challenge).prefetch_related(
             'users', 'approach_set'
         ),
+        'current_path': request.get_full_path(),
     }
 
     return render(request, 'task-detail.html', context)
@@ -153,11 +154,15 @@ def create_team_standalone(request, challenge_id):
             team.creator = request.user
             team.challenge = challenge
             team.save()
-            return HttpResponseRedirect(reverse('index'))
+            return redirect(request.POST.get('next', 'index'))
     else:
         form = TeamForm(request=request, challenge_id=challenge.id)
 
-    return render(request, 'create-team.html', {'form': form, 'challenge': challenge})
+    return render(
+        request,
+        'create-team.html',
+        {'form': form, 'challenge': challenge, 'next': request.GET.get('next', '')},
+    )
 
 
 @login_required

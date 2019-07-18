@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="teams column is-half">
-        <h2 class="title is-5">Team (with submissions) {% if not task.locked and teams.count > 0 %} <a href="{% url 'create-team-standalone' task.challenge.id %}">Create a Team</a> {% endif %}</h2>
+        <h2 class="title is-5">Team (with submissions) {% if not task.locked and teams.count > 0 %} <a href="{% url 'create-team-standalone' task.challenge.id %}{% if current_path %}?next={{ current_path }}{% endif %}">Create a Team</a> {% endif %}</h2>
           {% for team in teams %}
           <div class="team">
             <h3>{{ team.name }} <a href="{% url 'edit-team' team.id %}">Edit</a></h3>
@@ -65,7 +65,7 @@
           </div>
         {% empty %}
         <div class="noteam">
-          <h5>You are not on any teams. You must either be invited to an existing team or create a <a href="{% url 'create-team-standalone' task.challenge.id %}"><strong>new team</strong></a>.</h5>
+          <h5>You are not on any teams. You must either be invited to an existing team or create a <a href="{% url 'create-team-standalone' task.challenge.id %}{% if current_path %}?next={{ current_path }}{% endif %}"><strong>new team</strong></a>.</h5>
           <p>Creating a <a href="{% url 'create-team' task.id %}"><strong>new submission</strong></a> will allow you to create a team.</p>
         </div>
         {% endfor %}

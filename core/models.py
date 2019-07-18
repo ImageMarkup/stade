@@ -3,7 +3,6 @@ from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields.jsonb import JSONField
-from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
 from django.urls import reverse
