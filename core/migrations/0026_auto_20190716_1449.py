@@ -13,7 +13,10 @@ class Migration(migrations.Migration):
             name='max_submissions_per_week',
             field=models.PositiveSmallIntegerField(
                 default=10,
-                help_text='The maximum number of submissions a team can make to this task per week. Set to 0 to disable.',
+                help_text=(
+                    'The maximum number of submissions a team can make to this task per week. '
+                    'Set to 0 to disable.'
+                ),
                 verbose_name='Maximum submissions per week',
             ),
         ),
@@ -22,7 +25,10 @@ class Migration(migrations.Migration):
             name='max_approaches',
             field=models.PositiveSmallIntegerField(
                 default=3,
-                help_text='The maximum number of approaches a team can make on this task. Set to 0 to disable.',
+                help_text=(
+                    'The maximum number of approaches a team can make on this task. '
+                    'Set to 0 to disable.'
+                ),
                 verbose_name='Maximum approaches',
             ),
         ),

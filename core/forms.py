@@ -1,6 +1,5 @@
 from allauth.account.forms import SignupForm
 from django import forms
-from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
@@ -116,7 +115,7 @@ class CreateSubmissionForm(forms.ModelForm):
         if not self.request.user.has_perm(
             'approaches.add_submission', Approach.objects.get(pk=self.approach_id)
         ):
-            raise ValidationError('You don\'t have permissions to do that.')
+            raise ValidationError("You don't have permissions to do that.")
 
 
 class ApproachForm(forms.ModelForm):

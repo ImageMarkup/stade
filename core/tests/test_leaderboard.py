@@ -1,6 +1,6 @@
 import pytest
 
-from core.tests.factories import TaskFactory, TeamFactory, ApproachFactory, SubmissionFactory
+from core.tests.factories import ApproachFactory, SubmissionFactory, TaskFactory, TeamFactory
 
 
 @pytest.fixture
@@ -34,7 +34,7 @@ def task_with_submissions():
     SubmissionFactory(approach=t1_a0, status='succeeded', overall_score=0.82)
     SubmissionFactory(approach=t1_a0, status='succeeded', overall_score=0.78)
 
-    t2_a0 = ApproachFactory(task=task, team=teams[2], name='approach_0')
+    t2_a0 = ApproachFactory(task=task, team=teams[2], name='approach_0')  # noqa
     # intentionally no associated submissions
 
     yield task

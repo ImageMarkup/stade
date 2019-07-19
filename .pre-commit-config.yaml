@@ -45,6 +45,5 @@ repos:
       - id: toxlint
         name: tox -e lint
         entry: tox -e lint
-        pass_filenames: false
         language: system
         types: [python]
