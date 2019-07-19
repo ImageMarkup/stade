@@ -1,4 +1,5 @@
-from allauth.account.forms import SignupForm
+from allauth.account.forms import ResetPasswordKeyForm, SignupForm
+from allauth.account.models import EmailAddress
 from django import forms
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
@@ -18,6 +19,23 @@ class CustomSignupForm(SignupForm):
         user.email = user.email.lower()
         user.save()
         return user
+
+
+class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
+    """
+    Provide a custom form for setting password such that resetting a password
+    implies the email has been verified.
+    """
+
+    def save(self):
+        email = EmailAddress.objects.filter(email=self.user.email).first()
+
+        # Note this logic is inlined from allauth.account.views.confirm_email. We don't have
+        # access to a request object here so we cannot call it directly.
+        email.verified = True
+        email.set_as_primary(conditional=True)
+        email.save()
+        super().save()
 
 
 class AcceptInvitationForm(forms.Form):
