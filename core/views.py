@@ -1,11 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import FormView
 from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
 from rules.contrib.views import permission_required, objectgetter
@@ -81,6 +81,7 @@ def task_detail(request, task_id):
         'teams': request.user.teams.filter(challenge=task.challenge).prefetch_related(
             'users', 'approach_set'
         ),
+        'current_path': request.get_full_path(),
     }
 
     return render(request, 'task-detail.html', context)
@@ -124,7 +125,7 @@ def create_team(request, task):
     task = get_object_or_404(Task.objects.filter(challenge__locked=False), pk=task)
 
     if request.method == 'POST':
-        form = TeamForm(request.POST, task_id=task.id)
+        form = TeamForm(request.POST, task_id=task.id, challenge_id=task.challenge_id)
 
         if form.is_valid():
             team = form.save(commit=False)
@@ -145,6 +146,29 @@ def create_team(request, task):
             .filter(challenge=task.challenge)
             .all(),
         },
+    )
+
+
+@login_required
+def create_team_standalone(request, challenge_id):
+    challenge = get_object_or_404(Challenge.objects.filter(locked=False), pk=challenge_id)
+
+    if request.method == 'POST':
+        form = TeamForm(request.POST, challenge_id=challenge.id)
+
+        if form.is_valid():
+            team = form.save(commit=False)
+            team.creator = request.user
+            team.challenge = challenge
+            team.save()
+            return redirect(request.POST.get('next', 'index'))
+    else:
+        form = TeamForm(request=request, challenge_id=challenge.id)
+
+    return render(
+        request,
+        'create-team.html',
+        {'form': form, 'challenge': challenge, 'next': request.GET.get('next', '')},
     )
 
 
@@ -259,7 +283,6 @@ def edit_approach(request, approach_id):
         form = ApproachForm(request=request, instance=approach)
 
     return render(request, 'edit-approach.html', {'form': form, 'approach': approach})
-
 
 
 @permission_required('approaches.add_submission', fn=objectgetter(Approach, 'approach_id'))

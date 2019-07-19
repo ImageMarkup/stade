@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Approach, Submission, Task, Team, TeamInvitation
+from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 
 
 class CustomSignupForm(SignupForm):
@@ -72,6 +72,7 @@ class TeamForm(forms.ModelForm):
         self.request = kwargs.pop('request', None)
         self.instance = kwargs.get('instance', None)
         self.task_id = kwargs.pop('task_id', None)
+        self.challenge_id = kwargs.pop('challenge_id', None)
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -80,8 +81,9 @@ class TeamForm(forms.ModelForm):
             get_object_or_404(self.request.user.teams, pk=self.instance.id)
             challenge = self.instance.challenge
         else:
-            task = get_object_or_404(Task.objects.select_related('challenge'), pk=self.task_id)
-            challenge = task.challenge
+            challenge = get_object_or_404(Challenge.objects, id=self.challenge_id)
+            if self.task_id:
+                get_object_or_404(Task.objects.filter(challenge=challenge), pk=self.task_id)
 
         if challenge.locked:
             raise ValidationError(f'The {challenge.name} challenge is locked.')

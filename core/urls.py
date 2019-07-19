@@ -17,6 +17,11 @@ urlpatterns = [
     ),
     path('create-submission/<int:approach_id>', views.create_submission, name='create-submission'),
     path('create-invitation/<int:team_id>', views.create_invitation, name='create-invitation'),
+    path(
+        'team/create/<int:challenge_id>',
+        views.create_team_standalone,
+        name='create-team-standalone',
+    ),
     path('edit-team/<int:team_id>', views.edit_team, name='edit-team'),
     path('edit-approach/<int:approach_id>', views.edit_approach, name='edit-approach'),
     path(
@@ -35,5 +40,5 @@ urlpatterns = [
         'api/submission/<int:submission_id>/score',
         views.submission_scores,
         name='submission-scores',
-    )
+    ),
 ]
