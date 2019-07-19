@@ -16,6 +16,13 @@ def add_mailchimp_subscriber(email):
         json={'email_address': email, 'status': 'subscribed', 'tags': ['stade']},
     )
 
-    if not r.ok and r.json()['title'] != 'Member Exists':
+    # MailChimp API doesn't return special status codes for members already existing, or fake
+    # emails So ignore them (since there's nothing we can really do) and only raise in the case of
+    # a different, more legitimate error.
+    if (
+        not r.ok
+        and r.json()['title'] != 'Member Exists'
+        and 'looks fake or invalid' not in r.json()['detail']
+    ):
         logger.error(r.text)
         r.raise_for_status()
