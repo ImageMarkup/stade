@@ -88,6 +88,9 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_DISPLAY = show_user_display_name
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 LOGIN_REDIRECT_URL = '/'
-ACCOUNT_FORMS = {'signup': 'core.forms.CustomSignupForm'}
+ACCOUNT_FORMS = {
+    'signup': 'core.forms.CustomSignupForm',
+    'reset_password_from_key': 'core.forms.CustomResetPasswordKeyForm',
+}
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
