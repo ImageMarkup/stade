@@ -11,7 +11,7 @@
   </div>
 
   <div class="section-content">
-      <p class="has-text-weight-semibold notification is-info">If you've registered for any of the previous ISIC Archive challenges, <a href="{% url 'account_reset_password' %}">reset your password</a> to sign in.</p>
+      <p class="has-text-weight-semibold notification is-warning">You may already have an account if you've registered for any of the previous ISIC Archive challenges. <span>If so, try <a href="{% url 'account_reset_password' %}">resetting your password</a> instead.</span></p>
 
   <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
@@ -25,9 +25,9 @@
     </div>
     {% endif %}
 
-    <div class="fields">
+    <div class="columns is-multiline fields">
 
-      <div class="field email">
+      <div class="column is-full field email">
         <p class="control has-icons-left">
           <input class="input{% if form.email.errors %} is-danger{% endif %}" id="id_email"
           name="email" placeholder="Email Address" required autofocus type="email" value="{{ request.POST.email }}">
@@ -42,37 +42,7 @@
         {% endif %}
       </div>
 
-      <div class="field first_name">
-          <p class="control has-icons-left">
-              <input class="input{% if form.first_name.errors %} is-danger{% endif %}" id="id_first_name"
-                     name="first_name" maxlength="150" minlength="1" placeholder="First Name" required type="text" value="{{ request.POST.first_name }}">
-              <span class="icon is-small is-left">
-                  <i class="material-icons">person</i>
-              </span>
-          </p>
-          {% if form.first_name.errors %}
-          <div class="help is-danger">
-              {{ form.first_name.errors }}
-          </div>
-          {% endif %}
-      </div>
-
-      <div class="field last_name">
-          <p class="control has-icons-left">
-              <input class="input{% if form.last_name.errors %} is-danger{% endif %}" id="id_last_name"
-                     name="last_name" maxlength="150" minlength="1" placeholder="Last Name" required type="text" value="{{ request.POST.last_name }}">
-              <span class="icon is-small is-left">
-                  <i class="material-icons">person</i>
-              </span>
-          </p>
-          {% if form.last_name.errors %}
-          <div class="help is-danger">
-              {{ form.last_name.errors }}
-          </div>
-          {% endif %}
-      </div>
-
-      <div class="field username">
+      <div class="column is-full field username">
         <p class="control has-icons-left">
           <input class="input{% if form.username.errors %} is-danger{% endif %}" id="id_username"
           name="username" maxlength="150" minlength="1" placeholder="Username" required type="text" value="{{ request.POST.username }}">
@@ -87,7 +57,41 @@
         {% endif %}
       </div>
 
-      <div class="field password">
+      <hr class="column is-full">
+
+      <div class="column is-half field first_name">
+          <p class="control has-icons-left">
+              <input class="input{% if form.first_name.errors %} is-danger{% endif %}" id="id_first_name"
+                     name="first_name" maxlength="150" minlength="1" placeholder="First Name" required type="text" value="{{ request.POST.first_name }}">
+              <span class="icon is-small is-left">
+                  <i class="material-icons">person</i>
+              </span>
+          </p>
+          {% if form.first_name.errors %}
+          <div class="help is-danger">
+              {{ form.first_name.errors }}
+          </div>
+          {% endif %}
+      </div>
+
+      <div class="column is-half field last_name">
+          <p class="control has-icons-left">
+              <input class="input{% if form.last_name.errors %} is-danger{% endif %}" id="id_last_name"
+                     name="last_name" maxlength="150" minlength="1" placeholder="Last Name" required type="text" value="{{ request.POST.last_name }}">
+              <span class="icon is-small is-left">
+                  <i class="material-icons">person</i>
+              </span>
+          </p>
+          {% if form.last_name.errors %}
+          <div class="help is-danger">
+              {{ form.last_name.errors }}
+          </div>
+          {% endif %}
+      </div>
+
+      <hr class="column is-full">
+
+      <div class="column is-full field password">
         <p class="control has-icons-left">
           <input class="input{% if form.password1.errors %} is-danger{% endif %}" id="id_password1" name="password1" placeholder="Password" required type="password">
           <span class="icon is-small is-left">
@@ -101,7 +105,7 @@
         {% endif %}
       </div>
 
-      <div class="field confirmpassword">
+      <div class="column is-full field confirmpassword">
         <p class="control has-icons-left">
           <input class="input{% if form.password2.errors %} is-danger{% endif %}" id="id_password2" name="password2" placeholder="Confirm Password" required type="password">
           <span class="icon is-small is-left">

@@ -13,6 +13,8 @@
 
   <div class="section-content">
 
+    <p class="has-text-weight-semibold notification is-warning">If you've registered for any of the previous ISIC Archive challenges, you will need to <a href="{% url 'account_reset_password' %}">reset your password</a> to sign in.</p>
+    
     {% get_providers as socialaccount_providers %}
 
     {% if socialaccount_providers %}
