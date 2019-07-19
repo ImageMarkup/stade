@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Approach, Submission, Team, TeamInvitation, Task
+from core.models import Approach, Submission, Task, Team, TeamInvitation
 
 
 class CustomSignupForm(SignupForm):
@@ -63,21 +63,28 @@ class CreateInvitationForm(forms.ModelForm):
             )
 
 
-class CreateTeamForm(forms.ModelForm):
+class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ['name', 'institution', 'institution_url']
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
+        self.instance = kwargs.get('instance', None)
         self.task_id = kwargs.pop('task_id', None)
         super().__init__(*args, **kwargs)
 
     def clean(self):
-        task = get_object_or_404(Task.objects, pk=self.task_id)
+        super().clean()
+        if self.instance.pk:
+            get_object_or_404(self.request.user.teams, pk=self.instance.id)
+            challenge = self.instance.challenge
+        else:
+            task = get_object_or_404(Task.objects.select_related('challenge'), pk=self.task_id)
+            challenge = task.challenge
 
-        if task.challenge.locked:
-            raise ValidationError(f'The {task.challenge.name} challenge is locked.')
+        if challenge.locked:
+            raise ValidationError(f'The {challenge.name} challenge is locked.')
 
 
 class CreateSubmissionForm(forms.ModelForm):
@@ -110,28 +117,60 @@ class CreateSubmissionForm(forms.ModelForm):
             raise ValidationError('You don\'t have permissions to do that.')
 
 
-class CreateApproachForm(forms.ModelForm):
+class ApproachForm(forms.ModelForm):
     class Meta:
         model = Approach
         fields = ['name', 'uses_external_data', 'manuscript']
 
+        error_messages = {'manuscript': {'required': _('You must provide a manuscript file.')}}
+
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.instance = kwargs.get('instance', None)
         self.team_id = kwargs.pop('team_id', None)
         self.task_id = kwargs.pop('task_id', None)
-        self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
+        if self.instance.pk is None:
+            self.fields['manuscript'].required = True
 
     def clean(self):
-        team = get_object_or_404(self.request.user.teams, pk=self.team_id)
-        task = get_object_or_404(Task, pk=self.task_id)
+        super().clean()
+        if self.instance.pk:
+            team = self.instance.team
+            task = self.instance.task
+            approach = get_object_or_404(
+                Approach.objects.filter(team__users=self.request.user), pk=self.instance.id
+            )
+            if (
+                'name' in self.cleaned_data
+                and Approach.objects.exclude(pk=approach.id)
+                .filter(team=team, task=task, name=self.cleaned_data['name'])
+                .exists()
+            ):
+                raise ValidationError(
+                    f"{team.name} already has an approach named \'{self.cleaned_data['name']}\'"
+                )
+        else:
+            team = get_object_or_404(self.request.user.teams, pk=self.team_id)
+            task = get_object_or_404(Task, pk=self.task_id)
+
+            if (
+                task.max_approaches != 0
+                and Approach.objects.filter(team=team, task=task).count() >= task.max_approaches
+            ):
+                raise ValidationError(
+                    f"You\'ve reached the maximum number of approaches for {task.name}."
+                )
+
+            if (
+                'name' in self.cleaned_data
+                and Approach.objects.filter(
+                    team=team, task=task, name=self.cleaned_data['name']
+                ).exists()
+            ):
+                raise ValidationError(
+                    f"{team.name} already has an approach named \'{self.cleaned_data['name']}\'"
+                )
 
         if task.locked:
             raise ValidationError(f'The task {task.name} is locked.')
-
-        if (
-            task.max_approaches != 0
-            and Approach.objects.filter(team=team, task=task).count() >= task.max_approaches
-        ):
-            raise ValidationError(
-                f'You\'ve reached the maximum number of approaches for {task.name}.'
-            )

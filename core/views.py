@@ -12,10 +12,10 @@ from rules.contrib.views import permission_required, objectgetter
 
 from core.forms import (
     AcceptInvitationForm,
-    CreateApproachForm,
+    ApproachForm,
     CreateInvitationForm,
     CreateSubmissionForm,
-    CreateTeamForm,
+    TeamForm,
 )
 from core.leaderboard import submissions_by_approach, submissions_by_team
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
@@ -124,7 +124,7 @@ def create_team(request, task):
     task = get_object_or_404(Task.objects.filter(challenge__locked=False), pk=task)
 
     if request.method == 'POST':
-        form = CreateTeamForm(request.POST, task_id=task.id)
+        form = TeamForm(request.POST, task_id=task.id)
 
         if form.is_valid():
             team = form.save(commit=False)
@@ -133,7 +133,7 @@ def create_team(request, task):
             team.save()
             return HttpResponseRedirect(reverse('create-approach', args=[task.id, team.id]))
     else:
-        form = CreateTeamForm(task_id=task.id)
+        form = TeamForm(task_id=task.id)
 
     return render(
         request,
@@ -146,6 +146,22 @@ def create_team(request, task):
             .all(),
         },
     )
+
+
+@login_required
+def edit_team(request, team_id):
+    team = get_object_or_404(request.user.teams, pk=team_id)
+
+    if request.method == 'POST':
+        form = TeamForm(request.POST, request=request, instance=team)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        form = TeamForm(instance=team)
+
+    return render(request, 'edit-team.html', {'form': form, 'team': team})
 
 
 class AcceptInvitationView(LoginRequiredMixin, FormView):
@@ -205,7 +221,7 @@ def create_approach(request, task_id, team_id):
     team = get_object_or_404(request.user.teams, pk=team_id)
 
     if request.method == 'POST':
-        form = CreateApproachForm(
+        form = ApproachForm(
             request.POST, request.FILES, request=request, task_id=task_id, team_id=team_id
         )
         form.instance.team = team
@@ -215,7 +231,7 @@ def create_approach(request, task_id, team_id):
             form.save()
             return HttpResponseRedirect(reverse('create-submission', args=[form.instance.id]))
     else:
-        form = CreateApproachForm(request=request, task_id=task_id, team_id=team_id)
+        form = ApproachForm(request=request, task_id=task_id, team_id=team_id)
 
     return render(
         request,
@@ -230,6 +246,22 @@ def create_approach(request, task_id, team_id):
 
 
 @login_required
+def edit_approach(request, approach_id):
+    approach = get_object_or_404(Approach.objects.filter(team__users=request.user), pk=approach_id)
+
+    if request.method == 'POST':
+        form = ApproachForm(request.POST, request.FILES, request=request, instance=approach)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        form = ApproachForm(request=request, instance=approach)
+
+    return render(request, 'edit-approach.html', {'form': form, 'approach': approach})
+
+
+
 @permission_required('approaches.add_submission', fn=objectgetter(Approach, 'approach_id'))
 def create_submission(request, approach_id):
     approach = get_object_or_404(Approach, pk=approach_id)

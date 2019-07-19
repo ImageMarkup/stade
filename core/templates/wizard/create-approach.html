@@ -34,77 +34,15 @@
     <div class="columns">
       <div class="column new-approach">
         <h2>Create New Approach</h2>
-
-        <form action="" class="create-approach" method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-
-          {% if form.non_field_errors %}
-          <div class="help is-danger">
-            <i class="material-icons">error</i>
-            {{ form.non_field_errors }}
-          </div>
-          {% endif %}
-
-          <div class="fields">
-
-            <div class="field is-two-thirds name">
-              <p class="control has-icons-left">
-                <input autofocus class="input{% if form.name.errors %} is-danger{% endif %}" id="id_name" name="name" maxlength="100" placeholder="Approach Name" required type="text" value="{{ request.POST.name }}">
-                <span class="icon is-small is-left">
-                  <i class="material-icons">label</i>
-                </span>
-              </p>
-              {% if form.name.errors %}
-              <div class="help is-danger">
-                {{ form.name.errors }}
-              </div>
-              {% endif %}
-            </div>
-
-            <div class="field external-data">
-              <div class="control">
-                <label class="checkbox">
-                  <input id="id_uses_external_data" {% if request.POST.uses_external_data %}checked {% endif %}name="uses_external_data" type="checkbox">
-                  <p>Uses external data</p>
-                </label>
-              </div>
-            </div>
-
-            <div class="field file-upload">
-              <div class="file has-name is-medium is-fullwidth is-right{% if form.manuscript.errors %} is-danger{% endif %}">
-                <label class="file-label">
-                  <input class="file-input" id="id_manuscript" name="manuscript" required type="file">
-                  <span class="file-cta">
-                    <span class="file-icon">
-                      <i class="material-icons">file_copy</i>
-                    </span>
-                    <span class="file-label">
-                      Choose a file (*.PDF)
-                    </span>
-                  </span>
-                  <span class="file-name" id="file-name">
-                    No file chosen
-                  </span>
-                </label>
-                {% if form.manuscript.errors %}
-                <div class="help is-danger">
-                  {{ form.manuscript.errors }}
-                </div>
-                {% endif %}
-              </div>
-            </div>
-
-          </div>
-
-          <input class="button" type="submit" value="Create approach"/>
-        </form>
+        {% include "partial-approach.html" %}
       </div>
       <div class="column existing-approach">
         <h2>Choose Existing Approach</h2>
         {% if existing_approaches %}
         <ul class="approaches">
           {% for approach in existing_approaches %}
-          <li><a href="{% url 'create-submission' approach.id %}"><i class="material-icons">import_contacts</i> {{ approach.name }}</a></li>
+          <li><a href="{% url 'create-submission' approach.id %}"><i class="material-icons">import_contacts</i>
+              {{ approach.name }}</a></li>
           {% endfor %}
         </ul>
         {% else %}
@@ -114,13 +52,4 @@
     </div>
   </div>
 </section>
-
-<script type="text/javascript">
-  var file = document.getElementById("id_manuscript");
-  file.onchange = function(){
-    if(file.files.length > 0) {
-      document.getElementById('file-name').innerHTML = file.files[0].name;
-    }
-  };
-</script>
 {% endblock %}
