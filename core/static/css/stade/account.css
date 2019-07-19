@@ -4,7 +4,14 @@
 .section.container.login,
 .section.container.signup,
 .section.container.pwreset {
-  max-width: 420px;
+  max-width: 470px;
+}
+
+.section.container.login .notification,
+.section.container.signup .notification,
+.section.container.pwreset .notification {
+  margin-bottom: 30px;
+  margin-top: -10px;
 }
 
 .section.container.login form.login,
@@ -19,6 +26,15 @@ form.password_reset .fields {
   border-bottom: 1px solid #e3e6e8;
   margin-bottom: 20px;
   padding: 10px 0 20px;
+}
+
+form .fields .column {
+  padding: 5px 12px;
+}
+
+form .fields hr.column {
+  margin: 0 0 12px;
+  padding: 0;
 }
 
 form.login .fields .rememberme input[type="checkbox"] {
