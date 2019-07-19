@@ -176,6 +176,11 @@ h6 {
 
 }
 
+.container.notification-wrapper {
+  margin-top: -15px;
+  padding-bottom: 40px;
+}
+
 /* Site structure
 ** ================================ */
 
@@ -406,9 +411,9 @@ h6 {
   display: none;
 }
 
-/* Notifications */
+/* Invites */
 
-.notification-wrapper {
+.invites-wrapper {
   background: #ece8e8;
   padding: 30px;
 }
