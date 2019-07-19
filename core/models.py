@@ -4,7 +4,6 @@ from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields.jsonb import JSONField
-from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
 from django.db.models import QuerySet
@@ -12,21 +11,28 @@ from django.urls import reverse
 from django.utils import timezone
 
 
-def task_data_file_upload_to(instance, filename):
+# Don't use this, it will be deleted when past migrations are squashed.
+# See CollisionSafeFileField instead.
+def _deprecated_file_upload_to(instance, filename):
     extension = PurePath(filename).suffix[1:].lower()
     return f'{uuid4()}.{extension}'
 
 
-def submission_csv_file_upload_to(instance, filename):
-    extension = Path(filename).suffix[1:].lower()
-    instance.test_prediction_file_name = filename
-    return f'{uuid4()}.{extension}'
+task_data_file_upload_to = _deprecated_file_upload_to
+submission_file_upload_to = _deprecated_file_upload_to
 
 
-def manuscript_csv_file_upload_to(instance, filename):
-    extension = Path(filename).suffix[1:].lower()
-    instance.manuscript_name = filename
-    return f'{uuid4()}.{extension}'
+class CollisionSafeFileField(models.FileField):
+    description = 'A file field which is uploaded to <randomuuid>/filename.'
+
+    def __init__(self, *args, **kwargs):
+        kwargs['max_length'] = kwargs.get('max_length', 200)
+        kwargs['upload_to'] = self.uuid_prefix_filename
+        super().__init__(*args, **kwargs)
+
+    @staticmethod
+    def uuid_prefix_filename(instance, filename):
+        return f'{uuid4()}/{filename}'
 
 
 class SelectRelatedManager(models.Manager):
@@ -82,7 +88,7 @@ class Task(models.Model):
         default=10,
         help_text='The maximum number of submissions a team can make to this task per week. Set to 0 to disable.',
     )
-    test_ground_truth_file = models.FileField(upload_to=task_data_file_upload_to)
+    test_ground_truth_file = CollisionSafeFileField()
 
     # Define custom "objects" first, so it will be the "_default_manager", which is more efficient
     # for many automatically generated queries
@@ -179,8 +185,7 @@ class Submission(models.Model):
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
     accepted_terms = models.BooleanField(default=False)
-    test_prediction_file = models.FileField(upload_to=submission_file_upload_to)
-    test_prediction_file_name = models.CharField(max_length=200)
+    test_prediction_file = CollisionSafeFileField()
     status = models.CharField(
         max_length=20, default='queued', choices=SUBMISSION_STATUS_CHOICES.items()
     )
@@ -214,13 +219,9 @@ class Approach(models.Model):
     created = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100)
     uses_external_data = models.BooleanField()
-    manuscript = models.FileField(
-        upload_to=manuscript_csv_file_upload_to,
-        validators=[FileExtensionValidator(allowed_extensions=['pdf'])],
-        max_length=200,
-        blank=True,
+    manuscript = CollisionSafeFileField(
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True
     )
-    manuscript_name = models.CharField(max_length=200, blank=True, null=True)
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)

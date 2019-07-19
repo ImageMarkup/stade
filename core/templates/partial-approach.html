@@ -52,8 +52,8 @@
                         </span>
                     </span>
                     <span class="file-name" id="file-name">
-                        {% if approach.manuscript_name %}
-                            {{ approach.manuscript_name }}
+                        {% if approach.manuscript.name %}
+                            {{ approach.manuscript.name }}
                         {% elif approach.manuscript %}
                             {{ approach.manuscript }}
                         {% else %}
