@@ -8,12 +8,6 @@
 
   </head>
   <body class="content">
-  <div id="temporary-transition-banner" class="notification is-info">
-      <center>Welcome! This is the new platform for submitting to the ISIC Challenge.<br>
-          <strong>Note: Only Task 3 for the Live Challenge is currently accepting submissions.</strong><br>
-          Submissions for the 2019 Challenge will not be accepted until August 2nd.
-      </center>
-  </div>
     <header class="main-header">
       <div class="container">
         <div class="logo">
@@ -40,28 +34,42 @@
         </div>
       </div>
     </header>
-    {% if messages %}
-      {% for message in messages %}
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-          <div class="notification is-success">
-            <button class="delete"></button>
-            {{ message }}
-          </div>
-        {% endif %}
-
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-          <div class="notification is-danger">
-            <button class="delete"></button>
-            {{ message }}
-          </div>
-        {% endif %}
-      {% endfor %}
-    {% endif %}
+    <div id="temporary-transition-banner" class="notification">
+      <div class="container">
+        <div class="notice-content">
+          <h1 class="banner-title">Welcome to the new submission platform for the ISIC Challenge!</h1>
+          <h4 class="notice-title">Important Notices:</h4>
+          <ul class="notice-list">
+            <li><strong>Only Task 3 for the Live Challenge</strong> is currently accepting submissions.</li>
+            <li>Submissions for the 2019 Challenge <strong>will not be accepted until August 2nd</strong>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
     {% load invites %}
 
     {% show_pending_invites request %}
     <div class="main-content">
+      {% if messages %}
+        <div class="container notification-wrapper">
+        {% for message in messages %}
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="notification is-success">
+              <button class="delete"></button>
+              {{ message }}
+            </div>
+          {% endif %}
+
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="notification is-danger">
+              <button class="delete"></button>
+              {{ message }}
+            </div>
+          {% endif %}
+        {% endfor %}
+        </div>
+      {% endif %}
 
       {% block content %}{% endblock %}
 

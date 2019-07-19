@@ -153,6 +153,34 @@ h6 {
   padding-bottom: 10px;
 }
 
+/* Notifications
+** ================================ */
+
+#temporary-transition-banner {
+  background-color: #00A9A5;
+  border-radius: 0;
+  color: #fff;
+  padding: 40px 0 60px;
+}
+
+#temporary-transition-banner .banner-title,
+#temporary-transition-banner .notice-title {
+  color: #fff;
+}
+
+#temporary-transition-banner .notification-list {
+  margin-top: 5px;
+}
+
+#temporary-transition-banner .notice-content {
+
+}
+
+.container.notification-wrapper {
+  margin-top: -15px;
+  padding-bottom: 40px;
+}
+
 /* Site structure
 ** ================================ */
 
@@ -383,9 +411,9 @@ h6 {
   display: none;
 }
 
-/* Notifications */
+/* Invites */
 
-.notification-wrapper {
+.invites-wrapper {
   background: #ece8e8;
   padding: 30px;
 }
