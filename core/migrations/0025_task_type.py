@@ -5,15 +5,17 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0024_auto_20190715_1536'),
-    ]
+    dependencies = [('core', '0024_auto_20190715_1536')]
 
     operations = [
         migrations.AddField(
             model_name='task',
             name='type',
-            field=models.CharField(choices=[('segmentation', 'Segmentation'), ('classification', 'Classification')], default='classification', max_length=20),
+            field=models.CharField(
+                choices=[('segmentation', 'Segmentation'), ('classification', 'Classification')],
+                default='classification',
+                max_length=20,
+            ),
             preserve_default=False,
-        ),
+        )
     ]

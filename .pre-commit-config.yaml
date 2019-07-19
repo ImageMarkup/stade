@@ -39,3 +39,11 @@ repos:
     hooks:
       - id: black
         args: [--line-length=100, --skip-string-normalization]
+
+  - repo: local
+    hooks:
+      - id: toxlint
+        name: tox -e lint
+        entry: tox -e lint
+        language: system
+        types: [python]

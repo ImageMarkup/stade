@@ -5,14 +5,10 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0023_task_max_approaches'),
-    ]
+    dependencies = [('core', '0023_task_max_approaches')]
 
     operations = [
         migrations.AlterField(
-            model_name='teaminvitation',
-            name='recipient',
-            field=models.EmailField(max_length=254),
-        ),
+            model_name='teaminvitation', name='recipient', field=models.EmailField(max_length=254)
+        )
     ]

@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 from pathlib import PurePath
 from uuid import uuid4
 
@@ -81,12 +81,17 @@ class Task(models.Model):
     max_approaches = models.PositiveSmallIntegerField(
         verbose_name='Maximum approaches',
         default=3,
-        help_text='The maximum number of approaches a team can make on this task. Set to 0 to disable.',
+        help_text=(
+            'The maximum number of approaches a team can make on this task. Set to 0 to disable.'
+        ),
     )
     max_submissions_per_week = models.PositiveSmallIntegerField(
         verbose_name='Maximum submissions per week',
         default=10,
-        help_text='The maximum number of submissions a team can make to this task per week. Set to 0 to disable.',
+        help_text=(
+            'The maximum number of submissions a team can make to this task per week. '
+            'Set to 0 to disable.'
+        ),
     )
     test_ground_truth_file = CollisionSafeFileField()
 
