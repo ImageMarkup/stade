@@ -51,23 +51,16 @@ class CreateInvitationForm(forms.ModelForm):
         return self.cleaned_data['recipient'].lower()
 
     def clean(self):
+        super().clean()
         team = get_object_or_404(self.request.user.teams, pk=self.team_id)
         if team.users.filter(email=self.cleaned_data['recipient']).exists():
-            messages.add_message(
-                self.request,
-                messages.ERROR,
-                f'{self.cleaned_data["recipient"]} is already in the team',
-            )
-            raise forms.ValidationError('User is already in the team')
+            raise forms.ValidationError(f'{self.cleaned_data["recipient"]} is already in the team')
         if TeamInvitation.objects.filter(
             recipient=self.cleaned_data['recipient'], team_id=team.id
         ).exists():
-            messages.add_message(
-                self.request,
-                messages.ERROR,
-                f'{self.cleaned_data["recipient"]} has already been invited',
+            raise forms.ValidationError(
+                f'{self.cleaned_data["recipient"]} has already been invited'
             )
-            raise forms.ValidationError('User has already been invited')
 
 
 class TeamForm(forms.ModelForm):
@@ -105,12 +98,25 @@ class CreateSubmissionForm(forms.ModelForm):
             'test_prediction_file': {'required': _('You must provide a prediction file.')}
         }
 
+    def __init__(self, *args, **kwargs):
+        self.approach_id = kwargs.pop('approach_id', None)
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+
     def clean_accepted_terms(self):
         data = self.cleaned_data['accepted_terms']
         if not data:
             raise forms.ValidationError('You must accept the data sharing policy terms.')
 
         return data
+
+    def clean(self):
+        super().clean()
+
+        if not self.request.user.has_perm(
+            'approaches.add_submission', Approach.objects.get(pk=self.approach_id)
+        ):
+            raise ValidationError('You don\'t have permissions to do that.')
 
 
 class ApproachForm(forms.ModelForm):

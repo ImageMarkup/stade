@@ -27,8 +27,13 @@
       <li class="submitted-by"><strong>Submitted by:</strong> {{ user }}</li>
       <li class="status"><strong>Status:</strong> <span class="is-success">{{  submission.get_status_display }}</span></li>
     </ul>
+    {% if submission.status == 'failed' %}
+    There was a problem with your submission.
+
+    <pre>{{  submission.fail_reason }}</pre>
+    {% endif %}
     <div class="data-download">
-      <h3 class="title">Download the submission</h3>
+      <h3 class="title">Download {% if request.user.is_superuser %}the{% else %}your{% endif %} submission</h3>
       <a href="{{submission.test_prediction_file.url}}" class="button is-large">download <i class="material-icons">get_app</i></a>
     </div>
   </div>

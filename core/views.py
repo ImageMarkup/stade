@@ -2,12 +2,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
-from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views.generic.edit import FormView
 from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
+from rules.contrib.views import permission_required, objectgetter
 
 from core.forms import (
     AcceptInvitationForm,
@@ -51,8 +52,16 @@ def leaderboard(request, task_id, cluster):
     return paginator.get_paginated_response(serializer.data)
 
 
+@api_view(['GET'])
+def submission_scores(request, submission_id):
+    submission = get_object_or_404(
+        Submission.objects.filter(approach__task__scores_published=True), pk=submission_id
+    )
+    return JsonResponse(submission.score)
+
+
 def index(request):
-    challenges = Challenge.objects.prefetch_related('tasks').order_by('position')
+    challenges = Challenge.objects.prefetch_related('tasks')
 
     # for users, only show challenges with > 0 non-hidden tasks
     if not request.user.is_superuser:
@@ -65,7 +74,7 @@ def index(request):
 
 @login_required
 def task_detail(request, task_id):
-    task = get_object_or_404(Task.objects.select_related('challenge'), pk=task_id)
+    task = get_object_or_404(Task.objects, pk=task_id)
 
     context = {
         'task': task,
@@ -112,10 +121,8 @@ def submission_list(request, task_id, team_id):
 
 @login_required
 def create_team(request, task):
-    # Note: this permission checking is duplicated in the TeamForm
-    task = get_object_or_404(
-        Task.objects.select_related('challenge').filter(challenge__locked=False), pk=task
-    )
+    # Note: this permission checking is duplicated in the CreateTeamForm
+    task = get_object_or_404(Task.objects.filter(challenge__locked=False), pk=task)
 
     if request.method == 'POST':
         form = TeamForm(request.POST, task_id=task.id, challenge_id=task.challenge_id)
@@ -278,15 +285,15 @@ def edit_approach(request, approach_id):
     return render(request, 'edit-approach.html', {'form': form, 'approach': approach})
 
 
-@login_required
-def create_submission(request, approach):
-    approach = get_object_or_404(
-        Approach.objects.filter(task__locked=False, team__id__in=request.user.teams.only('id')),
-        pk=approach,
-    )
+@permission_required('approaches.add_submission', fn=objectgetter(Approach, 'approach_id'))
+def create_submission(request, approach_id):
+    approach = get_object_or_404(Approach, pk=approach_id)
 
     if request.method == 'POST':
-        form = CreateSubmissionForm(request.POST, request.FILES)
+        form = CreateSubmissionForm(
+            request.POST, request.FILES, approach_id=approach_id, request=request
+        )
+        # TODO: Is this the proper way to set these?
         form.instance.approach = approach
         form.instance.creator = request.user
 
@@ -295,6 +302,6 @@ def create_submission(request, approach):
             score_submission.delay(form.instance.id)
             return HttpResponseRedirect(reverse('submission-detail', args=[form.instance.id]))
     else:
-        form = CreateSubmissionForm()
+        form = CreateSubmissionForm(approach_id=approach_id, request=request)
 
     return render(request, 'wizard/create-submission.html', {'form': form, 'approach': approach})

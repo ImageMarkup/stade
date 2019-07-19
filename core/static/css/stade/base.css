@@ -400,10 +400,6 @@ h6 {
   padding: 11px 18px 14px;
 }
 
-.user-notification i {
-  color: #;
-}
-
 .user-notification form {
   margin: 2px 0 0 auto;
 }
@@ -416,4 +412,8 @@ h6 {
 .user-notification .notification-text span {
   display: block;
   font-weight: 600;
+}
+
+#temporary-transition-banner {
+  margin-bottom: 0;
 }

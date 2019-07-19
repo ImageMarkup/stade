@@ -1,32 +1,53 @@
-from pathlib import Path
+from datetime import timedelta, datetime
+from pathlib import PurePath
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
+from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils import timezone
 
 
-def task_data_file_upload_to(instance, filename):
-    extension = Path(filename).suffix[1:].lower()
+# Don't use this, it will be deleted when past migrations are squashed.
+# See CollisionSafeFileField instead.
+def _deprecated_file_upload_to(instance, filename):
+    extension = PurePath(filename).suffix[1:].lower()
     return f'{uuid4()}.{extension}'
 
 
-def submission_csv_file_upload_to(instance, filename):
-    extension = Path(filename).suffix[1:].lower()
-    instance.test_prediction_file_name = filename
-    return f'{uuid4()}.{extension}'
+task_data_file_upload_to = _deprecated_file_upload_to
+submission_file_upload_to = _deprecated_file_upload_to
 
 
-def manuscript_csv_file_upload_to(instance, filename):
-    extension = Path(filename).suffix[1:].lower()
-    instance.manuscript_name = filename
-    return f'{uuid4()}.{extension}'
+class CollisionSafeFileField(models.FileField):
+    description = 'A file field which is uploaded to <randomuuid>/filename.'
+
+    def __init__(self, *args, **kwargs):
+        kwargs['max_length'] = kwargs.get('max_length', 200)
+        kwargs['upload_to'] = self.uuid_prefix_filename
+        super().__init__(*args, **kwargs)
+
+    @staticmethod
+    def uuid_prefix_filename(instance, filename):
+        return f'{uuid4()}/{filename}'
+
+
+class SelectRelatedManager(models.Manager):
+    def __init__(self, *related_fields):
+        self.related_fields = related_fields
+        super().__init__()
+
+    def get_queryset(self):
+        return super().get_queryset().select_related(*self.related_fields)
 
 
 class Challenge(models.Model):
+    class Meta:
+        ordering = ['position']
+
     created = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100, unique=True)
     locked = models.BooleanField(
@@ -34,13 +55,15 @@ class Challenge(models.Model):
     )
     position = models.PositiveSmallIntegerField(default=0)
 
-    ordering = ['-position']
-
     def __str__(self):
         return self.name
 
 
+TASK_TYPE_CHOICES = {'segmentation': 'Segmentation', 'classification': 'Classification'}
+
+
 class Task(models.Model):
+    type = models.CharField(max_length=20, choices=TASK_TYPE_CHOICES.items())
     created = models.DateTimeField(default=timezone.now)
     challenge = models.ForeignKey(Challenge, on_delete=models.DO_NOTHING, related_name='tasks')
     name = models.CharField(max_length=100)
@@ -56,17 +79,52 @@ class Task(models.Model):
         help_text='Whether final scores are visible to submitters and the leaderboard is open.',
     )
     max_approaches = models.PositiveSmallIntegerField(
-        verbose_name='Maxium Approaches',
+        verbose_name='Maximum approaches',
         default=3,
-        help_text='The maximum number of approaches a team can make on this task.',
+        help_text='The maximum number of approaches a team can make on this task. Set to 0 to disable.',
     )
-    test_ground_truth_file = models.FileField(upload_to=task_data_file_upload_to)
+    max_submissions_per_week = models.PositiveSmallIntegerField(
+        verbose_name='Maximum submissions per week',
+        default=10,
+        help_text='The maximum number of submissions a team can make to this task per week. Set to 0 to disable.',
+    )
+    test_ground_truth_file = CollisionSafeFileField()
+
+    # Define custom "objects" first, so it will be the "_default_manager", which is more efficient
+    # for many automatically generated queries
+    objects = SelectRelatedManager('challenge')
 
     def __str__(self):
         return f'{self.challenge.name}: {self.name}'
 
     def get_absolute_url(self):
         return reverse('task-detail', args=[self.id])
+
+    def pending_or_succeeded_submissions(self, team) -> QuerySet:
+        return Submission.objects.filter(
+            status__in=['queued', 'scoring', 'succeeded'], approach__task=self, approach__team=team
+        )
+
+    def next_available_submission(self, team) -> datetime:
+        """
+        Return a datetime of when the next submission can be made, or None if the
+        submission can be made now.
+        """
+        if self.max_submissions_per_week == 0:
+            return None
+
+        one_week_ago = timezone.now() - timedelta(weeks=1)
+
+        oldest_submission_in_last_week = (
+            self.pending_or_succeeded_submissions(team)
+            .filter(created__gte=one_week_ago)
+            .order_by('created')[0]
+        )
+
+        if oldest_submission_in_last_week:
+            return oldest_submission_in_last_week.created + timedelta(weeks=1)
+        else:
+            return None
 
 
 class Team(models.Model):
@@ -120,22 +178,20 @@ SUBMISSION_STATUS_CHOICES = {
 
 
 class Submission(models.Model):
+    class Meta:
+        ordering = ['-created']
+
     created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
     accepted_terms = models.BooleanField(default=False)
-    test_prediction_file = models.FileField(upload_to=submission_csv_file_upload_to)
-    test_prediction_file_name = models.CharField(max_length=200)
+    test_prediction_file = CollisionSafeFileField()
     status = models.CharField(
-        max_length=20,
-        default='queued',
-        choices=[(x, y) for x, y in SUBMISSION_STATUS_CHOICES.items()],
+        max_length=20, default='queued', choices=SUBMISSION_STATUS_CHOICES.items()
     )
     score = JSONField(blank=True, null=True)
     overall_score = models.FloatField(blank=True, null=True)
     fail_reason = models.TextField(blank=True)
-
-    ordering = ['-created']
 
     def __str__(self):
         return f'{self.id}'
@@ -145,14 +201,15 @@ class Submission(models.Model):
 
 
 class ScoreHistory(models.Model):
+    class Meta:
+        ordering = ['-created']
+
     submission = models.ForeignKey(
         Submission, on_delete=models.CASCADE, related_name='score_history'
     )
     created = models.DateTimeField(default=timezone.now)
     score = JSONField()
     overall_score = models.FloatField()
-
-    ordering = ['-created']
 
 
 class Approach(models.Model):
@@ -162,13 +219,9 @@ class Approach(models.Model):
     created = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100)
     uses_external_data = models.BooleanField()
-    manuscript = models.FileField(
-        upload_to=manuscript_csv_file_upload_to,
-        validators=[FileExtensionValidator(allowed_extensions=['pdf'])],
-        max_length=200,
-        blank=True,
+    manuscript = CollisionSafeFileField(
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True
     )
-    manuscript_name = models.CharField(max_length=200, blank=True, null=True)
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)

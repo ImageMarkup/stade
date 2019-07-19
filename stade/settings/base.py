@@ -18,6 +18,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_framework',
     'import_export',
+    'rules.apps.AutodiscoverRulesConfig',
+    'markdownify',
 ]
 SITE_ID = 1
 
@@ -52,6 +54,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'stade.wsgi.application'
 AUTHENTICATION_BACKENDS = (
+    'rules.permissions.ObjectPermissionBackend',
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication methods, such as login by e-mail

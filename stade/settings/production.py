@@ -11,8 +11,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 CORS_ORIGIN_ALLOW_ALL = True  # todo change
 
 sentry_sdk.init(
-    dsn='https://f3276f78f8aa48739e911d6e8e8a7aed@sentry.io/1435057',
-    integrations=[DjangoIntegration(), CeleryIntegration()],
+    dsn=os.environ['SENTRY_DSN'], integrations=[DjangoIntegration(), CeleryIntegration()]
 )
 
 CELERY_BROKER_POOL_LIMIT = 1
@@ -27,7 +26,7 @@ AWS_DEFAULT_ACL = None
 EMAIL_HOST = 'smtp.mailgun.org'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'noreply@isic-archive.com'
-EMAIL_HOST_PASSWORD = '87c18a4bca555dd42828c98f0451185c-6140bac2-7248eaa1'
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_USE_TLS = True
 EMAIL_TIMEOUT = 10
 
