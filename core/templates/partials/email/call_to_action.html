@@ -1,0 +1,12 @@
+<script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "EmailMessage",
+      "potentialAction": {
+        "@type": "ViewAction",
+        "url": "{{ url }}{{ submission.get_absolute_url }}?view_action=true",
+        "name": "View submission"
+      },
+      "description": "View the details of your submission"
+    }
+</script>
