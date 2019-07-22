@@ -4,8 +4,11 @@ from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from rest_framework.decorators import api_view
+from django.views.generic.edit import FormView
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticated
 from rules.contrib.views import objectgetter, permission_required
 
 from core.forms import (
@@ -17,7 +20,7 @@ from core.forms import (
 )
 from core.leaderboard import submissions_by_approach, submissions_by_team
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
-from core.serializers import LeaderboardEntrySerializer
+from core.serializers import LeaderboardEntrySerializer, SubmissionSerializer
 from core.tasks import score_submission, send_team_invitation
 from core.utils import safe_redirect
 
@@ -61,6 +64,17 @@ def submission_scores(request, submission_id):
         Submission.objects.filter(approach__task__scores_published=True), pk=submission_id
     )
     return JsonResponse(submission.score)
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def submission(request, submission_id):
+    submission = get_object_or_404(
+        Submission.objects.filter(approach__team__in=request.user.teams.only('id')),
+        pk=submission_id,
+    )
+    return JsonResponse(SubmissionSerializer(submission).data)
 
 
 def index(request):

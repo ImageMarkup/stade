@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from core.models import Submission
+
 
 class LeaderboardEntrySerializer(serializers.Serializer):
     submission_id = serializers.IntegerField(source='id')
@@ -28,3 +30,9 @@ class LeaderboardEntrySerializer(serializers.Serializer):
 
     def get_approach_manuscript_url(self, submission):
         return self.context['request'].build_absolute_uri(submission.approach.manuscript.url)
+
+
+class SubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Submission
+        fields = '__all__'

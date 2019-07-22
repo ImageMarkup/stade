@@ -40,6 +40,7 @@ urlpatterns = [
         views.submission_scores,
         name='submission-scores',
     ),
+    path('api/submission/<int:submission_id>', views.submission, name='submission'),
 ]
 
 handler500 = views.handler500

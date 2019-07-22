@@ -1,41 +1,71 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="section container">
-  <div class="section-header">
-    <h1><i class="material-icons">assignment</i> <a href="{{ submission.approach.task.get_absolute_url }}">{{ submission.approach.task.name }}</a></h1>
-  </div>
+    <section class="section container">
+        <div class="section-header">
+            <h1><i class="material-icons">assignment</i> <a
+                    href="{{ submission.approach.task.get_absolute_url }}">{{ submission.approach.task.name }}</a></h1>
+        </div>
 
-  <div class="team-details">
-    <h2 class="team-name"><i class="material-icons">people</i> {{ submission.approach.team.name }}</h2>
-    {% if submission.status != 'succeeded' %}
-    <p class="overall-score">
-        --
-    </p>
-    {% else %}
-    <p class="overall-score">
-      <span class="score"><i class="material-icons">stars</i> {{ submission.overall_score|floatformat:3 }}</span>
-      Overall Score
-    </p>
+        <div class="team-details">
+            <h2 class="team-name"><i class="material-icons">people</i> {{ submission.approach.team.name }}</h2>
+            {% if submission.status != 'succeeded' %}
+                <p class="overall-score">
+                    --
+                </p>
+            {% else %}
+                <p class="overall-score">
+                    <span class="score"><i class="material-icons">stars</i> {{ submission.overall_score|floatformat:3 }}</span>
+                    Overall Score
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="section-content">
+            <h3>Submission Details</h3>
+            <ul class="submission-details">
+                <li class="approach-name"><strong>Approach:</strong> {{ submission.approach.name }}</li>
+                <li class="submitted-by"><strong>Submitted
+                    by:</strong> {{ submission.creator.first_name }} {{ submission.creator.last_name }}</li>
+                <li class="status"><strong>Status:</strong> <span class="is-loading"
+                        class="is-success">{{ submission.get_status_display }}
+                </span></li>
+            </ul>
+            {% if submission.status == 'failed' %}
+                There was a problem with your submission.
+
+                <pre>{{ submission.fail_reason }}</pre>
+            {% endif %}
+            <div class="data-download">
+                <h3 class="title">Download {% if request.user.is_superuser %}the{% else %}your{% endif %}
+                    submission</h3>
+                <a href="{{ submission.test_prediction_file.url }}" class="button is-large">download <i
+                        class="material-icons">get_app</i></a>
+            </div>
+        </div>
+    </section>
+
+    {% if submission.status == 'queued' or submission.status == 'scoring' %}
+        <script type="text/javascript">
+
+            function maybeRefreshPage(delay) {
+                // Cap the delay at 5 minutes
+                delay = Math.min(delay, 300000);
+
+                jQuery.ajax('/api/submission/{{ submission.id }}')
+                    .done(function (submission) {
+                        if (submission.status !== 'queued' && submission.status !== 'scoring') {
+                            window.location.reload();
+                        } else {
+                            window.setTimeout(maybeRefreshPage, delay, delay * 2);
+                        }
+                    })
+                    .error(function () {
+                        window.setTimeout(maybeRefreshPage, delay, delay * 2);
+                    });
+            }
+
+            maybeRefreshPage(3000);
+        </script>
     {% endif %}
-  </div>
-
-  <div class="section-content">
-    <h3>Submission Details</h3>
-    <ul class="submission-details">
-      <li class="approach-name"><strong>Approach:</strong> {{ submission.approach.name }}</li>
-      <li class="submitted-by"><strong>Submitted by:</strong> {{ submission.creator.first_name }} {{ submission.creator.last_name }}</li>
-      <li class="status"><strong>Status:</strong> <span class="is-success">{{  submission.get_status_display }}</span></li>
-    </ul>
-    {% if submission.status == 'failed' %}
-    There was a problem with your submission.
-
-    <pre>{{  submission.fail_reason }}</pre>
-    {% endif %}
-    <div class="data-download">
-      <h3 class="title">Download {% if request.user.is_superuser %}the{% else %}your{% endif %} submission</h3>
-      <a href="{{submission.test_prediction_file.url}}" class="button is-large">download <i class="material-icons">get_app</i></a>
-    </div>
-  </div>
-</section>
 {% endblock %}
