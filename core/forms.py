@@ -157,18 +157,9 @@ class ApproachForm(forms.ModelForm):
         if self.instance.pk:
             team = self.instance.team
             task = self.instance.task
-            approach = get_object_or_404(
+            get_object_or_404(
                 Approach.objects.filter(team__users=self.request.user), pk=self.instance.id
             )
-            if (
-                'name' in self.cleaned_data
-                and Approach.objects.exclude(pk=approach.id)
-                .filter(team=team, task=task, name=self.cleaned_data['name'])
-                .exists()
-            ):
-                raise ValidationError(
-                    f"{team.name} already has an approach named \'{self.cleaned_data['name']}\'"
-                )
         else:
             team = get_object_or_404(self.request.user.teams, pk=self.team_id)
             task = get_object_or_404(Task, pk=self.task_id)
@@ -179,16 +170,6 @@ class ApproachForm(forms.ModelForm):
             ):
                 raise ValidationError(
                     f"You\'ve reached the maximum number of approaches for {task.name}."
-                )
-
-            if (
-                'name' in self.cleaned_data
-                and Approach.objects.filter(
-                    team=team, task=task, name=self.cleaned_data['name']
-                ).exists()
-            ):
-                raise ValidationError(
-                    f"{team.name} already has an approach named \'{self.cleaned_data['name']}\'"
                 )
 
         if task.locked:
