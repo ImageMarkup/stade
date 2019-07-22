@@ -220,6 +220,9 @@ class ScoreHistory(models.Model):
 class Approach(models.Model):
     class Meta:
         verbose_name_plural = 'approaches'
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'task', 'team'], name='unique_approaches')
+        ]
 
     created = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100)
