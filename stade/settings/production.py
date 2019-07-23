@@ -7,6 +7,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from .base import *  # noqa: F401, F403
 
+ALLOWED_HOSTS = ['challenge.isic-archive.com']
 SECRET_KEY = os.environ['SECRET_KEY']
 CORS_ORIGIN_ALLOW_ALL = True  # todo change
 
