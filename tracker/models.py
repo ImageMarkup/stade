@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import IntegrityError, models
 from django.utils import timezone
 
 from tracker.tasks import add_mailchimp_subscriber
@@ -12,5 +12,9 @@ class Email(models.Model):
         return self.email
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        add_mailchimp_subscriber.delay(self.email)
+        try:
+            super().save(*args, **kwargs)
+            add_mailchimp_subscriber.delay(self.email)
+        except IntegrityError:
+            # Email already exists
+            pass
