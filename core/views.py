@@ -285,6 +285,7 @@ def edit_approach(request, approach_id):
     return render(request, 'edit-approach.html', {'form': form, 'approach': approach})
 
 
+@login_required
 @permission_required('approaches.add_submission', fn=objectgetter(Approach, 'approach_id'))
 def create_submission(request, approach_id):
     approach = get_object_or_404(Approach, pk=approach_id)
