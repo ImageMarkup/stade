@@ -7,9 +7,13 @@ def merge_approaches(apps, schema_edito):
     approach = apps.get_model('core', 'Approach')
     submission = apps.get_model('core', 'Submission')
 
-    cnn1 = approach.objects.get(pk=1143)
-    cnn2 = approach.objects.get(pk=1144)
-    cnn3 = approach.objects.get(pk=1145)
+    try:
+        cnn1 = approach.objects.get(pk=1143)
+        cnn2 = approach.objects.get(pk=1144)
+        cnn3 = approach.objects.get(pk=1145)
+    except approach.DoesNotExist:
+        return
+
     if cnn1.created < cnn2.created and cnn1.created < cnn3.created:
         submission.objects.filter(approach=cnn2).update(approach=cnn1)
         cnn2.delete()
@@ -26,8 +30,12 @@ def merge_approaches(apps, schema_edito):
         submission.objects.filter(approach=cnn2).update(approach=cnn3)
         cnn2.delete()
 
-    fcn1 = approach.objects.get(pk=169)
-    fcn2 = approach.objects.get(pk=186)
+    try:
+        fcn1 = approach.objects.get(pk=169)
+        fcn2 = approach.objects.get(pk=186)
+    except approach.DoesNotExist:
+        return
+
     if fcn1.created < fcn2.created:
         submission.objects.filter(approach=fcn2).update(approach=fcn1)
         fcn2.delete()
@@ -35,8 +43,12 @@ def merge_approaches(apps, schema_edito):
         submission.objects.filter(approach=fcn1).update(approach=fcn2)
         fcn1.delete()
 
-    gtdl1 = approach.objects.get(pk=40)
-    gtdl2 = approach.objects.get(pk=41)
+    try:
+        gtdl1 = approach.objects.get(pk=40)
+        gtdl2 = approach.objects.get(pk=41)
+    except approach.DoesNotExist:
+        return
+
     if gtdl1.created < gtdl2.created:
         submission.objects.filter(approach=gtdl2).update(approach=gtdl1)
         gtdl2.delete()
@@ -44,8 +56,12 @@ def merge_approaches(apps, schema_edito):
         submission.objects.filter(approach=gtdl1).update(approach=gtdl2)
         gtdl1.delete()
 
-    deeplab1 = approach.objects.get(pk=454)
-    deeplab2 = approach.objects.get(pk=460)
+    try:
+        deeplab1 = approach.objects.get(pk=454)
+        deeplab2 = approach.objects.get(pk=460)
+    except approach.DoesNotExist:
+        return
+
     if deeplab1.created < deeplab2.created:
         submission.objects.filter(approach=deeplab2).update(approach=deeplab1)
         deeplab2.delete()
