@@ -1,3 +1,5 @@
+from pathlib import PurePath
+
 from allauth.account.forms import ResetPasswordKeyForm, SignupForm
 from allauth.account.models import EmailAddress
 from django import forms
@@ -126,6 +128,17 @@ class CreateSubmissionForm(forms.ModelForm):
             raise forms.ValidationError('You must accept the data sharing policy terms.')
 
         return data
+
+    def clean_test_prediction_file(self):
+        actual_extension = (
+            PurePath(self.cleaned_data['test_prediction_file'].name).suffix[1:].lower()
+        )
+        expected_extension = self.instance.approach.task.allowed_submission_extension
+
+        if actual_extension != expected_extension:
+            raise ValidationError(f'Prediction file must be of type {expected_extension}.')
+
+        return self.cleaned_data['test_prediction_file']
 
     def clean(self):
         super().clean()
