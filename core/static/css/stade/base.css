@@ -181,6 +181,15 @@ h6 {
   padding-bottom: 40px;
 }
 
+.notification span {
+  display: block;
+  padding-top: 15px;
+}
+
+.notification a:hover:after {
+  display: none;
+}
+
 /* Site structure
 ** ================================ */
 
