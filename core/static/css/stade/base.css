@@ -311,7 +311,7 @@ h6 {
 
 .tasks-list .task {
   height: 175px;
-  padding: 20px;
+  padding: 10px;
   position: relative;
 }
 
@@ -319,27 +319,30 @@ h6 {
   background: #00A9A5;
   border-radius: 5px;
   color: #ffffff;
-  display: flex;
-  flex-wrap: wrap;
+  display: block;
   font-size: 18px;
   height: 100%;
-  justify-content: center;
-  padding: 20px 35px;
+  padding: 25px;
   width: 100%;
 }
 
 .tasks-list .task a > span {
+  display: block;
   width: 100%;
 }
 
 
 .tasks-list .task.inactive a {
-  background: #bbbfc3;
+  background: #d8dadc;
   color: #58636b;
 }
 
 .tasks-list .task.inactive a:hover {
-  background: #d8dadc;
+  background: #bbbfc3;
+}
+
+.tasks-list .task.inactive a:hover .task-name {
+  border-color: #999fa2;
 }
 
 .tasks-list .task .badge {
@@ -348,8 +351,8 @@ h6 {
   display: inline-block;
   padding: 10px 5px 15px;
   position: absolute;
-  right: 28px;
-  top: 18px;
+  right: 20px;
+  top: 8px;
   transition: all .15s ease-in-out;
   z-index: 2;
 }
@@ -362,7 +365,7 @@ h6 {
 
 .tasks-list .task .badge:after {
   content: "";
-  border-color: transparent transparent #bbbfc3 transparent;
+  border-color: transparent transparent #00A9A5 transparent;
   border-style: solid;
   border-width: 0 13px 6px 13px;
   bottom: 0;
@@ -378,33 +381,54 @@ h6 {
   padding-bottom: 20px;
 }
 
-.tasks-list .task a:hover ~ .badge:after {
-  content: "";
+.tasks-list .task.inactive .badge:after {
   border-color: transparent transparent #d8dadc transparent;
 }
 
+.tasks-list .task.inactive a:hover ~ .badge:after {
+  border-color: transparent transparent #bbbfc3 transparent;
+}
+
+.tasks-list .task a:hover ~ .badge:after {
+  content: "";
+  border-color: transparent transparent #5CC8C5 transparent;
+}
+
 .tasks-list .task a .task-name {
-    align-items: center;
-    display: flex;
+  border-bottom: 1px solid #1dcac5;
+  overflow: hidden;
+  padding-bottom: 10px;
+  text-overflow: ellipsis;
+  transition: border .15s ease-in-out;
+  white-space: nowrap;
+}
+
+.tasks-list .task a .task-name:after {
+  clear: both;
+  content: '';
+  display: table;
 }
 
 .tasks-list .task a .task-desc {
-  border-top: 1px solid #1dcac5;
   font-size: 14px;
-  margin-top: 3px;
   padding-top: 6px;
 }
 
-.tasks-list .task.inactive a .task-desc {
-  border-top: 1px solid #999fa2;
+.tasks-list .task.inactive a .task-name {
+  border-bottom: 1px solid #999fa2;
 }
 
 .tasks-list .task a .material-icons {
-  margin-right: 10px;
+  float: left;
+  margin-right: 5px;
 }
 
 .tasks-list .task a:hover {
   background: #5CC8C5;
+}
+
+.tasks-list .task a:hover .task-name {
+  border-bottom-color: #9bdedc;
 }
 
 .tasks-list .task a:after {
