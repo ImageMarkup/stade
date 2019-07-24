@@ -181,6 +181,23 @@ h6 {
   padding-bottom: 40px;
 }
 
+.notification.is-success {
+  background: #4fc17e;
+}
+
+.notification.is-danger {
+  background: #f54b61;
+}
+
+.notification span {
+  display: block;
+  padding-top: 15px;
+}
+
+.notification a:hover:after {
+  display: none;
+}
+
 /* Site structure
 ** ================================ */
 
