@@ -45,7 +45,16 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(TeamInvitation)
 class TeamInvitationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['created', 'team_name', 'sender', 'recipient']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        # TODO: Filter for permissions if non-superusers gain access to admin panel
+        qs = qs.select_related('team', 'sender')
+        return qs
+
+    def team_name(self, invitation):
+        return invitation.team.name
 
 
 @admin.register(Approach)
