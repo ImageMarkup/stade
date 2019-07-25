@@ -1,12 +1,10 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.utils.http import is_safe_url
 from django.views.generic.edit import FormView
 from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
@@ -23,15 +21,7 @@ from core.leaderboard import submissions_by_approach, submissions_by_team
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from core.serializers import LeaderboardEntrySerializer
 from core.tasks import score_submission, send_team_invitation
-
-
-def safe_redirect(request, redirect_to):
-    url_is_safe = is_safe_url(
-        url=redirect_to, allowed_hosts=settings.ALLOWED_HOSTS, require_https=request.is_secure()
-    )
-    if url_is_safe and redirect_to:
-        return redirect(redirect_to)
-    return HttpResponseRedirect(reverse('index'))
+from core.utils import safe_redirect
 
 
 @api_view(['GET'])
