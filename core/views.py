@@ -82,7 +82,6 @@ def task_detail(request, task_id):
         'teams': request.user.teams.filter(challenge=task.challenge).prefetch_related(
             'users', 'approach_set'
         ),
-        'current_path': request.get_full_path(),
     }
 
     return render(request, 'task-detail.html', context)
