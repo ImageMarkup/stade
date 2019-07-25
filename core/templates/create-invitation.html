@@ -1,25 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1> TEAM INVITATION - {{team.name}} </h1>
-<form action="" method="post">
-  {% csrf_token %}
+    <h1> TEAM INVITATION - {{ team.name }} </h1>
+    <form action="" method="post">
+        {% csrf_token %}
 
-  {% if form.non_field_errors %}
-  <div class="help is-danger">
-    <i class="material-icons">error</i>
-    {{ form.non_field_errors }}
-  </div>
-  {% endif %}
+        {% if form.non_field_errors %}
+            <div class="help is-danger">
+                <i class="material-icons">error</i>
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
 
-  <input autofocus class="input" id="id_recipient" name="recipient" maxlength="100" placeholder="Recipient Email"
-    type="text" required>
-  {% if form.recipient.errors %}
-  <p class="help is-danger">
-    {{ form.recipient.errors }}
-  </p>
-  {% endif %}
-  <br>
-  <input class="button" type="submit" value="Create invitation" name="create_invitation" />
-</form>
+        <input autofocus class="input" id="id_recipient" name="recipient" maxlength="100" placeholder="Recipient Email"
+               type="text" value="{{ request.POST.recipient }}" required>
+        {% if form.recipient.errors %}
+            <p class="help is-danger">
+                {{ form.recipient.errors }}
+            </p>
+        {% endif %}
+        <br>
+        <input class="button" type="submit" value="Send invite"/>
+    </form>
 {% endblock %}

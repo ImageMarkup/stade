@@ -79,21 +79,24 @@ def score_submission(submission_id, notify=True):
 @shared_task
 def send_team_invitation(invite_id):
     invite = TeamInvitation.objects.get(pk=invite_id)
-    existing = User.objects.filter(email=invite.recipient).exists()
+    existing_user = User.objects.filter(email=invite.recipient).exists()
+    context = {
+        'invite': invite,
+        'sent_from': ' '.join([invite.sender.first_name, invite.sender.last_name]),
+        'url': f'https://{Site.objects.get_current().domain}',
+    }
 
-    if existing:
+    if existing_user:
         send_mail(
-            'Team Invitation',
-            f'Invitation to join {invite.team.name}',
+            f"[{invite.team.challenge}] You've been invited to join {invite.team.name}!",
+            render_to_string('email/team_invite_existing_user.txt', context),
             settings.DEFAULT_FROM_EMAIL,
             [invite.recipient],
-            fail_silently=False,
         )
     else:
         send_mail(
-            'ISIC Registration',
-            'Register for ISIC at https://stade.challenge.isic-archive.com/accounts/signup/',
+            "You've been invited to join the ISIC Challenge!",
+            render_to_string('email/team_invite_new_user.txt', context),
             settings.DEFAULT_FROM_EMAIL,
             [invite.recipient],
-            fail_silently=False,
         )

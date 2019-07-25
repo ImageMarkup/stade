@@ -173,7 +173,7 @@ class TeamInvitation(models.Model):
     sender = models.ForeignKey(
         get_user_model(), related_name='sent_invites', on_delete=models.CASCADE
     )
-    recipient = models.EmailField()
+    recipient = models.EmailField(db_index=True)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
 
     def __str__(self):

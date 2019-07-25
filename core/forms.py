@@ -67,19 +67,16 @@ class CreateInvitationForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     def clean_recipient(self):
-        return self.cleaned_data['recipient'].lower()
-
-    def clean(self):
-        super().clean()
         team = get_object_or_404(self.request.user.teams, pk=self.team_id)
-        if team.users.filter(email=self.cleaned_data['recipient']).exists():
-            raise forms.ValidationError(f'{self.cleaned_data["recipient"]} is already in the team')
-        if TeamInvitation.objects.filter(
-            recipient=self.cleaned_data['recipient'], team_id=team.id
-        ).exists():
-            raise forms.ValidationError(
-                f'{self.cleaned_data["recipient"]} has already been invited'
-            )
+        recipient = self.cleaned_data['recipient'].lower()
+
+        if team.users.filter(email=recipient).exists():
+            raise forms.ValidationError(f'{recipient} is already in the team.')
+
+        if TeamInvitation.objects.filter(recipient=recipient, team_id=team.id).exists():
+            raise forms.ValidationError(f'{recipient} has already been invited.')
+
+        return self.cleaned_data['recipient'].lower()
 
 
 class TeamForm(forms.ModelForm):

@@ -229,7 +229,9 @@ def create_invitation(request, team_id):
             invite.save()
             send_team_invitation.delay(invite.id)
             messages.add_message(
-                request, messages.SUCCESS, f'Successfully invited {form.cleaned_data["recipient"]}'
+                request,
+                messages.SUCCESS,
+                f'Successfully invited {form.cleaned_data["recipient"]} to {team.name}.',
             )
             return HttpResponseRedirect(reverse('index'))
     else:

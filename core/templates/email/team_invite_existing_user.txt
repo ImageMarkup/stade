@@ -1,0 +1,10 @@
+Hello,
+
+You've been invited by {{ sent_from }} to join the following team: {{ invite.team.name }}.
+
+By joining the team you'll be able to participate in the {{ invite.team.challenge }} challenge
+on behalf of {{ invite.team.name }}.
+
+To join, sign in and click the Accept button at the top: {{ url }}.
+
+Thanks for participating in the ISIC Challenge!

@@ -1,0 +1,12 @@
+Hello,
+
+You've been invited by {{ sent_from }} to participate in the ISIC Challenge!
+
+To participate you only need to perform the following steps:
+1) Sign up for the ISIC Challenge: {{ url }}{% url 'account_signup' %}
+2) Verify your email address
+3) Login to the ISIC Challenge: {{ url }}{% url 'account_login' %}
+4) Click the Accept button towards the top of the page to accept your invitation
+   Note: the team you've been invited to is {{ invite.team.name }}.
+
+Thanks for participating in the ISIC Challenge!
