@@ -42,21 +42,6 @@
         {% endif %}
       </div>
 
-      <div class="column is-full field username">
-        <p class="control has-icons-left">
-          <input class="input{% if form.username.errors %} is-danger{% endif %}" id="id_username"
-          name="username" maxlength="150" minlength="1" placeholder="Username" required type="text" value="{{ request.POST.username }}">
-          <span class="icon is-small is-left">
-            <i class="material-icons">person</i>
-          </span>
-        </p>
-        {% if form.username.errors %}
-        <div class="help is-danger">
-          {{ form.username.errors }}
-        </div>
-        {% endif %}
-      </div>
-
       <hr class="column is-full">
 
       <div class="column is-half field first_name">
