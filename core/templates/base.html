@@ -11,24 +11,23 @@
     <header class="main-header">
       <div class="container">
         <div class="logo">
-          <h1><a href="/"><img src="{% static 'img/isic_logo.svg' %}" alt="ISIC Challenge"></a></h1>
+          <h1><a href="{% url 'index' %}"><img src="{% static 'img/isic_logo.svg' %}" alt="ISIC Challenge"></a></h1>
         </div>
         <div class="navigation">
           <ul class="navbar">
-            <!-- <li class="nav-item"><a href="/">Tasks</a></li> -->
             {% if user.is_authenticated %}
               <strong>{{ request.user.email }}</strong>
               {% if user.is_staff %}
               <li class="admin">
-                  <a href="/admin" class="button is-small">Admin</a>
+                  <a href="{% url 'admin:index' %}" class="button is-small">Admin</a>
               </li>
               {% endif %}
               <li class="logout">
-                  <a href="/accounts/logout" class="button btn-blue is-small">Logout</a>
+                  <a href="{% url 'account_logout' %}" class="button btn-blue is-small">Logout</a>
               </li>
             {% else %}
-              <li id="login-button" class="login"><a href="/accounts/login" class="button btn-blue">Login</a></li>
-              <li class="signup"><a href="/accounts/signup" class="button">Sign up</a></li>
+              <li id="login-button" class="login"><a href="{% url 'account_login' %}" class="button btn-blue">Login</a></li>
+              <li class="signup"><a href="{% url 'account_signup' %}" class="button">Sign up</a></li>
             {% endif %}
           </ul>
         </div>
