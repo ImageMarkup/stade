@@ -3,10 +3,13 @@ from pathlib import PurePath
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
 from django.db.models import QuerySet
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
 
@@ -252,3 +255,11 @@ class Approach(models.Model):
     @property
     def score(self):
         return self.latest_submission.overall_score
+
+
+@receiver(pre_save, sender=User)
+def set_username_to_email_address(sender, instance, **kwargs):
+    """
+    Forcibly sets the username of every user to their email address.
+    """
+    instance.username = instance.email

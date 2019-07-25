@@ -75,6 +75,8 @@ USE_L10N = True
 USE_TZ = True
 STATIC_URL = '/static/'
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
 DEFAULT_FROM_EMAIL = 'ISIC Challenge <support@isic-archive.com>'
 
 
