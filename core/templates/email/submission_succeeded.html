@@ -1,8 +1,9 @@
 <html>
-<body style="width: 500px; color: #525151; background-color: #f9f5f5; font-family: helvetica;">
+<body style="max-width: 500px; color: #525151; background-color: #f9f5f5; font-family: helvetica; margin: 0 auto; text-align: center;">
     {% include 'partials/email/call_to_action.html' %}
-    <img src="{{ url }}/static/img/isic_logo.png"/>
-    <center>
+    <img src="{{ url }}/static/img/isic_logo.png" style="display: block; margin: 0 auto 10px; width: 250px;"/>
+    <center style="background: #fff; border-radius: 5px; box-shadow: 0 4px 20px #ddd; padding: 25px;">
+        <p class="success" style="background-color: #4caf50d1; color: #fff; padding: 20px; border-radius: 3px; margin: 0 0 30px;">Your submission has been scored!</p>
         <table>
             <tr>
                 <td width="30%">Task</td>
@@ -19,9 +20,8 @@
         </table>
 
         <div>
-            <p class="success" style="background-color: #4caf50d1; color: #fff; padding: 20px; width: 64%; border-radius: 3px;">Your submission has been scored!</p>
             <p class="score" style="font-size: 30px;">{{ submission.overall_score|floatformat:3 }}</p>
-            <a href="{{ url }}{{ submission.get_absolute_url }}">View submission details</a>
+            <a href="{{ url }}{{ submission.get_absolute_url }}" style="background: #00A9A5; border-radius: 3px; color: #fff; display:-inline-block; padding: 8px 12px; text-decoration: none;">View submission details</a>
         </div>
     </center>
 </body>
