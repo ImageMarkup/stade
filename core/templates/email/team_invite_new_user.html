@@ -1,0 +1,21 @@
+<html>
+<body style="max-width: 500px; color: #525151; background-color: #f9f5f5; font-family: helvetica; line-height: 1.5em; margin: 0 auto;">
+    <img src="{{ url }}/static/img/isic_logo.png" style="display: block; margin: 0 auto 10px; width: 250px;"/>
+    <div style="background: #fff; border-radius: 5px; box-shadow: 0 4px 20px #ddd; padding: 25px;">
+      <p>Hello,</p>
+      <p>You've been invited by <strong style="color: #427AA1">{{ sent_from }}</strong> to participate in the ISIC Challenge!</p>
+
+      <h3>To participate you only need to perform the following steps:</h3>
+      <div style="background: #eeeeee; border-radius: 5px; padding:6px 20px; margin: 20px 0;">
+        <ol style="padding: 0 0 0 20px;">
+          <li>Sign up for the ISIC Challenge: <a href="{{ url }}{% url 'account_signup' %}" style="color: #00A9A5">Sign Up</a></li>
+          <li>Verify your email address</li>
+          <li>Login to the ISIC Challenge: {{ url }}{% url 'account_login' %}</li>
+          <li>Click the Accept button towards the top of the page to accept your invitation</li>
+        </ol>
+        <p style="font-weight: bold; margin-top: 15px; padding-top: 15px; border-top: 1px solid #cccccc;">Note: the team you've been invited to is {{ invite.team.name }}.</p>
+      </div>
+      <p>Thanks for participating in the ISIC Challenge!</p>
+    </div>
+</body>
+</html>
