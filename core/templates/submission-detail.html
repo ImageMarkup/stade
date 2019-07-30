@@ -24,7 +24,7 @@
     <h3>Submission Details</h3>
     <ul class="submission-details">
       <li class="approach-name"><strong>Approach:</strong> {{ submission.approach.name }}</li>
-      <li class="submitted-by"><strong>Submitted by:</strong> {{ user }}</li>
+      <li class="submitted-by"><strong>Submitted by:</strong> {{ submission.creator.first_name }} {{ submission.creator.last_name }}</li>
       <li class="status"><strong>Status:</strong> <span class="is-success">{{  submission.get_status_display }}</span></li>
     </ul>
     {% if submission.status == 'failed' %}
