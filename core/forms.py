@@ -101,6 +101,12 @@ class TeamForm(forms.ModelForm):
             if self.task_id:
                 get_object_or_404(Task.objects.filter(challenge=challenge), pk=self.task_id)
 
+        # Unique together constraints don't provide validation out of the box
+        if Team.objects.filter(name=self.cleaned_data['name'], challenge=challenge).exists():
+            raise ValidationError(
+                f'A team with this name already exists for the {challenge.name} challenge.'
+            )
+
         if challenge.locked:
             raise ValidationError(f'The {challenge.name} challenge is locked.')
 
