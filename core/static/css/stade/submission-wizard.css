@@ -196,7 +196,9 @@
 
 form.create-team .fields,
 form.create-approach .fields,
-form.create-submission .fields {
+form.create-submission .fields,
+form.edit-team .fields,
+form.create-invitation .fields {
   border-bottom: 1px solid #e3e6e8;
   margin-bottom: 20px;
   padding: 10px 0 20px;

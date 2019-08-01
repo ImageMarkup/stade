@@ -25,28 +25,39 @@
         <h2 class="title is-5">
           Your Teams
           {% if not task.locked and teams.count > 0 %}
-          <a href="{% url 'create-team-standalone' task.challenge.id %}?next={{ request.path|urlencode }}">
-            Create a Team
+          <a href="{% url 'create-team-standalone' task.challenge.id %}?next={{ request.path|urlencode }}" class="button btn-nobg create-team">
+            <i class="material-icons">add_circle</i> Create a Team
           </a>
           {% endif %}
         </h2>
           {% for team in teams %}
           <div class="team">
-            <h3>
-              {{ team.name }}
-              <a href="{% url 'edit-team' team.id %}?next={{ request.path|urlencode }}">
-                <i class="material-icons">edit</i>
-              </a>
-            </h3>
-            <p>{{ team.user_full_names|join:", " }}</p>
+            <div class="team-meta">
+              <div class="name-members">
+                <h3>
+                  {{ team.name }}
+                  <a href="{% url 'edit-team' team.id %}?next={{ request.path|urlencode }}" class="edit-team">
+                    <i class="material-icons">edit</i>
+                  </a>
+                </h3>
+                <p>{{ team.user_full_names|join:", " }}</p>
+              </div>
+              <a href="{% url 'create-invitation' team.id %}" class="button">Invite Member(s)</a>
+            </div>
 
             {% if team.approach_set.all %}
+              <div class="approach table-header">
+                <span class="approach-name">Approach Name</span>
+                <span class="status">Status</span>
+                <span class="score">Score</span>
+                <span class="spacer"></span>
+              </div>
               {% for approach in team.approach_set.all %}
               <div class="approach">
                 <span class="approach-name">
                   {{ approach.name }}
                   <a href="{% url 'edit-approach' approach.id %}?next={{ request.path|urlencode }}">
-                    Edit
+                    <i class="material-icons">edit</i>
                   </a>
                 </span>
                 {% with latest_submission=approach.latest_submission %}
@@ -59,11 +70,11 @@
                         {% endif %}
                     </span>
                     {% if latest_submission.status == 'succeeded' %}
-                        <span class="score">{{ latest_submission.score|floatformat:3 }}</span>
+                        <span class="score">{{ latest_submission.overall_score|floatformat:3 }}</span>
                     {% else %}
                         <span class="score">--</span>
                     {% endif %}
-                    <a href="{{ latest_submission.get_absolute_url }}" class="button btn-blue is-small">details</a>
+                    <a href="{{ latest_submission.get_absolute_url }}" class="button btn-nobg is-small">details</a>
                     {% endif %}
                 {% endwith %}
               </div>
@@ -73,7 +84,7 @@
                   <i class="material-icons">info</i>
                   <span>approach details based on latest submission only</span>
                 </div>
-                <a href="{% url 'submission-list' task.id team.id %}" class="button">Submission History</a>
+                <a href="{% url 'submission-list' task.id team.id %}" class="button btn-nobg">Submission History</a>
               </div>
             {% else %}
               <div class="no-approach">
