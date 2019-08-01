@@ -1,122 +1,184 @@
 /* Task Dashboard Styles
 ** ================================ */
 
- .tasks .text .title,
- .teams .title:first-of-type {
-   border-bottom: 1px solid #e3e6e8;
-   margin-bottom: 15px;
-   padding-bottom: 10px;
- }
+.tasks .text .title,
+.teams .title:first-of-type {
+  border-bottom: 1px solid #e3e6e8;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
 
- .teams .noteam {
-   color: #989898;
-   padding: 60px;
-   text-align: center;
- }
+.teams .title {
+  display: flex;
+  justify-content: space-between;
+}
 
- .teams .noteam h5 {
-   color: #989898;
- }
+.teams .create-team i {
+  margin-right: 4px;
+}
 
- .teams .team {
-   border-top: 5px solid #00A9A5;
-   border-radius: 3px;
-   box-shadow: 0 3px 6px rgba(0, 0, 0, .15);
-   margin-bottom: 20px;
-   padding: 20px 20px 25px;
- }
+.teams .noteam {
+  color: #989898;
+  padding: 60px;
+  text-align: center;
+}
 
- .teams .team h3 {
-   margin-bottom: 0;
- }
+.teams .noteam h5 {
+  color: #989898;
+}
 
- .team .approach {
-   border-bottom: 1px solid #e3e6e8;
-   display: flex;
-   padding: 10px 15px;
- }
+.teams .team {
+  border-top: 5px solid #00A9A5;
+  border-radius: 3px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, .15);
+  margin-bottom: 20px;
+  padding: 20px 20px 25px;
+}
 
- .team .approach:first-of-type {
-   border-top: 1px solid #e3e6e8;
- }
+.teams .team .team-meta {
+  align-items: center;
+  border-bottom: 1px solid #e3e6e8;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
 
- .team .approach .approach-name {
-   flex: 5;
- }
+.team-meta .edit-team {
+  margin-left: 4px;
+  padding-top: 3px;
+}
 
- .team .approach .score {
-   font-weight: 600;
- }
+.team-meta .edit-team i {
+  font-size: 20px;
+}
 
- .team .approach .status,
- .team .approach .score {
-   text-align: center;
- }
+.team-meta .edit-team:after {
+  display: none;
+}
 
- .team .approach .status,
- .team .approach .score,
- .team .approach .button {
-   display: flex;
-   align-items: center;
-   flex: 1;
-   padding: 0 10px;
- }
+.teams .team h3 {
+  align-items: center;
+  display: flex;
+  margin-bottom: 0;
+}
 
- .team .approach .status .material-icons {
-   margin-left: 5px;
-  }
+.team .approach {
+  border-bottom: 1px solid #e3e6e8;
+  display: flex;
+  padding: 10px 15px;
+  justify-content: space-between;
+}
 
- .team .approach .status a::after {
-	 margin-left: 5px;
- }
+.team .approach:first-of-type {
+  border-top: 1px solid #e3e6e8;
+}
 
- .team .approach .help {
-   display: inline;
-   font-size: inherit;
- }
+.team .approach .approach-name {
+  align-items: center;
+  display: flex;
+  width: 40%;
+}
 
- .team .approach .help .material-icons {
-   font-size: 16px;
-   vertical-align: middle;
- }
+.team .approach .approach-name i {
+  font-size: 16px;
+  margin-left: 3px;
+  padding-top: 1px;
+}
 
- .team .no-approach {
-   align-items: center;
-   background: #fafafa;
-   display: flex;
-   justify-content: center;
-   padding: 30px;
-   text-align: center;
- }
+.team .approach .approach-name a:after {
+  display: none;
+}
 
- .team .no-approach p {
-   margin: 0 10px 0 0;
-   padding: 0;
- }
+.team .approach .score {
+  font-weight: 600;
+}
 
- .team .no-approach a {
-   font-weight: 600;
- }
+.team .approach .status,
+.team .approach .score {
+  text-align: center;
+}
 
- .team .footer {
-   align-items: center;
-   color: #00A9A5;
-   display: flex;
-   justify-content: space-between;
-   padding: 15px;
- }
+.team .approach .status,
+.team .approach .score,
+.team .approach .button {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding: 0 10px;
+}
 
- .team .footer .footnote {
-   display: flex;
-   font-size: 14px;
-   font-style: italic;
- }
+.team .approach .status .material-icons {
+  margin-left: 5px;
+}
 
- .team .footer .footnote .material-icons {
-   font-size: 20px;
-   margin-right: 5px;
- }
+.team .approach .status a::after {
+  margin-left: 5px;
+}
 
- .team .footer .button {
-   justify-self: right;
- }
+.team .approach .spacer {
+  padding: 0 10px;
+}
+
+.team .approach .help {
+  display: inline;
+  font-size: inherit;
+}
+
+.team .approach .help .material-icons {
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.team .approach > * {
+  width: 20%;
+}
+
+.team .approach.table-header > * {
+  color: #a4a6a6;
+}
+
+.team .approach.table-header .score {
+  font-weight: normal;
+}
+
+.team .no-approach {
+  align-items: center;
+  background: #fafafa;
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+}
+
+.team .no-approach p {
+  margin: 0 10px 0 0;
+  padding: 0;
+}
+
+.team .no-approach a {
+  font-weight: 600;
+}
+
+.team .footer {
+  align-items: center;
+  color: #00A9A5;
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+}
+
+.team .footer .footnote {
+  display: flex;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.team .footer .footnote .material-icons {
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+.team .footer .button {
+  justify-self: right;
+}

@@ -46,12 +46,18 @@
             </div>
 
             {% if team.approach_set.all %}
+              <div class="approach table-header">
+                <span class="approach-name">Approach Name</span>
+                <span class="status">Status</span>
+                <span class="score">Score</span>
+                <span class="spacer"></span>
+              </div>
               {% for approach in team.approach_set.all %}
               <div class="approach">
                 <span class="approach-name">
                   {{ approach.name }}
                   <a href="{% url 'edit-approach' approach.id %}?next={{ request.path|urlencode }}">
-                    Edit
+                    <i class="material-icons">edit</i>
                   </a>
                 </span>
                 {% with latest_submission=approach.latest_submission %}
@@ -64,11 +70,11 @@
                         {% endif %}
                     </span>
                     {% if latest_submission.status == 'succeeded' %}
-                        <span class="score">{{ latest_submission.score|floatformat:3 }}</span>
+                        <span class="score">{{ latest_submission.overall_score|floatformat:3 }}</span>
                     {% else %}
                         <span class="score">--</span>
                     {% endif %}
-                    <a href="{{ latest_submission.get_absolute_url }}" class="button btn-blue is-small">details</a>
+                    <a href="{{ latest_submission.get_absolute_url }}" class="button btn-nobg is-small">details</a>
                     {% endif %}
                 {% endwith %}
               </div>
@@ -78,7 +84,7 @@
                   <i class="material-icons">info</i>
                   <span>approach details based on latest submission only</span>
                 </div>
-                <a href="{% url 'submission-list' task.id team.id %}" class="button">Submission History</a>
+                <a href="{% url 'submission-list' task.id team.id %}" class="button btn-nobg">Submission History</a>
               </div>
             {% else %}
               <div class="no-approach">
