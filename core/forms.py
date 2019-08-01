@@ -155,7 +155,7 @@ class CreateSubmissionForm(forms.ModelForm):
 class ApproachForm(forms.ModelForm):
     class Meta:
         model = Approach
-        fields = ['name', 'uses_external_data', 'manuscript']
+        fields = ['name', 'description', 'uses_external_data', 'manuscript', 'docker_tag']
 
         error_messages = {'manuscript': {'required': _('You must provide a manuscript file.')}}
 
@@ -167,6 +167,14 @@ class ApproachForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance.pk is None:
             self.fields['manuscript'].required = True
+
+    def clean_description(self):
+        # We can't put this in the model layer since the description field was introduced
+        # after approaches existed.
+        if self.cleaned_data['description'].strip() == '':
+            raise ValidationError('This field is required.')
+        else:
+            return self.cleaned_data['description']
 
     def clean(self):
         super().clean()

@@ -13,7 +13,7 @@
         <div class="field is-two-thirds name">
             <p class="control has-icons-left">
                 <input autofocus class="input{% if form.name.errors %} is-danger{% endif %}" id="id_name" name="name"
-                    maxlength="100" placeholder="Approach Name" required type="text"
+                    maxlength="100" placeholder="Convolutional Ensemble with Averaged Pooling" required type="text"
                     value="{% if approach %}{{ approach.name }}{% else %}{{request.POST.name}}{% endif %}">
                 <span class="icon is-small is-left">
                     <i class="material-icons">label</i>
@@ -22,6 +22,21 @@
             {% if form.name.errors %}
             <div class="help is-danger">
                 {{ form.name.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+  <div class="field is-two-thirds description">
+            <p class="control has-icons-left">
+                <textarea class="input{% if form.description.errors %} is-danger{% endif %}" id="id_description" name="description"
+                     placeholder="" required>{% if approach %}{{ approach.description }}{% else %}{{request.POST.description}}{% endif %}</textarea>
+                <span class="icon is-small is-left">
+                    <i class="material-icons">label</i>
+                </span>
+            </p>
+            {% if form.description.errors %}
+            <div class="help is-danger">
+                {{ form.description.errors }}
             </div>
             {% endif %}
         </div>
@@ -67,6 +82,26 @@
                 </div>
                 {% endif %}
             </div>
+        </div>
+
+        Optionally, you can submit your algorithm in the form of a Docker container to be used for ...
+
+        For instructions on how to package your algorithm and publish it to Docker Hub, look at our example
+        algorithm at https://github.com/ImageMarkup/isic-algorithm-example.
+        <div class="field is-two-thirds docker-tag">
+            <p class="control has-icons-left">
+                <input autofocus class="input{% if form.docker_tag.errors %} is-danger{% endif %}" id="id_docker_tag" name="docker_tag"
+                       maxlength="120" placeholder="isic/isic-algorithm-example:latest" type="text"
+                       value="{% if approach %}{{ approach.docker_tag }}{% else %}{{request.POST.docker_tag}}{% endif %}">
+                <span class="icon is-small is-left">
+                    <i class="material-icons">label</i>
+                </span>
+            </p>
+            {% if form.docker_tag.errors %}
+                <div class="help is-danger">
+                    {{ form.docker_tag.errors }}
+                </div>
+            {% endif %}
         </div>
     </div>
 
