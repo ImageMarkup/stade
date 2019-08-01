@@ -231,6 +231,27 @@ form.create-invitation .fields {
   margin: 0;
 }
 
+form .optional {
+  background: #f5f5f5;
+  border: 1px dotted #dbdbdb;
+  border-radius: 5px;
+  color: #777;
+  margin-top: 30px;
+  padding: 20px 25px 30px;
+}
+
+form .optional .field {
+  margin-top: 20px;
+}
+
+form .optional .note {
+  border-left: 3px solid #00A9A5;
+  font-size: 13px;
+  margin-bottom: 0;
+  padding-bottom: 3px;
+  padding-left: 10px;
+}
+
 label.checkbox {
   align-items: center;
   display: flex;
