@@ -127,10 +127,25 @@ h6 {
   background: #1F5673;
 }
 
+.button.btn-nobg {
+  background: none;
+  color: #427AA1;
+}
+
+.button.btn-nobg:hover {
+  background: #eaf2f7;
+}
+
+.button.is-small {
+  font-weight: 500;
+}
+
 .button:after,
 .button:hover:after,
 .button.btn-blue:after,
-.button.btn-blue:hover:after {
+.button.btn-blue:hover:after,
+.button.btn-nobg:after,
+.button.btn-nobg:hover:after {
   display: none;
 }
 
