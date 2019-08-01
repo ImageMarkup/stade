@@ -80,6 +80,10 @@ class CreateInvitationForm(forms.ModelForm):
 
 
 class TeamForm(forms.ModelForm):
+    initial_invite_1 = forms.EmailField(required=False)
+    initial_invite_2 = forms.EmailField(required=False)
+    initial_invite_3 = forms.EmailField(required=False)
+
     class Meta:
         model = Team
         fields = ['name', 'institution', 'institution_url']
@@ -109,6 +113,15 @@ class TeamForm(forms.ModelForm):
 
         if challenge.locked:
             raise ValidationError(f'The {challenge.name} challenge is locked.')
+
+    def get_invites(self):
+        for field in range(3):
+            if self.cleaned_data[f'initial_invite_{field+1}']:
+                yield TeamInvitation(
+                    sender=self.request.user,
+                    team=self.instance,
+                    recipient=self.cleaned_data[f'initial_invite_{field+1}'].lower(),
+                )
 
 
 class CreateSubmissionForm(forms.ModelForm):
