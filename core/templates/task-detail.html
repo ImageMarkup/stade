@@ -32,13 +32,18 @@
         </h2>
           {% for team in teams %}
           <div class="team">
-            <h3>
-              {{ team.name }}
-              <a href="{% url 'edit-team' team.id %}?next={{ request.path|urlencode }}">
-                <i class="material-icons">edit</i>
-              </a>
-            </h3>
-            <p>{{ team.user_full_names|join:", " }}</p>
+            <div class="team-meta">
+              <div class="name-members">
+                <h3>
+                  {{ team.name }}
+                  <a href="{% url 'edit-team' team.id %}?next={{ request.path|urlencode }}" class="edit-team">
+                    <i class="material-icons">edit</i>
+                  </a>
+                </h3>
+                <p>{{ team.user_full_names|join:", " }}</p>
+              </div>
+              <a href="{% url 'create-invitation' team.id %}" class="button">Invite Member(s)</a>
+            </div>
 
             {% if team.approach_set.all %}
               {% for approach in team.approach_set.all %}
