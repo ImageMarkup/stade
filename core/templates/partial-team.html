@@ -55,21 +55,25 @@
     </div>
 
 {%  if show_initial_invites %}
-    Invite some people to your new team:<br />
+  <div class="fields">
+    <h4>Optional - Invite some people to your new team:</h4>
 
-    <input type="email" name="initial_invite_1" value="{{ request.POST.initial_invite_1 }}" /><br />
-    {{ form.initial_invite_1.errors }}
-    <input type="email" name="initial_invite_2" value="{{ request.POST.initial_invite_2 }}" /><br />
-    {{ form.initial_invite_2.errors }}
-    <input type="email" name="initial_invite_3" value="{{ request.POST.initial_invite_3 }}" /><br />
-    {{ form.initial_invite_3.errors }}
-
-
-    Note: you can always invite more people at a later time.
+    <div class="field invite1">
+      <input class="input" type="email" name="initial_invite_1" placeholder="Team member's email address" value="{{ request.POST.initial_invite_1 }}" />
+      {{ form.initial_invite_1.errors }}
+    </div>
+    <div class="field invite1">
+      <input class="input" type="email" name="initial_invite_2" placeholder="Team member's email address" value="{{ request.POST.initial_invite_2 }}" />
+      {{ form.initial_invite_2.errors }}
+    </div>
+    <div class="field invite1">
+      <input class="input" type="email" name="initial_invite_3" placeholder="Team member's email address" value="{{ request.POST.initial_invite_3 }}" />
+      {{ form.initial_invite_3.errors }}
+    </div>
+    <p class="description">Note: you can always invite more people at a later time.</p>
+  </div>
 
 {% endif %}
-
-
 
     <input id="create-team-submit" class="button" type="submit" value="Submit"/>
     <input type="hidden" name="next" value="{{ next }}" />
