@@ -293,7 +293,12 @@ def edit_approach(request, approach_id):
     return render(
         request,
         'edit-approach.html',
-        {'form': form, 'approach': approach, 'next': request.GET.get('next')},
+        {
+            'form': form,
+            'task': approach.task,
+            'approach': approach,
+            'next': request.GET.get('next'),
+        },
     )
 
 
