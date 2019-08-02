@@ -41,3 +41,5 @@ urlpatterns = [
         name='submission-scores',
     ),
 ]
+
+handler500 = views.handler500

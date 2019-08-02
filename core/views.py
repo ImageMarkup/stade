@@ -22,6 +22,10 @@ from core.tasks import score_submission, send_team_invitation
 from core.utils import safe_redirect
 
 
+def handler500(request):
+    return render(request, 'errors/application-error.html', status=500)
+
+
 @api_view(['GET'])
 def leaderboard(request, task_id, cluster):
     if request.user.is_superuser:
