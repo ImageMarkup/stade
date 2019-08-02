@@ -260,3 +260,20 @@ label.checkbox {
 label.checkbox p {
   padding-left: 10px;
 }
+
+label.checkbox .external-data > p {
+  margin: 0 !important;
+}
+
+label.checkbox .external-data > p:last-of-type {
+  color: #777;
+}
+
+.field .description {
+  padding: 10px;
+}
+
+.field .p-label {
+  margin-bottom: 4px !important;
+  padding-left: 10px;
+}
