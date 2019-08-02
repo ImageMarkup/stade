@@ -127,21 +127,29 @@ def create_team(request, task):
     task = get_object_or_404(Task.objects.filter(challenge__locked=False), pk=task)
 
     if request.method == 'POST':
-        form = TeamForm(request.POST, task_id=task.id, challenge_id=task.challenge_id)
+        form = TeamForm(
+            request.POST, task_id=task.id, challenge_id=task.challenge_id, request=request
+        )
 
         if form.is_valid():
             team = form.save(commit=False)
             team.creator = request.user
             team.challenge = task.challenge
             team.save()
+
+            for invite in form.get_invites():
+                invite.save()
+                send_team_invitation.delay(invite.id)
+
             return HttpResponseRedirect(reverse('create-approach', args=[task.id, team.id]))
     else:
-        form = TeamForm(task_id=task.id)
+        form = TeamForm(task_id=task.id, request=request)
 
     return render(
         request,
         'wizard/create-team.html',
         {
+            'show_initial_invites': True,
             'form': form,
             'task': task,
             'teams': request.user.teams.prefetch_related('users')
