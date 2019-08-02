@@ -1,3 +1,4 @@
+import logging
 from pathlib import PurePath
 
 from allauth.account.forms import ResetPasswordKeyForm, SignupForm
@@ -8,6 +9,9 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
+
+
+logger = logging.getLogger(__name__)
 
 
 class CustomSignupForm(SignupForm):
@@ -51,7 +55,10 @@ class AcceptInvitationForm(forms.Form):
     def clean_invitation_id(self):
         invitation_id = self.cleaned_data['invitation_id']
         invite = get_object_or_404(TeamInvitation, pk=invitation_id)
-        if invite.recipient != self.request.user:
+        if invite.recipient != self.request.user.email:
+            # This should never fail.
+            # These errors never get displayed to users, so log to sentry
+            logger.error(f'Invalid invitation id {invitation_id}')
             raise forms.ValidationError('invalid invitation id')
         return invitation_id
 

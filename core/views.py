@@ -1,11 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views.generic.edit import FormView
 from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
 from rules.contrib.views import objectgetter, permission_required
@@ -190,31 +188,20 @@ def edit_team(request, team_id):
     )
 
 
-class AcceptInvitationView(LoginRequiredMixin, FormView):
-    template_name = 'contact.html'  # fix, unused
-    form_class = AcceptInvitationForm
+@login_required
+def accept_invitation(request):
+    if request.method == 'POST':
+        form = AcceptInvitationForm(request.POST, request=request)
 
-    def get_success_url(self):
-        return reverse('index')  # todo redirect to correct task
-
-    def get_form(self, form_class=None):
-        if form_class is None:
-            form_class = self.get_form_class()
-        return form_class(**self.get_form_kwargs(), request=self.request)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['user'] = self.request.user
-        return context
-
-    def form_valid(self, form):
-        # add user to team, delete invitation
-        team_invitation = get_object_or_404(TeamInvitation, pk=form.cleaned_data['invitation_id'])
-
-        # try catch, inside transaction
-        team_invitation.team.users.add(team_invitation.recipient)
-        team_invitation.delete()
-        return super().form_valid(form)
+        if form.is_valid():
+            invitation = get_object_or_404(TeamInvitation, pk=form.cleaned_data['invitation_id'])
+            # try catch, inside transaction
+            invitation.team.users.add(request.user)
+            invitation.delete()
+            messages.add_message(request, messages.SUCCESS, f'Welcome to {invitation.team.name}!')
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            print(form.errors)
 
 
 @login_required

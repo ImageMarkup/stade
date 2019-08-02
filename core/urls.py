@@ -1,7 +1,6 @@
 from django.urls import path
 
 from . import views
-from .views import AcceptInvitationView
 
 
 urlpatterns = [
@@ -9,7 +8,7 @@ urlpatterns = [
     path('task/<int:task_id>', views.task_detail, name='task-detail'),
     path('submission/<int:submission_id>', views.submission_detail, name='submission-detail'),
     path('submissions/<int:task_id>/<int:team_id>', views.submission_list, name='submission-list'),
-    path('team-invite/accept', AcceptInvitationView.as_view(), name='accept-invitation'),
+    path('team-invite/accept', views.accept_invitation, name='accept-invitation'),
     # wizard
     path('create-team/<int:task>', views.create_team, name='create-team'),
     path(
