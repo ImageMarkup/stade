@@ -149,6 +149,23 @@ h6 {
   display: none;
 }
 
+.help-container {
+  top: 250px;
+  height: 0;
+  position: fixed;
+  right: 0;
+  width: 107px;
+}
+
+.help-button {
+  border: 1px solid #dabd4c !important;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  display: block;
+  transform: rotate(-90deg);
+  width: 170px;
+}
+
 /* Override some Bulma stuff */
 
 .button.is-text {
