@@ -45,13 +45,12 @@
       <div class="container">
         <div class="notice-content">
           <h1 class="banner-title">Welcome to the new submission platform for the ISIC Challenge!</h1>
-          <h4 class="notice-title">Important Notices:</h4>
+          <h4 class="notice-title">Important Notice:</h4>
           <ul class="notice-list">
               {% if not request.user.is_authenticated %}
                 <li>If you had an account on the old platform, you will need to <a href="{% url 'account_reset_password' %}">reset your password</a> to login.</li>
               {% endif %}
             <li><strong>Only Task 3 for the Live Challenge</strong> is currently accepting submissions.</li>
-            <li>Submissions for the 2019 Challenge <strong>will not be accepted until August 2nd</strong>.</li>
           </ul>
         </div>
       </div>
