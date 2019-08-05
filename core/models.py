@@ -203,6 +203,7 @@ class Submission(models.Model):
     )
     score = JSONField(blank=True, null=True)
     overall_score = models.FloatField(blank=True, null=True)
+    validation_score = models.FloatField(blank=True, null=True)
     fail_reason = models.TextField(blank=True)
 
     def __str__(self):

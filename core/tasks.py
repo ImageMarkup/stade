@@ -58,6 +58,7 @@ def score_submission(submission_id, notify=True):
                 results = compute_metrics(truth_file, prediction_file)
         submission.score = results
         submission.overall_score = results['overall']
+        submission.validation_score = results['validation']
         submission.status = 'succeeded'
         submission.save()
         submission.score_history.create(
