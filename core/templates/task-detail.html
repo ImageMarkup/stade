@@ -70,7 +70,11 @@
                         {% endif %}
                     </span>
                     {% if latest_submission.status == 'succeeded' %}
-                        <span class="score">{{ latest_submission.overall_score|floatformat:3 }}</span>
+                        {% if task.scores_published %}
+                            <span class="score">{{ latest_submission.overall_score|floatformat:3 }}</span>
+                        {% else %}
+                            <span class="score">{{ latest_submission.validation_score|floatformat:3 }}</span>
+                        {% endif %}
                     {% else %}
                         <span class="score">--</span>
                     {% endif %}

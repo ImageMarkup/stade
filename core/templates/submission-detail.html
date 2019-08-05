@@ -12,11 +12,22 @@
     <p class="overall-score">
         --
     </p>
-    {% else %}
+    {% elif submission.approach.task.scores_published %}
     <p class="overall-score">
       <span class="score"><i class="material-icons">stars</i> {{ submission.overall_score|floatformat:3 }}</span>
       Overall Score
     </p>
+    {% endif %}
+
+    {% if submission.status != 'succeeded' %}
+        <p class="overall-score">
+            --
+        </p>
+    {% else %}
+        <p class="overall-score">
+            <span class="score"><i class="material-icons">stars</i> {{ submission.validation_score|floatformat:3 }}</span>
+            Validation Score
+        </p>
     {% endif %}
   </div>
 

@@ -3,6 +3,9 @@ Your submission has been scored!
 Task: {{ submission.approach.task.name }}
 Team: {{ submission.approach.team.name }}
 Approach: {{ submission.approach.name }}
-
+{% if submission.approach.task.scores_published %}
 Score: {{ submission.overall_score|floatformat:3 }}
+{% else %}
+Score: {{ submission.validation_score|floatformat:3 }}
+{% endif %}
 View Submission: {{ url }}{{ submission.get_absolute_url }}
