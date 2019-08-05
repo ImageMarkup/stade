@@ -255,10 +255,6 @@ class Approach(models.Model):
     def friendly_status(self):
         return SUBMISSION_STATUS_CHOICES[self.latest_submission.status]
 
-    @property
-    def score(self):
-        return self.latest_submission.overall_score
-
 
 @receiver(pre_save, sender=User)
 def set_username_to_email_address(sender, instance, **kwargs):

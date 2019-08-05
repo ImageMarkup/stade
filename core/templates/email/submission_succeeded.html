@@ -20,7 +20,11 @@
         </table>
 
         <div>
-            <p class="score" style="font-size: 30px;">{{ submission.overall_score|floatformat:3 }}</p>
+            {% if submission.approach.task.scores_published %}
+                <p class="score" style="font-size: 30px;">{{ submission.overall_score|floatformat:3 }}</p>
+            {% else %}
+                <p class="score" style="font-size: 30px;">{{ submission.validation_score|floatformat:3 }}</p>
+            {% endif %}
             <a href="{{ url }}{{ submission.get_absolute_url }}" style="background: #00A9A5; border-radius: 3px; color: #fff; display:-inline-block; padding: 8px 12px; text-decoration: none;">View submission details</a>
         </div>
     </center>
