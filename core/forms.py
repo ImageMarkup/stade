@@ -216,5 +216,11 @@ class ApproachForm(forms.ModelForm):
                     f"You\'ve reached the maximum number of approaches for {task.name}."
                 )
 
+        # Unique together constraints don't provide validation out of the box
+        if Approach.objects.filter(name=self.cleaned_data['name'], task=task, team=team).exists():
+            raise ValidationError(
+                f'An approach with this name already exists for the {task.name} task.'
+            )
+
         if task.locked:
             raise ValidationError(f'The task {task.name} is locked.')
