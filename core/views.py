@@ -4,8 +4,10 @@ from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from rest_framework.decorators import api_view
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticated
 from rules.contrib.views import objectgetter, permission_required
 
 from core.forms import (
@@ -27,8 +29,10 @@ def handler500(request):
 
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
 def leaderboard(request, task_id, cluster):
-    if request.user.is_superuser:
+    if request.user.is_staff:
         task = get_object_or_404(Task, pk=task_id)
     else:
         task = get_object_or_404(Task.objects.filter(scores_published=True), pk=task_id)
@@ -56,10 +60,16 @@ def leaderboard(request, task_id, cluster):
 
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
 def submission_scores(request, submission_id):
-    submission = get_object_or_404(
-        Submission.objects.filter(approach__task__scores_published=True), pk=submission_id
-    )
+    if request.user.is_staff:
+        submission = get_object_or_404(Submission, pk=submission_id)
+    else:
+        submission = get_object_or_404(
+            Submission.objects.filter(approach__task__scores_published=True), pk=submission_id
+        )
+
     return JsonResponse(submission.score)
 
 

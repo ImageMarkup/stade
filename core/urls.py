@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
 from . import views
 
@@ -23,6 +24,11 @@ urlpatterns = [
     ),
     path('edit-team/<int:team_id>', views.edit_team, name='edit-team'),
     path('edit-approach/<int:approach_id>', views.edit_approach, name='edit-approach'),
+    path(
+        'internal-leaderboard',
+        TemplateView.as_view(template_name='internal-leaderboard.html'),
+        name='internal-leaderboard',
+    ),
     path(
         'api/leaderboard/<int:task_id>/by-approach',
         views.leaderboard,
