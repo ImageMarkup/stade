@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section container">
+    <div class="section-header">
+        <h1>Global Statistics</h1>
+    </div>
+    <div class="section-content">
+<p>Number of users: {{num_users}}</p>
+<p>Number of MailChimp subscribers: {{num_mailchimp_subscribers}}</p>
+    </div>
+</section>
+
+  {% for challenge in challenges %}
+  <section class="section container">
+      <div class="section-header">
+        <h1>{{ challenge.challenge.name }}</h1>
+      </div>
+      <div class="section-content">
+
+          <div class="columns">
+              <div class="column">
+          <ul>
+              <li>Number of teams: {{ challenge.num_teams }}</li>
+              <li>Number of approaches: {{ challenge.num_approaches }}</li>
+              <li>Number of successful submissions: {{ challenge.num_successful_submissions }}</li>
+          </ul>
+              </div>
+        </div>
+      </div>
+  </section>
+  {% endfor %}
+{% endblock %}

@@ -1,9 +1,12 @@
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
 from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+import requests
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.pagination import LimitOffsetPagination
@@ -83,6 +86,35 @@ def index(request):
         ).filter(num_visible_tasks__gt=0)
 
     return render(request, 'index.html', {'challenges': challenges.all()})
+
+
+@user_passes_test(lambda u: u.is_staff)
+def dashboard(request):
+    r = requests.get(
+        f'{settings.MAILCHIMP_API_URL}/3.0/lists/{settings.MAILCHIMP_LIST_ID}',
+        auth=('', settings.MAILCHIMP_API_KEY),
+        headers={'Content-Type': 'application/json'},
+    )
+    r.raise_for_status()
+
+    context = {
+        'num_users': User.objects.count(),
+        'num_mailchimp_subscribers': r.json()['stats']['member_count'],
+        'challenges': [],
+    }
+    for challenge in Challenge.objects.order_by('-name').exclude(name='ISIC Sandbox').all():
+        context['challenges'].append(
+            {
+                'challenge': challenge,
+                'num_teams': challenge.team_set.count(),
+                'num_approaches': Approach.objects.filter(task__challenge=challenge).count(),
+                'num_successful_submissions': Submission.objects.filter(
+                    approach__task__challenge=challenge
+                ).count(),
+            }
+        )
+
+    return render(request, 'staff/dashboard.html', context)
 
 
 @login_required
