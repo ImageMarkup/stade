@@ -1,0 +1,44 @@
+.dashboard-items {
+  justify-content: space-around;
+}
+
+.dashboard-items .column {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.dashboard-items .global .bg {
+  background: #00a9a5; /* Old browsers */
+  background: -moz-linear-gradient(-45deg, #00a9a5 0%, #427aa1 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg, #00a9a5 0%,#427aa1 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, #00a9a5 0%,#427aa1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  border-radius: 3px;
+  bottom: 3rem;
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00a9a5', endColorstr='#427aa1',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  left: 1.5rem;
+  position: absolute;
+  right: 1.5rem;
+  top: 3rem;
+  z-index: 1;
+}
+
+.dashboard-items .global .section-header,
+.dashboard-items .global .section-content {
+  background: none;
+  color: #fff;
+  position: relative;
+  z-index: 2;
+}
+
+.dashboard-items .section-content {
+  background: #fff;
+  border-radius: 0 0 3px 3px;
+  height: 100%;
+  padding: 15px 20px;
+  position: relative;
+}
+
+.dashboard-items .section-content ul {
+  margin-top: 0;
+}
