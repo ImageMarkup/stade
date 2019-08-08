@@ -25,9 +25,14 @@
           <ul class="navbar">
             {% if user.is_authenticated %}
               <strong>{{ request.user.email }}</strong>
-              {% if user.is_staff %}
+              {% if user.is_superuser %}
               <li class="admin">
                   <a href="{% url 'admin:index' %}" class="button is-small">Admin</a>
+              </li>
+              {% endif %}
+              {% if user.is_staff %}
+              <li class="admin">
+                  <a href="{% url 'staff-dashboard' %}" class="button is-small">Dashboard</a>
               </li>
               {% endif %}
               <li class="logout">
