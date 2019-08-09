@@ -26,6 +26,11 @@ urlpatterns = [
     path('edit-approach/<int:approach_id>', views.edit_approach, name='edit-approach'),
     path('staff/dashboard', views.dashboard, name='staff-dashboard'),
     path(
+        'staff/request-submission-bundle/<int:task_id>',
+        views.request_submission_bundle,
+        name='request-submission-bundle',
+    ),
+    path(
         'internal-leaderboard',
         TemplateView.as_view(template_name='internal-leaderboard.html'),
         name='internal-leaderboard',
