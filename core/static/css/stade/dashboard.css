@@ -51,6 +51,12 @@
   text-transform: uppercase;
 }
 
+.dashboard-items .section-content ul li span.dash-label > p {
+  font-size: 11px;
+  text-transform: lowercase;
+  font-weight: normal;
+}
+
 .dashboard-items .section-content ul li span.dash-value {
   font-size: 24px;
 }
