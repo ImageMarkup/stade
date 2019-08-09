@@ -6,6 +6,7 @@ from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.views.decorators.http import require_http_methods
 import requests
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -23,7 +24,7 @@ from core.forms import (
 from core.leaderboard import submissions_by_approach, submissions_by_team
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from core.serializers import LeaderboardEntrySerializer
-from core.tasks import score_submission, send_team_invitation
+from core.tasks import generate_submission_bundle, score_submission, send_team_invitation
 from core.utils import safe_redirect
 
 
@@ -89,19 +90,35 @@ def index(request):
 
 
 @user_passes_test(lambda u: u.is_staff)
-def dashboard(request):
-    r = requests.get(
-        f'{settings.MAILCHIMP_API_URL}/3.0/lists/{settings.MAILCHIMP_LIST_ID}',
-        auth=('', settings.MAILCHIMP_API_KEY),
-        headers={'Content-Type': 'application/json'},
+@require_http_methods(['POST'])
+def request_submission_bundle(request, task_id):
+    generate_submission_bundle.delay(task_id, request.user.id)
+    messages.add_message(
+        request,
+        messages.SUCCESS,
+        (
+            'Preparing the submission bundle, a download link will be sent to'
+            f'{request.user.email} when complete.'
+        ),
     )
-    r.raise_for_status()
+    return safe_redirect(request, request.GET.get('next'))
 
-    context = {
-        'num_users': User.objects.count(),
-        'num_mailchimp_subscribers': r.json()['stats']['member_count'],
-        'challenges': [],
-    }
+
+@user_passes_test(lambda u: u.is_staff)
+def dashboard(request):
+    context = {'num_users': User.objects.count(), 'challenges': []}
+
+    if not settings.DEBUG:
+        r = requests.get(
+            f'{settings.MAILCHIMP_API_URL}/3.0/lists/{settings.MAILCHIMP_LIST_ID}',
+            auth=('', settings.MAILCHIMP_API_KEY),
+            headers={'Content-Type': 'application/json'},
+        )
+        r.raise_for_status()
+        context['num_mailchimp_subscribers'] = (r.json()['stats']['member_count'],)
+    else:
+        context['num_mailchimp_subscribers'] = 5000
+
     for challenge in Challenge.objects.order_by('-name').exclude(name='ISIC Sandbox').all():
         context['challenges'].append(
             {
