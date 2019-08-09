@@ -251,6 +251,14 @@ class ScoreHistory(models.Model):
     overall_score = models.FloatField()
 
 
+REVIEW_STATE_CHOICES = {'accepted': 'Accepted', 'rejected': 'Rejected'}
+REJECT_REASON_CHOICES = {
+    'blank_or_corrupt_manuscript': 'Blank/Corrupt manuscript',
+    'low_quality_manuscript': 'Low quality manuscript',
+    'rule_violation': 'Violation of rules',
+}
+
+
 class Approach(models.Model):
     class Meta:
         verbose_name_plural = 'approaches'
@@ -265,6 +273,13 @@ class Approach(models.Model):
     uses_external_data = models.BooleanField(default=False, choices=((True, 'Yes'), (False, 'No')))
     manuscript = CollisionSafeFileField(
         validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True
+    )
+
+    review_state = models.CharField(
+        max_length=8, blank=True, default='', choices=REVIEW_STATE_CHOICES.items()
+    )
+    reject_reason = models.CharField(
+        max_length=27, blank=True, default='', choices=REJECT_REASON_CHOICES.items()
     )
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
@@ -293,8 +308,30 @@ class Approach(models.Model):
         return SUBMISSION_STATUS_CHOICES[self.latest_submission.status]
 
 
+class ReviewHistory(models.Model):
+    class Meta:
+        ordering = ['-created']
+
+    approach = models.ForeignKey(Approach, on_delete=models.CASCADE, related_name='review_history')
+    reviewed_by = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
+    created = models.DateTimeField(default=timezone.now)
+    review_state = models.CharField(max_length=8, choices=REVIEW_STATE_CHOICES.items())
+    reject_reason = models.CharField(
+        max_length=27, blank=True, default='', choices=REJECT_REASON_CHOICES.items()
+    )
+
+
+@receiver(pre_save, sender=Approach)
+def reset_review_state_on_manuscript_change(sender, instance: Approach, **kwargs):
+    if instance.id:
+        old_approach = Approach.objects.get(pk=instance.id)
+
+        if old_approach.manuscript != instance.manuscript:
+            instance.review_state = ''
+
+
 @receiver(pre_save, sender=User)
-def set_username_to_email_address(sender, instance, **kwargs):
+def set_username_to_email_address(sender, instance: User, **kwargs):
     """
     Forcibly sets the username of every user to their email address.
     """

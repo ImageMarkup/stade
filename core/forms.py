@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
+import core.models
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 
 
@@ -42,6 +43,35 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
         email.set_as_primary(conditional=True)
         email.save()
         super().save()
+
+
+class ReviewApproachForm(forms.Form):
+    approach_id = forms.IntegerField(widget=forms.HiddenInput())
+    action = forms.ChoiceField(
+        choices=[['accepted', 'Accept'], ['rejected', 'Reject'], ['reset', 'Reset']]
+    )
+    reason = forms.ChoiceField(choices=core.models.REJECT_REASON_CHOICES.items(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+
+    def clean_action(self):
+        action = self.cleaned_data['action']
+
+        if action == 'reset':
+            action = ''
+
+        return action
+
+    def clean(self):
+        super().clean()
+
+        if self.cleaned_data['action'] == 'rejected' and self.cleaned_data['reason'] == '':
+            raise forms.ValidationError(f'A rejection reason must be provided.')
+
+        if not self.request.user.is_staff:
+            raise forms.ValidationError(f"You don't have permission to do that.")
 
 
 class AcceptInvitationForm(forms.Form):

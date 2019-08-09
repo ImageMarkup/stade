@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block content %}
+    <section class="section container">
+        <div class="section-header">
+            <h1>{{ task.challenge.name }} {{ task.name }}</h1>
+        </div>
+
+        <div class="section-content">
+            <h2>Approaches</h2>
+
+            <div class="submissions-wrapper">
+
+                <div class="submissions-list">
+
+                    <div class="submission submission-header columns is-mobile">
+                        <div class="approach-name column">
+                            ID
+                        </div>
+                        <div class="approach-name column">
+                            Approach Name
+                        </div>
+                         <div class="approach-name column">
+                            Team Name
+                        </div>
+                        <div class="status column is-one-sixth">
+                            Submission
+                        </div>
+                        <div class="status column is-one-sixth">
+                            Manuscript
+                        </div>
+                        <div class="status column is-one-sixth">
+                            Review
+                        </div>
+                    </div>
+
+                    {% for approach in approaches %}
+                        <div class="submission columns is-mobile">
+                            <div class="created column is-one-sixth-desktop is-two-sixths-mobile">
+                                {{ approach.pk }}
+                            </div>
+                            <div class="created column is-one-sixth-desktop is-two-sixths-mobile">
+                                {{ approach.name }} {% if approach.uses_external_data %}*{% endif %}
+                            </div>
+                            <div class="created column is-one-sixth-desktop is-two-sixths-mobile">
+                                {{ approach.team.name }}
+                                <br>
+                                {% if approach.team.institution %}
+                                {% if approach.team.institution_url %}<a href="{{ approach.team.institution_url }}">{% endif %}{{ approach.team.institution }}{% if approach.team.institution_url %}</a>{% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="approach-name column is-one-sixth">
+                                {{ approach.latest_successful_submission.overall_score|floatformat:3 }}
+                                <a href="{{ approach.latest_successful_submission.get_absolute_url }}">View</a>
+                            </div>
+                            <div class="status column is-one-sixth">
+                                <a href="{{ approach.manuscript.url }}">View</a>
+                            </div>
+                                <div class="status column is-one-sixth">
+                                   <form action="{% url 'submit-approach-review' approach.id %}?next={{ request.path|urlencode }}" method="POST">
+                                       {% csrf_token %}
+                                       <label for="id_reason">Reason:</label><select name="reason" id="id_reason">
+                                           <option value=""></option>
+                                           <option value="blank_or_corrupt_manuscript">Blank/Corrupt manuscript</option>
+
+                                           <option value="low_quality_manuscript">Low quality manuscript</option>
+
+                                           <option value="rule_violation">Violation of rules</option>
+
+                                       </select>
+                                       <input type="submit" name="action" value="accepted">
+                                       <input type="submit" name="action" value="rejected">
+                                       <input type="submit" name="action" value="reset">
+                                           <input type="hidden" name="approach_id" value="{{ approach.id }}">
+                                       </form>
+                                </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+<div class="section-content">
+            <h2>Reviewed Approaches</h2>
+
+            <div class="submissions-wrapper">
+
+                <div class="submissions-list">
+
+                    <div class="submission submission-header columns is-mobile">
+                        <div class="approach-name column">
+                            ID
+                        </div>
+                        <div class="approach-name column">
+                            Approach Name
+                        </div>
+                         <div class="approach-name column">
+                            Team Name
+                        </div>
+                        <div class="status column is-one-sixth">
+                            Submission
+                        </div>
+                        <div class="status column is-one-sixth">
+                            Manuscript
+                        </div>
+                        <div class="status column is-one-sixth">
+                            Review
+                        </div>
+                    </div>
+
+                    {% for approach in reviewed_approaches %}
+
+                        <div class="submission columns is-mobile">
+                            <div class="created column is-one-sixth-desktop is-two-sixths-mobile">
+                                {{ approach.pk }}
+                            </div>
+                            <div class="created column is-one-sixth-desktop is-two-sixths-mobile">
+                                {{ approach.name }} {% if approach.uses_external_data %}*{% endif %}
+                            </div>
+                            <div class="created column is-one-sixth-desktop is-two-sixths-mobile">
+                                {{ approach.team.name }}
+                                <br>
+                                {% if approach.team.institution %}
+                                {% if approach.team.institution_url %}<a href="{{ approach.team.institution_url }}">{% endif %}{{ approach.team.institution }}{% if approach.team.institution_url %}</a>{% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="approach-name column is-one-sixth">
+                                {{ approach.latest_successful_submission.overall_score|floatformat:3 }}
+                                <a href="{{ approach.latest_successful_submission.get_absolute_url }}">View</a>
+                            </div>
+                            <div class="status column is-one-sixth">
+                                <a href="{{ approach.manuscript.url }}">View</a>
+                            </div>
+                                <div class="status column is-one-sixth">
+                                    <strong>{{ approach.get_review_state_display }}
+                                        {% if approach.review_state == 'rejected' %}<span>{{ approach.get_reject_reason_display }}</span>{% endif %}</strong>
+
+  <form action="{% url 'submit-approach-review' approach.id %}?next={{ request.path|urlencode }}" method="POST">
+                                       {% csrf_token %}
+                                       <input type="submit" name="action" value="reset">
+                                           <input type="hidden" name="approach_id" value="{{ approach.id }}">
+                                       </form>
+
+                                                                   </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+    </section>
+</div>
+
+{% endblock %}
