@@ -7,33 +7,42 @@
     </div>
     <div class="section-content">
       <ul>
-        <li><span>Number of users:</span> <span>{{num_users}}</span></li>
-        <li><span>Number of MailChimp subscribers:</span> <span>{{num_mailchimp_subscribers}}</span></li>
+        <li><span class="dash-label">Number of users:</span> <span class="dash-value">{{num_users}}</span></li>
+        <li><span class="dash-label">Number of MailChimp subscribers:</span> <span class="dash-value">{{num_mailchimp_subscribers}}</span></li>
       </ul>
+    </div>
+    <div class="global-section-footer">
+      <a href="{% url 'internal-leaderboard' %}" class="button is-medium" target="_blank">View Leaderboard</a>
     </div>
     <div class="bg"></div>
   </section>
 
   {% for challenge in challenges %}
-   <section class="section column is-one-third">
+  <section class="section column is-one-third">
     <div class="section-header">
       <h1>{{ challenge.challenge.name }}</h1>
     </div>
     <div class="section-content">
       <ul>
-        <li><span>Number of teams:</span> <span>{{ challenge.num_teams }}</span></li>
-        <li><span>Number of approaches:</span> <span>{{ challenge.num_approaches }}</span></li>
-        <li><span>Number of successful submissions:</span> <span>{{ challenge.num_successful_submissions }}</span></li>
+        <li><span class="dash-label">Number of teams:</span> <span class="dash-value">{{ challenge.num_teams }}</span></li>
+        <li><span class="dash-label">Number of approaches:</span> <span class="dash-value">{{ challenge.num_approaches }}</span></li>
+        <li><span class="dash-label">Number of successful submissions:</span> <span class="dash-value">{{ challenge.num_successful_submissions }}</span></li>
       </ul>
-
+    </div>
+    <div class="section-footer">
+      <h4>Actions</h4>
+      <ul>
       {% for task in challenge.challenge.tasks.all %}
       <form id="request-submission-bundle-{{ task.id }}" action="{% url 'request-submission-bundle' task.id %}?next={{ request.path|urlencode }}" method="POST">{% csrf_token %}</form>
-      <a href="#"
-         onclick="document.getElementById('request-submission-bundle-{{ task.id }}').submit()">
-          generate submission bundle for {{ task.name }}
-      </a>
+      <li>
+        <a href="#" onclick="document.getElementById('request-submission-bundle-{{ task.id }}').submit()">
+          <i class="material-icons">link</i>
+          <span>{{ task.name }}<span class="action-name">Generate submission bundle</span></span>
+        </a>
+        <!-- <a href="#" class="review-approach has-tooltip"><i class="material-icons">find_in_page</i><span class="tooltip is-right">Review Approaches</span></a> -->
+      </li>
       {% endfor %}
-
+      </ul>
     </div>
   </section>
   {% endfor %}
