@@ -9,9 +9,8 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 import requests
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import IsAuthenticated
 from rules.contrib.views import objectgetter, permission_required
 
 from core.forms import (
@@ -34,7 +33,6 @@ def handler500(request):
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication])
-@permission_classes([IsAuthenticated])
 def leaderboard(request, task_id, cluster):
     if request.user.is_staff:
         task = get_object_or_404(Task, pk=task_id)
@@ -65,7 +63,6 @@ def leaderboard(request, task_id, cluster):
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication])
-@permission_classes([IsAuthenticated])
 def submission_scores(request, submission_id):
     if request.user.is_staff:
         submission = get_object_or_404(Submission, pk=submission_id)

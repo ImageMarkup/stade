@@ -28,7 +28,7 @@ def test_submission_throttling(approach):
     for _ in range(approach.task.max_submissions_per_week):
         form = CreateSubmissionForm(
             data={'accepted_terms': True},
-            files={'test_prediction_file': SimpleUploadedFile('some-file', b'foo')},
+            files={'test_prediction_file': SimpleUploadedFile('some-file.csv', b'foo')},
             approach_id=approach.id,
             request=request,
         )
@@ -39,7 +39,7 @@ def test_submission_throttling(approach):
 
     form = CreateSubmissionForm(
         data={'accepted_terms': True},
-        files={'test_prediction_file': SimpleUploadedFile('some-file', b'foo')},
+        files={'test_prediction_file': SimpleUploadedFile('some-file.csv', b'foo')},
         approach_id=approach.id,
         request=request,
     )
