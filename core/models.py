@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from pathlib import PurePath
+from typing import Optional
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
@@ -250,6 +251,14 @@ class Approach(models.Model):
     @property
     def latest_submission(self):
         return Submission.objects.filter(approach=self).order_by('-created').first()
+
+    @property
+    def latest_successful_submission(self) -> Optional[Submission]:
+        return (
+            Submission.objects.filter(approach=self, status='succeeded')
+            .order_by('-created')
+            .first()
+        )
 
     @property
     def friendly_status(self):

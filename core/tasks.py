@@ -1,15 +1,24 @@
+import csv
+import os
+import tempfile
+import time
+from zipfile import ZipFile
+
+import boto3
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail
+from django.db import connection, transaction
+from django.db.models import Count, Q
 from django.template.loader import render_to_string
 
 from isic_challenge_scoring.task3 import compute_metrics
 from isic_challenge_scoring.types import ScoreException
 
-from core.models import Submission, Task, TeamInvitation
+from core.models import Approach, Submission, Task, TeamInvitation
 
 logger = get_task_logger(__name__)
 
@@ -36,6 +45,91 @@ def notify_creator_of_scoring_attempt(submission):
         [submission.creator.email],
         html_message=html_message,
     )
+
+
+def upload_and_sign_submission_bundle(bundle_filename):
+    s3 = boto3.client('s3')
+    key = f'submission-bundles/{bundle_filename}'
+
+    with open(bundle_filename, 'rb') as data:
+        s3.upload_fileobj(data, settings.AWS_STORAGE_BUCKET_NAME, key)
+
+    return s3.generate_presigned_url(
+        'get_object',
+        Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': key},
+        ExpiresIn=86400,
+    )
+
+
+def generate_bundle_as_zip(task, successful_approaches):
+    current_time = int(round(time.time() * 1000))
+    file_prefix = f'task-{task.id}-{current_time}'
+    bundle_filename = f'{file_prefix}-submissions.zip'
+    with ZipFile(bundle_filename, 'w') as bundle:
+        # add the test ground truth file
+        with task.test_ground_truth_file.open() as f:
+            bundle.writestr(f'{file_prefix}/test_ground_truth.csv', f.read())
+
+        # add the submitter metadata file
+        with tempfile.NamedTemporaryFile('w') as outfile:
+            writer = csv.writer(outfile)
+            writer.writerow(
+                ['approach_id', 'approach_name', 'team_id', 'team_name', 'overall_score']
+            )
+
+            for approach in successful_approaches:
+                writer.writerow(
+                    [
+                        approach.id,
+                        approach.name,
+                        approach.team.id,
+                        approach.team.name,
+                        approach.latest_successful_submission.overall_score,
+                    ]
+                )
+
+            outfile.flush()
+
+            bundle.write(outfile.name, f'{file_prefix}/submitter_metadata.csv')
+
+        for approach in successful_approaches:
+            with approach.manuscript.open() as f:
+                bundle.writestr(f'{file_prefix}/{approach.id}/manuscript.pdf', f.read())
+
+            with approach.latest_successful_submission.test_prediction_file.open() as f:
+                bundle.writestr(f'{file_prefix}/{approach.id}/predictions.csv', f.read())
+
+    return bundle_filename
+
+
+@shared_task
+def generate_submission_bundle(task_id, notify_user_id):
+    with transaction.atomic():
+        cursor = connection.cursor()
+        cursor.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ')
+
+        task = Task.objects.get(pk=task_id)
+        user = User.objects.only('email').get(pk=notify_user_id)
+        successful_approaches = (
+            Approach.objects.annotate(
+                num_successful_submissions=Count(
+                    'submission', filter=Q(submission__status='succeeded')
+                )
+            )
+            .filter(task=task, num_successful_submissions__gt=0)
+            .select_related('team')
+        )
+
+        bundle_filename = generate_bundle_as_zip(task, successful_approaches)
+
+    signed_url = upload_and_sign_submission_bundle(bundle_filename)
+
+    message = render_to_string(
+        f'email/submission_bundle_generated.txt', {'submission_bundle_url': signed_url}
+    )
+    send_mail('Submission bundle generated', message, settings.DEFAULT_FROM_EMAIL, [user.email])
+
+    os.remove(bundle_filename)
 
 
 @shared_task
