@@ -115,18 +115,24 @@ def dashboard(request):
             headers={'Content-Type': 'application/json'},
         )
         r.raise_for_status()
-        context['num_mailchimp_subscribers'] = (r.json()['stats']['member_count'],)
+        context['num_mailchimp_subscribers'] = r.json()['stats']['member_count']
     else:
         context['num_mailchimp_subscribers'] = 5000
 
-    for challenge in Challenge.objects.order_by('-name').exclude(name='ISIC Sandbox').all():
+    for challenge in Challenge.objects.exclude(name='ISIC Sandbox').all():
         context['challenges'].append(
             {
                 'challenge': challenge,
                 'classification_tasks': challenge.tasks.filter(type='classification'),
                 'num_teams': challenge.team_set.count(),
-                'num_approaches': Approach.objects.filter(task__challenge=challenge).count(),
-                'num_successful_submissions': Submission.objects.filter(
+                'num_successful_approaches': Approach.objects.annotate(
+                    num_successful_submissions=Count(
+                        'submission', filter=Q(submission__status='succeeded')
+                    )
+                )
+                .filter(task__challenge=challenge, num_successful_submissions__gt=0)
+                .count(),
+                'num_total_submissions': Submission.objects.filter(
                     approach__task__challenge=challenge
                 ).count(),
             }

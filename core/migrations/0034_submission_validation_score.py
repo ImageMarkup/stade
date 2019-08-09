@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0033_add_approach_description_and_docker_tag'),
-    ]
+    dependencies = [('core', '0033_add_approach_description_and_docker_tag')]
 
     operations = [
         migrations.AddField(
             model_name='submission',
             name='validation_score',
             field=models.FloatField(blank=True, null=True),
-        ),
+        )
     ]

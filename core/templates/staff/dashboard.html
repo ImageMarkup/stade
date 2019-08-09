@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+
+{% load humanize %}
 {% block content %}
 <div class="dashboard-items container columns is-multiline">
   <section class="section global column is-one-third">
@@ -7,8 +9,8 @@
     </div>
     <div class="section-content">
       <ul>
-        <li><span class="dash-label">Number of users:</span> <span class="dash-value">{{num_users}}</span></li>
-        <li><span class="dash-label">Number of MailChimp subscribers:</span> <span class="dash-value">{{num_mailchimp_subscribers}}</span></li>
+        <li><span class="dash-label">Mailing list subscribers:</span> <span class="dash-value">{{num_mailchimp_subscribers|intcomma}}</span></li>
+        <li><span class="dash-label">Registered users:</span> <span class="dash-value">{{num_users|intcomma}}</span></li>
       </ul>
     </div>
     <div class="global-section-footer">
@@ -24,9 +26,9 @@
     </div>
     <div class="section-content">
       <ul>
-        <li><span class="dash-label">Number of teams:</span> <span class="dash-value">{{ challenge.num_teams }}</span></li>
-        <li><span class="dash-label">Number of approaches:</span> <span class="dash-value">{{ challenge.num_approaches }}</span></li>
-        <li><span class="dash-label">Number of successful submissions:</span> <span class="dash-value">{{ challenge.num_successful_submissions }}</span></li>
+        <li><span class="dash-label">Teams:</span> <span class="dash-value">{{ challenge.num_teams|intcomma }}</span></li>
+        <li><span class="dash-label">Successful approaches:<p>approaches with at least 1 successful submission</p></span> <span class="dash-value">{{ challenge.num_successful_approaches|intcomma  }}</span></li>
+        <li><span class="dash-label">Total submissions processed:</span> <span class="dash-value">{{ challenge.num_total_submissions|intcomma  }}</span></li>
       </ul>
     </div>
     <div class="section-footer">
