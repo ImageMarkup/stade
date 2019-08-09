@@ -23,10 +23,6 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_display_links = ['id']
     list_filter = ['status']
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.defer('score')
-
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):

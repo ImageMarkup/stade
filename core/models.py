@@ -39,6 +39,15 @@ class CollisionSafeFileField(models.FileField):
         return f'{uuid4()}/{filename}'
 
 
+class DeferredFieldsManager(models.Manager):
+    def __init__(self, *deferred_fields):
+        self.deferred_fields = deferred_fields
+        super().__init__()
+
+    def get_queryset(self):
+        return super().get_queryset().defer(*self.deferred_fields)
+
+
 class SelectRelatedManager(models.Manager):
     def __init__(self, *related_fields):
         self.related_fields = related_fields
@@ -206,6 +215,8 @@ class Submission(models.Model):
     overall_score = models.FloatField(blank=True, null=True)
     validation_score = models.FloatField(blank=True, null=True)
     fail_reason = models.TextField(blank=True)
+
+    objects = DeferredFieldsManager('score')
 
     def __str__(self):
         return f'{self.id}'

@@ -65,10 +65,13 @@ def leaderboard(request, task_id, cluster):
 @authentication_classes([SessionAuthentication])
 def submission_scores(request, submission_id):
     if request.user.is_staff:
-        submission = get_object_or_404(Submission, pk=submission_id)
+        # Remove all deferred fields, since we want the score immediately
+        submission = get_object_or_404(Submission.objects.defer(None), pk=submission_id)
     else:
+        # Remove all deferred fields, since we want the score immediately
         submission = get_object_or_404(
-            Submission.objects.filter(approach__task__scores_published=True), pk=submission_id
+            Submission.objects.defer(None).filter(approach__task__scores_published=True),
+            pk=submission_id,
         )
 
     return JsonResponse(submission.score)
