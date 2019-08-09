@@ -8,7 +8,7 @@
     <h1><i class="material-icons">assignment</i> <a href="{{ task.get_absolute_url }}">{{ task.name }}</a></h1>
     <div class="create-submission">
       {% if not task.locked %}
-      <a href="{% url 'create-team' task.id %}" {% if not request.user.is_authenticated %}disabled{% endif %} class="button is-medium">new submission</a>
+      <a {% if request.user.is_authenticated %}href="{% url 'create-team' task.id %}" class="button is-medium"{% else %} class="button is-medium is-disabled"{% endif %}>new submission</a>
       {% endif %}
     </div>
   </div>
@@ -99,8 +99,10 @@
           </div>
         {% empty %}
           {% if not request.user.is_authenticated %}
-          You must be logged in to participate in this task.
-          <a href="{% url 'account_signup' %}">Signup</a> or <a href="{% url 'account_login' %}">login</a> to continue.
+          <div class="notification is-warning">
+            You must be logged in to participate in this task.
+            <a href="{% url 'account_signup' %}">Signup</a> or <a href="{% url 'account_login' %}">login</a> to continue.
+          </div>
           {% else %}
         <div class="noteam">
           <h5>You are not on any teams. You must either be invited to an existing team or create a <a href="{% url 'create-team-standalone' task.challenge.id %}?next={{ request.path|urlencode }}"><strong>new team</strong></a>.</h5>

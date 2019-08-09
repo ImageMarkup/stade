@@ -140,6 +140,12 @@ h6 {
   font-weight: 500;
 }
 
+.button.is-disabled {
+  background: #d8dadc;
+  color: #58636b;
+  cursor: not-allowed;  
+}
+
 .button:after,
 .button:hover:after,
 .button.btn-blue:after,
