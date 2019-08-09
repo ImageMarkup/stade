@@ -8,7 +8,7 @@
     <h1><i class="material-icons">assignment</i> <a href="{{ task.get_absolute_url }}">{{ task.name }}</a></h1>
     <div class="create-submission">
       {% if not task.locked %}
-      <a href="{% url 'create-team' task.id %}" class="button is-medium">new submission</a>
+      <a href="{% url 'create-team' task.id %}" {% if not request.user.is_authenticated %}disabled{% endif %} class="button is-medium">new submission</a>
       {% endif %}
     </div>
   </div>
@@ -23,7 +23,7 @@
       </div>
       <div class="teams column is-half">
         <h2 class="title is-5">
-          Your Teams
+          {% if request.user.is_authenticated %}Your Teams{% else %}Participate{% endif %}
           {% if not task.locked and teams.count > 0 %}
           <a href="{% url 'create-team-standalone' task.challenge.id %}?next={{ request.path|urlencode }}" class="button btn-nobg create-team">
             <i class="material-icons">add_circle</i> Create a Team
@@ -98,10 +98,15 @@
 
           </div>
         {% empty %}
+          {% if not request.user.is_authenticated %}
+          You must be logged in to participate in this task.
+          <a href="{% url 'account_signup' %}">Signup</a> or <a href="{% url 'account_login' %}">login</a> to continue.
+          {% else %}
         <div class="noteam">
           <h5>You are not on any teams. You must either be invited to an existing team or create a <a href="{% url 'create-team-standalone' task.challenge.id %}?next={{ request.path|urlencode }}"><strong>new team</strong></a>.</h5>
           <p>Creating a <a href="{% url 'create-team' task.id %}"><strong>new submission</strong></a> will allow you to create a team.</p>
         </div>
+        {% endif %}
         {% endfor %}
       </div>
     </div>
