@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7
+      - image: circleci/postgres:11.4-alpine-ram
+
+    working_directory: ~/stade
+
+    steps:
+      - checkout
+
+      - run:
+          name: install dependencies
+          command: |
+            sudo pip install tox
+
+      - run:
+          name: run tests
+          command: |
+            tox
