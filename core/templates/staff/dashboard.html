@@ -32,7 +32,7 @@
     <div class="section-footer">
       <h4>Actions</h4>
       <ul>
-      {% for task in challenge.challenge.tasks.all %}
+      {% for task in challenge.classification_tasks.all %}
       <form id="request-submission-bundle-{{ task.id }}" action="{% url 'request-submission-bundle' task.id %}?next={{ request.path|urlencode }}" method="POST">{% csrf_token %}</form>
       <li>
         <a href="#" onclick="document.getElementById('request-submission-bundle-{{ task.id }}').submit()">

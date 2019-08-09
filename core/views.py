@@ -97,7 +97,7 @@ def request_submission_bundle(request, task_id):
         request,
         messages.SUCCESS,
         (
-            'Preparing the submission bundle, a download link will be sent to'
+            'Preparing the submission bundle, a download link will be sent to '
             f'{request.user.email} when complete.'
         ),
     )
@@ -123,6 +123,7 @@ def dashboard(request):
         context['challenges'].append(
             {
                 'challenge': challenge,
+                'classification_tasks': challenge.tasks.filter(type='classification'),
                 'num_teams': challenge.team_set.count(),
                 'num_approaches': Approach.objects.filter(task__challenge=challenge).count(),
                 'num_successful_submissions': Submission.objects.filter(
