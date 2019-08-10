@@ -23,6 +23,11 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_display_links = ['id']
     list_filter = ['status']
 
+    autocomplete_fields = ['creator', 'approach']
+
+    # exclude detailed metrics from the form since they're big and impractical to edit
+    exclude = ['score']
+
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
@@ -62,3 +67,5 @@ class ApproachAdmin(admin.ModelAdmin):
     list_display = ['task', 'team', 'name']
     list_display_links = ['name']
     list_filter = ['task']
+
+    search_fields = ['name']
