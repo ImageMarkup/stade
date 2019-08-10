@@ -93,8 +93,9 @@ def generate_bundle_as_zip(task, successful_approaches):
             bundle.write(outfile.name, f'{file_prefix}/submitter_metadata.csv')
 
         for approach in successful_approaches:
-            with approach.manuscript.open() as f:
-                bundle.writestr(f'{file_prefix}/{approach.id}/manuscript.pdf', f.read())
+            if approach.manuscript:  # manuscripts weren't always required in the past (or for live)
+                with approach.manuscript.open() as f:
+                    bundle.writestr(f'{file_prefix}/{approach.id}/manuscript.pdf', f.read())
 
             with approach.latest_successful_submission.test_prediction_file.open() as f:
                 bundle.writestr(f'{file_prefix}/{approach.id}/predictions.csv', f.read())
