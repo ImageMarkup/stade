@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from core.models import Challenge, Task
+
 
 class LeaderboardEntrySerializer(serializers.Serializer):
     submission_id = serializers.IntegerField(source='id')
@@ -28,3 +30,17 @@ class LeaderboardEntrySerializer(serializers.Serializer):
 
     def get_approach_manuscript_url(self, submission):
         return self.context['request'].build_absolute_uri(submission.approach.manuscript.url)
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['id', 'created', 'type', 'name', 'description', 'short_description', 'locked']
+
+
+class ChallengeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Challenge
+        fields = ['id', 'created', 'name', 'locked', 'position', 'tasks']
+
+    tasks = TaskSerializer(many=True)

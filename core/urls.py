@@ -35,6 +35,8 @@ urlpatterns = [
         TemplateView.as_view(template_name='internal-leaderboard.html'),
         name='internal-leaderboard',
     ),
+    path('api/challenge', views.challenge, name='challenge'),
+    path('api/challenge/<int:challenge_id>', views.challenge_by_id, name='challenge-by-id'),
     path(
         'api/leaderboard/<int:task_id>/by-approach',
         views.leaderboard,
