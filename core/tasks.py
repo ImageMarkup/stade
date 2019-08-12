@@ -171,7 +171,7 @@ def rescore_task_submissions(task_id):
         score_submission.delay(submission.id, False)
 
 
-@shared_task(time_limit=60)
+@shared_task(soft_time_limit=60, time_limit=120)
 def score_submission(submission_id, notify=True):
     submission = Submission.objects.get(pk=submission_id)
     submission.status = 'scoring'
