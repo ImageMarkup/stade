@@ -24,9 +24,6 @@ from core.models import Approach, Submission, Task, TeamInvitation
 logger = get_task_logger(__name__)
 
 
-CHUNK_SIZE = 5 * 1024 * 1024
-
-
 def notify_creator_of_scoring_attempt(submission):
     context = {'submission': submission, 'url': f'https://{Site.objects.get_current().domain}'}
     message = render_to_string(f'email/submission_{submission.status}.txt', context)
@@ -107,26 +104,17 @@ def generate_bundle_as_zip(task, successful_approaches):
             bundle.write(outfile.name, f'{bundle_root_dir}/submitter_metadata.csv')
 
         # add manuscripts and predictions
+        prediction_filename = f'predictions.{"zip" if task.type == "segmentation" else "csv"}'
         for approach in successful_approaches:
             if approach.manuscript:  # manuscripts weren't always required in the past (or for live)
-                with tempfile.NamedTemporaryFile('wb') as outfile:
-                    for chunk in approach.manuscript.chunks(chunk_size=CHUNK_SIZE):
-                        outfile.write(chunk)
-                    outfile.flush()
+                bundle.write(
+                    approach.manuscript.file.name, f'{bundle_root_dir}/{approach.id}/manuscript.pdf'
+                )
 
-                    bundle.write(outfile.name, f'{bundle_root_dir}/{approach.id}/manuscript.pdf')
-
-            with tempfile.NamedTemporaryFile('wb') as outfile:
-                for chunk in approach.latest_successful_submission.test_prediction_file.chunks(
-                    chunk_size=CHUNK_SIZE
-                ):
-                    outfile.write(chunk)
-                outfile.flush()
-
-                if approach.task.type == 'classification':
-                    bundle.write(outfile.name, f'{bundle_root_dir}/{approach.id}/predictions.csv')
-                elif approach.task.type == 'segmentation':
-                    bundle.write(outfile.name, f'{bundle_root_dir}/{approach.id}/predictions.zip')
+            bundle.write(
+                approach.latest_successful_submission.test_prediction_file.file.name,
+                f'{bundle_root_dir}/{approach.id}/{prediction_filename}',
+            )
 
     return bundle_filename
 
