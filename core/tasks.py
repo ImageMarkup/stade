@@ -13,8 +13,9 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail
 from django.db import connection, transaction
-from django.db.models import Count, Q
+from django.db.models import Count, FileField, Q
 from django.template.loader import render_to_string
+import requests
 
 from isic_challenge_scoring.task3 import compute_metrics
 from isic_challenge_scoring.types import ScoreException
@@ -46,6 +47,19 @@ def notify_creator_of_scoring_attempt(submission):
         [submission.creator.email],
         html_message=html_message,
     )
+
+
+def file_field_to_tmp_file(f: FileField) -> str:
+    with tempfile.NamedTemporaryFile('wb', delete=False) as outfile:
+        r = requests.get(f.url, stream=True)
+        r.raise_for_status()
+
+        for chunk in r.iter_content(5 * 1024 * 1024):
+            outfile.write(chunk)
+
+        outfile.flush()
+
+    return outfile.name
 
 
 def upload_and_sign_submission_bundle(bundle_filename):
@@ -108,11 +122,12 @@ def generate_bundle_as_zip(task, successful_approaches):
         for approach in successful_approaches:
             if approach.manuscript:  # manuscripts weren't always required in the past (or for live)
                 bundle.write(
-                    approach.manuscript.file.name, f'{bundle_root_dir}/{approach.id}/manuscript.pdf'
+                    file_field_to_tmp_file(approach.manuscript),
+                    f'{bundle_root_dir}/{approach.id}/manuscript.pdf',
                 )
 
             bundle.write(
-                approach.latest_successful_submission.test_prediction_file.file.name,
+                file_field_to_tmp_file(approach.latest_successful_submission.test_prediction_file),
                 f'{bundle_root_dir}/{approach.id}/{prediction_filename}',
             )
 
