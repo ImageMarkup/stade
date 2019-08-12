@@ -123,7 +123,6 @@ def dashboard(request):
         context['challenges'].append(
             {
                 'challenge': challenge,
-                'classification_tasks': challenge.tasks.filter(type='classification'),
                 'num_teams': challenge.team_set.count(),
                 'num_successful_approaches': Approach.objects.annotate(
                     num_successful_submissions=Count(

@@ -1,7 +1,8 @@
 import csv
+from datetime import datetime
 import os
 import tempfile
-import time
+import uuid
 from zipfile import ZipFile
 
 import boto3
@@ -21,6 +22,9 @@ from isic_challenge_scoring.types import ScoreException
 from core.models import Approach, Submission, Task, TeamInvitation
 
 logger = get_task_logger(__name__)
+
+
+CHUNK_SIZE = 5 * 1024 * 1024
 
 
 def notify_creator_of_scoring_attempt(submission):
@@ -49,7 +53,7 @@ def notify_creator_of_scoring_attempt(submission):
 
 def upload_and_sign_submission_bundle(bundle_filename):
     s3 = boto3.client('s3')
-    key = f'submission-bundles/{bundle_filename}'
+    key = f'submission-bundles/{uuid.uuid4()}/{bundle_filename}'
 
     with open(bundle_filename, 'rb') as data:
         s3.upload_fileobj(data, settings.AWS_STORAGE_BUCKET_NAME, key)
@@ -62,19 +66,28 @@ def upload_and_sign_submission_bundle(bundle_filename):
 
 
 def generate_bundle_as_zip(task, successful_approaches):
-    current_time = int(round(time.time() * 1000))
-    file_prefix = f'task-{task.id}-{current_time}'
-    bundle_filename = f'{file_prefix}-submissions.zip'
+    current_time = datetime.utcnow().strftime('%Y-%m-%d-%H%M%S')
+    bundle_root_dir = f'ISIC-task-{task.id}-submissions-{current_time}'
+    bundle_filename = f'{bundle_root_dir}.zip'
     with ZipFile(bundle_filename, 'w') as bundle:
         # add the test ground truth file
         with task.test_ground_truth_file.open() as f:
-            bundle.writestr(f'{file_prefix}/test_ground_truth.csv', f.read())
+            bundle.writestr(
+                f'{bundle_root_dir}/{os.path.basename(task.test_ground_truth_file.name)}', f.read()
+            )
 
         # add the submitter metadata file
         with tempfile.NamedTemporaryFile('w') as outfile:
             writer = csv.writer(outfile)
             writer.writerow(
-                ['approach_id', 'approach_name', 'team_id', 'team_name', 'overall_score']
+                [
+                    'approach_id',
+                    'approach_name',
+                    'uses_external_data',
+                    'team_id',
+                    'team_name',
+                    'overall_score',
+                ]
             )
 
             for approach in successful_approaches:
@@ -82,6 +95,7 @@ def generate_bundle_as_zip(task, successful_approaches):
                     [
                         approach.id,
                         approach.name,
+                        approach.uses_external_data,
                         approach.team.id,
                         approach.team.name,
                         approach.latest_successful_submission.overall_score,
@@ -90,15 +104,29 @@ def generate_bundle_as_zip(task, successful_approaches):
 
             outfile.flush()
 
-            bundle.write(outfile.name, f'{file_prefix}/submitter_metadata.csv')
+            bundle.write(outfile.name, f'{bundle_root_dir}/submitter_metadata.csv')
 
+        # add manuscripts and predictions
         for approach in successful_approaches:
             if approach.manuscript:  # manuscripts weren't always required in the past (or for live)
-                with approach.manuscript.open() as f:
-                    bundle.writestr(f'{file_prefix}/{approach.id}/manuscript.pdf', f.read())
+                with tempfile.NamedTemporaryFile('wb') as outfile:
+                    for chunk in approach.manuscript.chunks(chunk_size=CHUNK_SIZE):
+                        outfile.write(chunk)
+                    outfile.flush()
 
-            with approach.latest_successful_submission.test_prediction_file.open() as f:
-                bundle.writestr(f'{file_prefix}/{approach.id}/predictions.csv', f.read())
+                    bundle.write(outfile.name, f'{bundle_root_dir}/{approach.id}/manuscript.pdf')
+
+            with tempfile.NamedTemporaryFile('wb') as outfile:
+                for chunk in approach.latest_successful_submission.test_prediction_file.chunks(
+                    chunk_size=CHUNK_SIZE
+                ):
+                    outfile.write(chunk)
+                outfile.flush()
+
+                if approach.task.type == 'classification':
+                    bundle.write(outfile.name, f'{bundle_root_dir}/{approach.id}/predictions.csv')
+                elif approach.task.type == 'segmentation':
+                    bundle.write(outfile.name, f'{bundle_root_dir}/{approach.id}/predictions.zip')
 
     return bundle_filename
 
@@ -124,13 +152,12 @@ def generate_submission_bundle(task_id, notify_user_id):
         bundle_filename = generate_bundle_as_zip(task, successful_approaches)
 
     signed_url = upload_and_sign_submission_bundle(bundle_filename)
+    os.remove(bundle_filename)
 
     message = render_to_string(
-        f'email/submission_bundle_generated.txt', {'submission_bundle_url': signed_url}
+        'email/submission_bundle_generated.txt', {'submission_bundle_url': signed_url}
     )
     send_mail('Submission bundle generated', message, settings.DEFAULT_FROM_EMAIL, [user.email])
-
-    os.remove(bundle_filename)
 
 
 @shared_task
