@@ -134,7 +134,7 @@ def generate_bundle_as_zip(task, successful_approaches):
     return bundle_filename
 
 
-@shared_task
+@shared_task(time_limit=600)
 def generate_submission_bundle(task_id, notify_user_id):
     with transaction.atomic():
         cursor = connection.cursor()
@@ -163,7 +163,7 @@ def generate_submission_bundle(task_id, notify_user_id):
     send_mail('Submission bundle generated', message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
 
-@shared_task
+@shared_task(time_limit=30)
 def rescore_task_submissions(task_id):
     task = Task.objects.get(pk=task_id)
 
@@ -171,7 +171,7 @@ def rescore_task_submissions(task_id):
         score_submission.delay(submission.id, False)
 
 
-@shared_task
+@shared_task(time_limit=60)
 def score_submission(submission_id, notify=True):
     submission = Submission.objects.get(pk=submission_id)
     submission.status = 'scoring'
@@ -202,7 +202,7 @@ def score_submission(submission_id, notify=True):
             notify_creator_of_scoring_attempt(submission)
 
 
-@shared_task
+@shared_task(time_limit=30)
 def send_team_invitation(invite_id):
     invite = TeamInvitation.objects.get(pk=invite_id)
     existing_user = User.objects.filter(email=invite.recipient).exists()
