@@ -10,7 +10,6 @@ from typing import Generator
 import uuid
 from zipfile import ZipFile
 
-import boto3
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.conf import settings
@@ -71,6 +70,8 @@ def _field_file_to_local_path(field_file: FieldFile) -> Generator[Path, None, No
 
 
 def upload_and_sign_submission_bundle(bundle_filename):
+    import boto3
+
     s3 = boto3.client('s3')
     key = f'submission-bundles/{uuid.uuid4()}/{bundle_filename}'
 

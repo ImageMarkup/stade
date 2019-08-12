@@ -1,0 +1,17 @@
+stages:
+  - test
+
+e2e:
+  stage: test
+  image: joyzoursky/python-chromedriver:3.7-selenium
+  services:
+    - name: postgres:11.4
+      alias: pghost
+  script:
+    - pip install tox
+    - export POSTGRES_HOST=pghost
+    - tox -e e2e
+  artifacts:
+    paths:
+      - assets
+      - selenium-report

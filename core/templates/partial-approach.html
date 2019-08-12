@@ -39,12 +39,12 @@
             <h4>Uses external data</h4>
             <div class="control">
                 <label class="radio" style="display:block;margin-bottom:10px">
-                    <input type="radio" name="uses_external_data" value="True">
+                    <input id="uses-external-data-yes" type="radio" name="uses_external_data" value="True">
                     <strong>Yes</strong>, I make use of data other than that which was provided
                     for {{ task.challenge.name }} {{ task.name }}.
                 </label>
                 <label class="radio" style="display: block;margin:0">
-                    <input type="radio" name="uses_external_data" value="False">
+                    <input id="uses-external-data-no" type="radio" name="uses_external_data" value="False">
                     <strong>No</strong>, I do not make use of any data other than that which which was provided
                     for {{ task.challenge.name }} {{ task.name }}.
                 </label>

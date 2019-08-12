@@ -14,6 +14,7 @@ DATABASES = {
         'PASSWORD': 'postgres',
         'HOST': os.environ.get('POSTGRES_HOST', '127.0.0.1'),
         'PORT': '5432',
-    }
+    },
+    'TEST': {'HOST': 'pghost'},
 }
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

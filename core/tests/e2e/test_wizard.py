@@ -1,8 +1,19 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 import pytest
+from selenium.webdriver.common.keys import Keys
 
 from core.models import Task
 from core.tests.factories import TaskFactory
+
+
+def driver_args():
+    return ['--no-sandbox', '--headless', '--disable-gpu', '--disable-dev-shm-usage']
+
+
+@pytest.fixture
+def selenium(selenium):
+    selenium.implicitly_wait(60)
+    return selenium
 
 
 @pytest.fixture
@@ -20,13 +31,15 @@ def task(request, transactional_db):
 
 
 def test_submission_wizard(request, selenium, live_server, django_user_model, tmpdir, task):
-    django_user_model.objects.create_user(username='someone', password='something')
+    django_user_model.objects.create_user(
+        username='someone', email='someone@something.com', password='something'
+    )
 
     # login user
     selenium.get(live_server.url)
     selenium.find_element_by_id('login-button').click()
     el = selenium.find_element_by_xpath('//input[@id="id_login"]')
-    el.send_keys('someone')
+    el.send_keys('someone@something.com')
     el = selenium.find_element_by_xpath('//input[@id="id_password"]')
     el.send_keys('something')
     selenium.find_element_by_id('log-in-submit').click()
@@ -47,6 +60,8 @@ def test_submission_wizard(request, selenium, live_server, django_user_model, tm
     pdf = tmpdir.join('test-approach.pdf')
     pdf.write('somefakecontent')
     selenium.find_element_by_id('id_name').send_keys('Test approach')
+    selenium.find_element_by_id('uses-external-data-yes').click()
+    selenium.find_element_by_id('id_description').send_keys('Test approach description')
     selenium.find_element_by_id('id_manuscript').send_keys(pdf.strpath)
     selenium.find_element_by_id('create-approach-submit').click()
 
@@ -54,6 +69,6 @@ def test_submission_wizard(request, selenium, live_server, django_user_model, tm
     submission_file = request.fspath.join('../../../../etc/data/example_prediction.csv')
     selenium.find_element_by_id('id_accepted_terms').click()
     selenium.find_element_by_id('id_test_prediction_file').send_keys(submission_file.strpath)
-    selenium.find_element_by_id('create-submission-submit').click()
+    selenium.find_element_by_id('create-submission-submit').send_keys(Keys.ENTER)
 
     assert selenium.find_element_by_css_selector('li.status').text == 'Status: Queued for scoring'
