@@ -176,6 +176,7 @@ class ApproachForm(forms.ModelForm):
     class Meta:
         model = Approach
         fields = ['name', 'description', 'uses_external_data', 'manuscript', 'docker_tag']
+        widgets = {'uses_external_data': forms.RadioSelect}
 
         error_messages = {'manuscript': {'required': _('You must provide a manuscript file.')}}
 
