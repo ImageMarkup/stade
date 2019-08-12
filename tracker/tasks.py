@@ -7,7 +7,7 @@ import requests
 logger = get_task_logger(__name__)
 
 
-@shared_task
+@shared_task(time_limit=10)
 def add_mailchimp_subscriber(email):
     r = requests.post(
         f'{settings.MAILCHIMP_API_URL}/3.0/lists/{settings.MAILCHIMP_LIST_ID}/members',
