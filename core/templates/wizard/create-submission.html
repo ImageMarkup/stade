@@ -42,6 +42,17 @@
     <div class="new-submission">
       <h2>Upload Submission Data</h2>
 
+    {% if approach.task.challenge_id == 39 %}
+    <p>Your submission CSV should be formatted similarly to this example:</p>
+        <pre>image,MEL,NV,BCC,AK,BKL,DF,VASC,SCC,UNK
+ISIC_0001112,0.5723,0.74638,0.807,0.9231,0.193,0.6482,0.1508,0.1182,0.042
+ISIC_0001145,0.9684,0.587292,0.91609,0.8093,0.239,0.05252,0.343,0.8350,0.66
+ISIC_0001107,0.5061,0.23904,0.02974,0.8791,0.757,0.15820,0.7691,0.3817,0.6782
+ISIC_0001102,0.54389,0.64057,0.61898,0.554,0.2462,0.0586,0.4182,0.124,0.6313</pre>
+
+    <p>For more information on submitting, please see the <a target="_blank" href="https://challenge2019.isic-archive.com/submit.html">submission documentation</a>.</p>
+    {% endif %}
+
       <form action="" class="create-submission" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
