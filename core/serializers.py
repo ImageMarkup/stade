@@ -19,11 +19,11 @@ class LeaderboardEntrySerializer(serializers.Serializer):
             else submission.approach.team.institution_url
         )
 
-    def team_institution_name(self, submission):
+    def get_team_institution_name(self, submission):
         return (
             None
-            if not submission.approach.team.institution_name
-            else submission.approach.team.institution_name
+            if not submission.approach.team.institution
+            else submission.approach.team.institution
         )
 
     def get_approach_manuscript_url(self, submission):
