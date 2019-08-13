@@ -124,13 +124,9 @@ def dashboard(request):
             {
                 'challenge': challenge,
                 'num_teams': challenge.team_set.count(),
-                'num_successful_approaches': Approach.objects.annotate(
-                    num_successful_submissions=Count(
-                        'submission', filter=Q(submission__status='succeeded')
-                    )
-                )
-                .filter(task__challenge=challenge, num_successful_submissions__gt=0)
-                .count(),
+                'num_successful_approaches': Approach.successful.filter(
+                    task__challenge=challenge
+                ).count(),
                 'num_total_submissions': Submission.objects.filter(
                     approach__task__challenge=challenge
                 ).count(),

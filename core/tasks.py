@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail
 from django.db import connection, transaction
-from django.db.models import Count, FileField, Q
+from django.db.models import FileField
 from django.template.loader import render_to_string
 import requests
 
@@ -142,15 +142,7 @@ def generate_submission_bundle(task_id, notify_user_id):
 
         task = Task.objects.get(pk=task_id)
         user = User.objects.only('email').get(pk=notify_user_id)
-        successful_approaches = (
-            Approach.objects.annotate(
-                num_successful_submissions=Count(
-                    'submission', filter=Q(submission__status='succeeded')
-                )
-            )
-            .filter(task=task, num_successful_submissions__gt=0)
-            .select_related('team')
-        )
+        successful_approaches = Approach.successful.select_related('team').filter(task=task)
 
         bundle_filename = generate_bundle_as_zip(task, successful_approaches)
 
