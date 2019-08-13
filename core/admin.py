@@ -13,6 +13,12 @@ def rescore_task(modeladmin, request, queryset):
 rescore_task.short_description = 'Rescore task submissions'
 
 
+class ApproachInline(admin.TabularInline):
+    model = Approach
+    show_change_link = True
+    extra = 0
+
+
 class SubmissionInline(admin.TabularInline):
     pass
 
@@ -46,6 +52,8 @@ class TeamAdmin(admin.ModelAdmin):
     list_filter = ['challenge__name']
 
     autocomplete_fields = ['creator', 'users']
+
+    inlines = [ApproachInline]
 
 
 @admin.register(TeamInvitation)
