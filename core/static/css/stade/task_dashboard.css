@@ -182,3 +182,7 @@
 .team .footer .button {
   justify-self: right;
 }
+
+.button[disabled] {
+    color: #000;
+}

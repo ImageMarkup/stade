@@ -136,16 +136,15 @@ def dashboard(request):
     return render(request, 'staff/dashboard.html', context)
 
 
-@login_required
 def task_detail(request, task_id):
     task = get_object_or_404(Task.objects, pk=task_id)
 
-    context = {
-        'task': task,
-        'teams': request.user.teams.filter(challenge=task.challenge).prefetch_related(
+    context = {'task': task}
+
+    if request.user.is_authenticated:
+        context['teams'] = request.user.teams.filter(challenge=task.challenge).prefetch_related(
             'users', 'approach_set'
-        ),
-    }
+        )
 
     return render(request, 'task-detail.html', context)
 
