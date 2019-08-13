@@ -100,11 +100,9 @@ def index(request):
 def review_approaches(request, task_id):
     task = get_object_or_404(Task.objects, pk=task_id)
     approaches = (
-        task.approach_set.select_related('team')
-        .annotate(
-            num_successful_submissions=Count('submission', filter=Q(submission__status='succeeded'))
-        )
-        .filter(num_successful_submissions__gt=0, review_state='')
+        task.approach_set(manager='successful')
+        .select_related('team')
+        .filter(review_state='')
         .order_by('name')
     )
     reviewed_approaches = (

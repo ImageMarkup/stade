@@ -29,7 +29,7 @@ FROM
                   core_submission
                   ON core_submission.approach_id = core_approach.id
             WHERE
-               core_approach.review_state != '' AND
+               core_approach.review_state != 'rejected' AND
                core_submission.status = 'succeeded'
          )
          t
@@ -67,7 +67,7 @@ FROM
             core_submission
             ON core_submission.approach_id = core_approach.id
       WHERE
-         core_approach.review_state != '' AND
+         core_approach.review_state != 'rejected' AND
          core_submission.status = 'succeeded'
    )
    t
