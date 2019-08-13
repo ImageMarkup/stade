@@ -36,17 +36,25 @@
         </div>
 
         <div class="field external-data">
+            <h4>Uses external data</h4>
             <div class="control">
-                <label class="checkbox">
-                    <input id="id_uses_external_data"
-                        {% if request.POST.uses_external_data or approach.uses_external_data %}checked
-                        {% endif %} name="uses_external_data" type="checkbox">
-                    <div class="external-data">
-                      <p>Uses external data</p>
-                      <p class="is-size-7">Check this box if your algorithm makes use of data other than that which was provided for {{ task.challenge.name }} {{ task.name }}.</p>
-                    </div>
+                <label class="radio" style="display:block;margin-bottom:10px">
+                    <input type="radio" name="uses_external_data" value="True">
+                    <strong>Yes</strong>, I make use of data other than that which was provided
+                    for {{ task.challenge.name }} {{ task.name }}.
+                </label>
+                <label class="radio" style="display: block;margin:0">
+                    <input type="radio" name="uses_external_data" value="False">
+                    <strong>No</strong>, I do not make use of any data other than that which which was provided
+                    for {{ task.challenge.name }} {{ task.name }}.
                 </label>
             </div>
+
+            {% if form.uses_external_data.errors %}
+                <div class="help is-danger">
+                    {{ form.uses_external_data.errors }}
+                </div>
+            {% endif %}
         </div>
 
         <div class="field file-upload">

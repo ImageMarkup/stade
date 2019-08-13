@@ -262,7 +262,7 @@ class Approach(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     docker_tag = models.CharField(blank=True, max_length=120)
-    uses_external_data = models.BooleanField()
+    uses_external_data = models.BooleanField(default=False, choices=((True, 'Yes'), (False, 'No')))
     manuscript = CollisionSafeFileField(
         validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True
     )
