@@ -75,6 +75,22 @@ h6 {
   font-size: 16px;
 }
 
+/* Helpers
+** ================================ */
+
+.text-with-icon {
+  align-items: center;
+  display: flex;
+}
+
+.text-with-icon.icon-left i {
+  margin-right: 5px;
+}
+
+.text-with-icon.icon-right i {
+  margin-left: 5px;
+}
+
 /* Button styles
 ** ================================ */
 
