@@ -177,6 +177,7 @@ h6 {
 ** ================================ */
 
 .has-tooltip {
+  display: inline-block;
   position: relative;
 }
 
@@ -186,6 +187,7 @@ h6 {
   color: #fff !important;
   display: none;
   font-size: 12px;
+  font-weight: 400;
   padding: 4px 10px 6px;
   pointer-events: none;
   position: absolute;
