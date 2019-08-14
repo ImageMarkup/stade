@@ -149,8 +149,7 @@ def submit_approach_review(request, approach_id):
 
         return safe_redirect(request, request.GET.get('next'))
     else:
-        messages.add_message(request, messages.ERROR, 'Something went wrong.')
-        print(form.errors)
+        messages.add_message(request, messages.ERROR, 'The rejection reason is required.')
         # This should never fail
         logger.error(f'Failed to submit approach review, {form.errors}')
         return safe_redirect(request, request.GET.get('next'))
