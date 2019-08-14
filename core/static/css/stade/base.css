@@ -28,26 +28,8 @@ a {
   transition: all .15s ease-in-out;
 }
 
-a:after {
-  background: #D6E0E5;
-  bottom: -4px;
-  content: '';
-  height: 2px;
-  left: 50%;
-  opacity: 0;
-  position: absolute;
-  right: 50%;
-  transition: all .15s ease-in-out;
-}
-
 a:hover {
   color: #1F5673;
-}
-
-a:hover:after {
-  left: 0;
-  opacity: 1;
-  right: 0;
 }
 
 h1,
@@ -583,10 +565,6 @@ h6 {
 
 .tasks-list .task a:hover .task-name {
   border-bottom-color: #9bdedc;
-}
-
-.tasks-list .task a:after {
-  display: none;
 }
 
 /* Invites */

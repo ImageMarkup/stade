@@ -86,10 +86,6 @@
   padding-top: 1px;
 }
 
-.team .approach .approach-name a:after {
-  display: none;
-}
-
 .team .approach .score {
   font-weight: 600;
 }
