@@ -114,10 +114,6 @@
   opacity: 0.6;
 }
 
-.dashboard-items .section-footer ul li a:after {
-  display: none;
-}
-
 .dashboard-items .section-footer ul li:hover {
   background: #fff;
   box-shadow: 0 4px 5px -4px rgba(0, 0, 0, 0.25);

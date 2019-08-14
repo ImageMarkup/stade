@@ -107,3 +107,151 @@
 .data-download .button i {
   margin-left: 15px;
 }
+
+/* Review Approaches
+** ================================ */
+
+.approach-reviews .column:first-of-type {
+  padding-right: 30px;
+}
+
+.approach-reviews .column:last-of-type {
+  padding-left: 30px;
+}
+
+.approach-list .approach {
+  border: 1px solid #e8e8e8;
+  border-radius: 3px;
+  margin-bottom: 25px;
+}
+
+.approach-header,
+.approach-body,
+.approach-footer {
+  padding: 10px 15px;
+}
+
+.approach-list .approach .approach-header {
+  align-items: flex-end;
+  background: #f3f3f3;
+  border-bottom: 1px solid #e8e8e8;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+}
+
+.approach-header .approach-name {
+  flex: 5;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3em;
+}
+
+.approach-name i {
+  font-size: 20px;
+}
+
+.approach-header .approach-manuscript {
+  flex: 1;
+}
+
+.approach-header .approach-id {
+  flex: 1;
+  font-size: 14px;
+  font-style: italic;
+  text-align: right;
+}
+
+.approach-header .approach-id span {
+  color: #666;
+}
+
+.approach-body .approach-team {
+  display: flex;
+  font-size: 14px;
+  line-height: 1.25em;
+}
+
+.approach-body .approach-team p {
+  margin: 0;
+}
+
+.approach-body .approach-team p > span:first-of-type {
+  color: #aeb3b9;
+  border-bottom: 1px solid #e8e8e8;
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.approach-body .approach-team .team-name {
+  flex: 2;
+  padding-right: 10px;
+}
+
+.approach-body .approach-team .team-institution {
+  flex: 7;
+  padding: 0 10px;
+}
+
+.approach-body .approach-team .team-score {
+  justify-self: end;
+  padding-left: 10px;
+  width: 65px;
+}
+
+.approach-team .team-score i {
+  font-size: 20px;
+}
+
+.approach-footer {
+  align-items: center;
+  border-top: 1px solid #e8e8e8;
+  display: flex;
+  justify-content: space-between;
+}
+
+.approach-footer .button {
+  margin-right: 5px;
+}
+
+.approach-footer .accept-reject {
+  align-items: center;
+  display: flex;
+  margin: 0;
+  width: 100%;
+}
+
+.approach-footer form {
+  margin: 0;
+}
+
+.approach-footer form .reason {
+  margin-left: auto;
+}
+
+.approach-footer strong {
+  color: inherit;
+}
+
+.approach-footer .button {
+  font-weight: 600;
+}
+
+.accepted .approach-footer {
+  background: #f3fff7;
+  color: #22c65b !important;
+}
+
+.rejected .approach-footer {
+  background: #f7e1e6;
+  color: #ff2b56 !important;
+}
+
+.accepted .approach-footer .button,
+.rejected .approach-footer .button {
+  background: #292F36;
+}

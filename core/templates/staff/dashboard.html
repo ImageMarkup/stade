@@ -41,7 +41,7 @@
           <i class="material-icons">link</i>
           <span>{{ task.name }}<span class="action-name">Generate submission bundle</span></span>
         </a>
-        <!-- <a href="#" class="review-approach has-tooltip"><i class="material-icons">find_in_page</i><span class="tooltip is-right">Review Approaches</span></a> -->
+        <a href="{% url 'staff-review-approaches' task.id %}" class="review-approach has-tooltip"><i class="material-icons">find_in_page</i><span class="tooltip is-right">Review Approaches</span></a>
       </li>
       {% endfor %}
       </ul>

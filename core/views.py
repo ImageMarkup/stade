@@ -1,7 +1,10 @@
+import logging
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+from django.db import transaction
 from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -18,6 +21,7 @@ from core.forms import (
     ApproachForm,
     CreateInvitationForm,
     CreateSubmissionForm,
+    ReviewApproachForm,
     TeamForm,
 )
 from core.leaderboard import submissions_by_approach, submissions_by_team
@@ -25,6 +29,9 @@ from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitat
 from core.serializers import LeaderboardEntrySerializer
 from core.tasks import generate_submission_bundle, score_submission, send_team_invitation
 from core.utils import safe_redirect
+
+
+logger = logging.getLogger(__name__)
 
 
 def handler500(request):
@@ -87,6 +94,65 @@ def index(request):
         ).filter(num_visible_tasks__gt=0)
 
     return render(request, 'index.html', {'challenges': challenges.all()})
+
+
+@user_passes_test(lambda u: u.is_staff)
+def review_approaches(request, task_id):
+    task = get_object_or_404(Task.objects, pk=task_id)
+    approaches = (
+        task.approach_set(manager='successful')
+        .select_related('team')
+        .filter(review_state='')
+        .order_by('name')
+    )
+    reviewed_approaches = (
+        task.approach_set(manager='successful')
+        .select_related('team')
+        .exclude(review_state='')
+        .order_by('name')
+    )
+
+    return render(
+        request,
+        'staff/review-approaches.html',
+        {
+            'task': task,
+            'approaches': approaches,
+            'form': ReviewApproachForm(request=request),
+            'reviewed_approaches': reviewed_approaches,
+        },
+    )
+
+
+@user_passes_test(lambda u: u.is_staff)
+@require_http_methods(['POST'])
+def submit_approach_review(request, approach_id):
+    approach = get_object_or_404(Approach, pk=approach_id)
+    form = ReviewApproachForm(request.POST, request=request)
+
+    if form.is_valid():
+        with transaction.atomic():
+            approach.review_state = form.cleaned_data['action']
+            approach.reject_reason = form.cleaned_data['reason']
+            approach.review_history.create(
+                reviewed_by=request.user,
+                review_state=form.cleaned_data['action'],
+                reject_reason=form.cleaned_data['reason'],
+            )
+            approach.save()
+
+        new_status = (
+            'reset' if form.cleaned_data['action'] == '' else approach.get_review_state_display()
+        )
+
+        messages.add_message(request, messages.SUCCESS, f'{approach.name} has been {new_status}.')
+
+        return safe_redirect(request, request.GET.get('next'))
+    else:
+        messages.add_message(request, messages.ERROR, 'The rejection reason is required.')
+        # This should never fail
+        logger.error(f'Failed to submit approach review, {form.errors}')
+        return safe_redirect(request, request.GET.get('next'))
 
 
 @user_passes_test(lambda u: u.is_staff)

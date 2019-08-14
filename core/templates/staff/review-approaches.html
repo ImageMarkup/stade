@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section container">
+  <div class="section-header">
+    <h1>{{ task.challenge.name }} {{ task.name }}</h1>
+  </div>
+
+  <div class="section-content approach-reviews">
+    <div class="columns">
+      <div class="column is-half">
+        <h2>Approaches for review</h2>
+        <div class="approach-review">
+          <div class="approach-list">
+            {% for approach in approaches %}
+            <div class="approach">
+              <div class="approach-header">
+                <div class="approach-name">
+                  <span class="text-with-icon icon-left">
+                    <span class="has-tooltip"><a href="{{ approach.manuscript.url }}" target="_blank"><i class="material-icons">find_in_page</i></a><span class="tooltip is-top">View Manuscript</span></span> {{ approach.name }} {% if approach.uses_external_data %}*{% endif %}
+                  </span>
+                </div>
+                <div class="approach-id">
+                  <span>ID:</span> {{ approach.pk }}
+                </div>
+              </div>
+              <div class="approach-body">
+                <div class="approach-team">
+                  <p class="team-name"><span>Team</span>
+                    {{ approach.team.name }}
+                  </p>
+                  {% if approach.team.institution %}
+                    <p class="team-institution">
+                      <span>Institution</span>
+                      {% if approach.team.institution_url %}
+                          <a href="{{ approach.team.institution_url }}">{% endif %}{{ approach.team.institution }}{% if approach.team.institution_url %}</a>
+                      {% endif %}
+                    </p>
+                  {% endif %}
+                  <p class="team-score">
+                    <span>Score</span>
+                    <span class="text-with-icon icon-right">
+                      {{ approach.latest_successful_submission.overall_score|floatformat:3 }}
+                      <a href="{{ approach.latest_successful_submission.get_absolute_url }}"><span class="has-tooltip"><i class="material-icons">search</i><span class="tooltip is-right">View Submission</span></a>
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div class="approach-footer">
+                <form class="accept-reject" action="{% url 'submit-approach-review' approach.id %}?next={{ request.path|urlencode }}" method="POST">
+                  {% csrf_token %}
+                    <button class="button is-small is-success" type="submit" name="action" value="accepted">Accept</button>
+                    <button class="button is-small is-danger" type="submit" name="action" value="rejected">Reject</button>
+                  <label class="reason" for="id_reason">Rejection Reason:
+                    <select name="reason" id="id_reason">
+                      <option value=""></option>
+                      <option value="blank_or_corrupt_manuscript">Blank/Corrupt manuscript</option>
+                      <option value="low_quality_manuscript">Low quality manuscript</option>
+                      <option value="rule_violation">Violation of rules</option>
+                    </select>
+                  </label>
+                  <input type="hidden" name="approach_id" value="{{ approach.id }}">
+                </form>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="column is-half">
+        <h2>Reviewed Approaches</h2>
+        <div class="approach-review reviewed">
+          <div class="approach-list">
+
+            {% for approach in reviewed_approaches %}
+            <div class="approach{% if approach.review_state == 'rejected' %} rejected{% else %} accepted{% endif %}">
+              <div class="approach-header">
+                <div class="approach-name">
+                  <span class="text-with-icon icon-left">
+                    <span class="has-tooltip"><a href="{{ approach.manuscript.url }}" target="_blank"><i class="material-icons">find_in_page</i></a><span class="tooltip is-top">View Manuscript</span></span> {{ approach.name }} {% if approach.uses_external_data %}*{% endif %}
+                  </span>
+                </div>
+                <div class="approach-id">
+                  <span>ID:</span> {{ approach.pk }}
+                </div>
+              </div>
+              <div class="approach-body">
+                <div class="approach-team">
+                  <p class="team-name"><span>Team</span>
+                    {{ approach.team.name }}
+                  </p>
+                  {% if approach.team.institution %}
+                    <p class="team-institution">
+                      <span>Institution</span>
+                      {% if approach.team.institution_url %}
+                          <a href="{{ approach.team.institution_url }}">{% endif %}{{ approach.team.institution }}{% if approach.team.institution_url %}</a>
+                      {% endif %}
+                    </p>
+                  {% endif %}
+                  <p class="team-score">
+                    <span>Score</span>
+                    <span class="text-with-icon icon-right">
+                      {{ approach.latest_successful_submission.overall_score|floatformat:3 }}
+                      <a href="{{ approach.latest_successful_submission.get_absolute_url }}"><span class="has-tooltip"><i class="material-icons">search</i><span class="tooltip is-right">View Submission</span></a>
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div class="approach-footer">
+                <strong>{{ approach.get_review_state_display }}</strong>
+                {% if approach.review_state == 'rejected' %}<span>{{ approach.get_reject_reason_display }}</span>{% endif %}
+
+                <form action="{% url 'submit-approach-review' approach.id %}?next={{ request.path|urlencode }}" method="POST">
+                  {% csrf_token %}
+                  <input class="button is-small" type="submit" name="action" value="reset">
+                  <input type="hidden" name="approach_id" value="{{ approach.id }}">
+                </form>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+{% endblock %}
