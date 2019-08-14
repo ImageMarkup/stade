@@ -15,10 +15,9 @@
             <div class="approach">
               <div class="approach-header">
                 <div class="approach-name">
-                  <span class="text-with-icon icon-left">
-                    <span class="has-tooltip"><a href="{{ approach.manuscript.url }}" target="_blank"><i class="material-icons">find_in_page</i></a><span class="tooltip is-top">View Manuscript</span></span> {{ approach.name }} {% if approach.uses_external_data %}*{% endif %}
-                  </span>
+                  {{ approach.name }} {% if approach.uses_external_data %}*{% endif %}
                 </div>
+                <a href="{{ approach.manuscript.url }}" class="button btn-nobg is-small text-with-icon icon-left" target="_blank"><i class="material-icons">find_in_page</i> View Manuscript</a>
                 <div class="approach-id">
                   <span>ID:</span> {{ approach.pk }}
                 </div>
@@ -48,8 +47,8 @@
               <div class="approach-footer">
                 <form class="accept-reject" action="{% url 'submit-approach-review' approach.id %}?next={{ request.path|urlencode }}" method="POST">
                   {% csrf_token %}
-                    <button class="button is-small is-success" type="submit" name="action" value="accepted">Accept</button>
-                    <button class="button is-small is-danger" type="submit" name="action" value="rejected">Reject</button>
+                  <input class="button is-small is-success" type="submit" name="action" value="accept">
+                  <input class="button is-small is-danger" type="submit" name="action" value="reject">
                   <label class="reason" for="id_reason">Rejection Reason:
                     <select name="reason" id="id_reason">
                       <option value=""></option>
@@ -76,10 +75,9 @@
             <div class="approach{% if approach.review_state == 'rejected' %} rejected{% else %} accepted{% endif %}">
               <div class="approach-header">
                 <div class="approach-name">
-                  <span class="text-with-icon icon-left">
-                    <span class="has-tooltip"><a href="{{ approach.manuscript.url }}" target="_blank"><i class="material-icons">find_in_page</i></a><span class="tooltip is-top">View Manuscript</span></span> {{ approach.name }} {% if approach.uses_external_data %}*{% endif %}
-                  </span>
+                  {{ approach.name }} {% if approach.uses_external_data %}*{% endif %}
                 </div>
+                <a href="{{ approach.manuscript.url }}" class="button btn-nobg is-small text-with-icon icon-left" target="_blank"><i class="material-icons">find_in_page</i> View Manuscript</a>
                 <div class="approach-id">
                   <span>ID:</span> {{ approach.pk }}
                 </div>

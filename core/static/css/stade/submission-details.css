@@ -132,7 +132,7 @@
 }
 
 .approach-list .approach .approach-header {
-  align-items: flex-end;
+  align-items: center;
   background: #f3f3f3;
   border-bottom: 1px solid #e8e8e8;
   display: flex;
@@ -142,7 +142,7 @@
 
 .approach-header .approach-name {
   flex: 5;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.3em;
 }
@@ -164,6 +164,19 @@
 
 .approach-header .approach-id span {
   color: #666;
+}
+
+.approach-header .button {
+  margin-left: 16px;
+}
+
+.approach-header .button:hover {
+  background: #fff !important;
+}
+
+.approach-header .button i {
+  font-size: 18px;
+  margin-left: -2px;
 }
 
 .approach-body .approach-team {
