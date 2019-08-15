@@ -120,11 +120,11 @@
   z-index: 2; /* move to front so shadow displays */
 }
 
-.dashboard-items .section-footer ul li a > span {
+.dashboard-items .section-footer ul li > span {
   color: #427AA1;
 }
 
-.dashboard-items .section-footer ul li a .action-name {
+.dashboard-items .section-footer ul li .action-name {
   color: #58636b;
   display: block;
   font-size: 13px;

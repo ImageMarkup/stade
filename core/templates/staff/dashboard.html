@@ -32,15 +32,15 @@
       </ul>
     </div>
     <div class="section-footer">
-      <h4>Actions</h4>
+      <h4>Tasks</h4>
       <ul>
-      {% for task in challenge.challenge.tasks.all %}
+      {% for task in challenge.challenge.tasks.all|dictsort:"name" %}
       <form id="request-submission-bundle-{{ task.id }}" action="{% url 'request-submission-bundle' task.id %}?next={{ request.path|urlencode }}" method="POST">{% csrf_token %}</form>
       <li>
-        <a href="#" onclick="document.getElementById('request-submission-bundle-{{ task.id }}').submit()">
-          <i class="material-icons">link</i>
-          <span>{{ task.name }}<span class="action-name">Generate submission bundle</span></span>
+        <a href="#">
+          <span>{{ task.name }}</span>
         </a>
+          <a onclick="document.getElementById('request-submission-bundle-{{ task.id }}').submit()" class="review-approach has-tooltip"><i class="material-icons">cloud_download</i><span class="tooltip is-left">Generate Submission Bundle</span></a>
         <a href="{% url 'staff-review-approaches' task.id %}" class="review-approach has-tooltip"><i class="material-icons">find_in_page</i><span class="tooltip is-right">Review Approaches</span></a>
       </li>
       {% endfor %}
