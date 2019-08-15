@@ -47,8 +47,8 @@
               <div class="approach-footer">
                 <form class="accept-reject" action="{% url 'submit-approach-review' approach.id %}?next={{ request.path|urlencode }}" method="POST">
                   {% csrf_token %}
-                  <input class="button is-small is-success" type="submit" name="action" value="accept">
-                  <input class="button is-small is-danger" type="submit" name="action" value="reject">
+                    <button class="button is-small is-success" type="submit" name="action" value="accepted">Accept</button>
+                    <button class="button is-small is-danger" type="submit" name="action" value="rejected">Reject</button>
                   <label class="reason" for="id_reason">Rejection Reason:
                     <select name="reason" id="id_reason">
                       <option value=""></option>
