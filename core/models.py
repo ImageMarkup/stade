@@ -253,7 +253,7 @@ class ScoreHistory(models.Model):
 
 REVIEW_STATE_CHOICES = {'accepted': 'Accepted', 'rejected': 'Rejected'}
 REJECT_REASON_CHOICES = {
-    'blank_or_corrupt_manuscript': 'Blank/Corrupt manuscript',
+    'blank_or_corrupt_manuscript': 'Blank or corrupt manuscript',
     'low_quality_manuscript': 'Low quality manuscript',
     'rule_violation': 'Violation of rules',
 }
