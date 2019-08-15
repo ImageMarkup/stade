@@ -25,7 +25,15 @@ from core.forms import (
     TeamForm,
 )
 from core.leaderboard import submissions_by_approach, submissions_by_team
-from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
+from core.models import (
+    Approach,
+    Challenge,
+    Submission,
+    SubmissionApproach,
+    Task,
+    Team,
+    TeamInvitation,
+)
 from core.serializers import LeaderboardEntrySerializer
 from core.tasks import generate_submission_bundle, score_submission, send_team_invitation
 from core.utils import safe_redirect
@@ -99,18 +107,23 @@ def index(request):
 @user_passes_test(lambda u: u.is_staff)
 def review_approaches(request, task_id):
     task = get_object_or_404(Task.objects, pk=task_id)
-    approaches = (
-        task.approach_set(manager='successful')
-        .select_related('team')
-        .filter(review_state='')
-        .order_by('name')
+    approaches = []
+    reviewed_approaches = []
+
+    all_approaches = task.approach_set(manager='successful').select_related('team').order_by('name')
+    relevant_submissions = SubmissionApproach.index_by_approach(
+        SubmissionApproach.objects.select_related('submission', 'approach').filter(
+            approach__in=all_approaches
+        )
     )
-    reviewed_approaches = (
-        task.approach_set(manager='successful')
-        .select_related('team')
-        .exclude(review_state='')
-        .order_by('name')
-    )
+
+    for approach in all_approaches:
+        approach.relevant_submission = relevant_submissions[approach.id].submission
+
+        if approach.review_state == '':
+            approaches.append(approach)
+        else:
+            reviewed_approaches.append(approach)
 
     return render(
         request,

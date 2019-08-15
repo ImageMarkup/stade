@@ -308,6 +308,27 @@ class Approach(models.Model):
         return SUBMISSION_STATUS_CHOICES[self.latest_submission.status]
 
 
+class SubmissionApproach(models.Model):
+    class Meta:
+        managed = False
+        db_table = 'view_submission_approach'
+
+    task = models.ForeignKey(Task, on_delete=models.DO_NOTHING)
+    approach = models.ForeignKey(Approach, on_delete=models.DO_NOTHING)
+    team = models.ForeignKey(Team, on_delete=models.DO_NOTHING)
+    submission = models.OneToOneField(Submission, on_delete=models.DO_NOTHING, primary_key=True)
+    review_state = models.CharField(max_length=27)
+    overall_score = models.FloatField()
+
+    @staticmethod
+    def index_by_approach(qs: QuerySet):
+        ret = {}
+        sa: SubmissionApproach
+        for sa in qs:
+            ret[sa.approach.id] = sa
+        return ret
+
+
 class ReviewHistory(models.Model):
     class Meta:
         ordering = ['-created']
