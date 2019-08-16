@@ -238,17 +238,11 @@ class Submission(models.Model):
     def get_absolute_url(self):
         return reverse('submission-detail', args=[self.id])
 
-
-class ScoreHistory(models.Model):
-    class Meta:
-        ordering = ['-created']
-
-    submission = models.ForeignKey(
-        Submission, on_delete=models.CASCADE, related_name='score_history'
-    )
-    created = models.DateTimeField(default=timezone.now)
-    score = JSONField()
-    overall_score = models.FloatField()
+    def reset_scores(self):
+        self.score = None
+        self.overall_score = None
+        self.validation_score = None
+        return self
 
 
 REVIEW_STATE_CHOICES = {'accepted': 'Accepted', 'rejected': 'Rejected'}

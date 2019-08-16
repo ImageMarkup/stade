@@ -160,15 +160,10 @@ def rescore_task_submissions(task_id):
     task = Task.objects.get(pk=task_id)
 
     for submission in Submission.objects.filter(approach__task=task).all():
-        score_submission.delay(submission.id, False)
+        score_submission.delay(submission.id)
 
 
-@shared_task(soft_time_limit=60, time_limit=120)
-def score_submission(submission_id, notify=True):
-    submission = Submission.objects.get(pk=submission_id)
-    submission.status = 'scoring'
-    submission.save()
-
+def _score_submission(submission):
     try:
         with submission.approach.task.test_ground_truth_file.open() as truth_file:
             with submission.test_prediction_file.open() as prediction_file:
@@ -177,20 +172,31 @@ def score_submission(submission_id, notify=True):
         submission.overall_score = results['overall']
         submission.validation_score = results['validation']
         submission.status = 'succeeded'
-        submission.save()
-        submission.score_history.create(
-            score=submission.score, overall_score=submission.overall_score
-        )
     except ScoreException as e:
         submission.status = 'failed'
         submission.fail_reason = e.args[0]
-        submission.save()
+        submission.reset_scores()
     except Exception:
         logger.exception(f'internal error scoring submission {submission.id}')
         submission.status = 'internal_failure'
+        submission.reset_scores()
+
+    return submission
+
+
+@shared_task(soft_time_limit=60, time_limit=120)
+def score_submission(submission_id, dry_run=False, notify=False):
+    submission = Submission.objects.get(pk=submission_id)
+    if not dry_run:
+        submission.status = 'scoring'
         submission.save()
-    finally:
-        if notify and submission.status != 'scoring':
+
+    submission = _score_submission(submission)
+
+    if not dry_run:
+        submission.save()
+
+        if notify:
             notify_creator_of_scoring_attempt(submission)
 
 
