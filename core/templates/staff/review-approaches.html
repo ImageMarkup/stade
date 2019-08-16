@@ -8,7 +8,7 @@
   <div class="section-content approach-reviews">
     <div class="columns">
       <div class="column is-half">
-        <h2>Approaches for review</h2>
+        <h2>Approaches for review ({{ approaches|length }})</h2>
         <div class="approach-review">
           <div class="approach-list">
             {% for approach in approaches %}
@@ -38,8 +38,8 @@
                   <p class="team-score">
                     <span>Score</span>
                     <span class="text-with-icon icon-right">
-                      {{ approach.latest_successful_submission.overall_score|floatformat:3 }}
-                      <a href="{{ approach.latest_successful_submission.get_absolute_url }}"><span class="has-tooltip"><i class="material-icons">search</i><span class="tooltip is-right">View Submission</span></a>
+                      {{ approach.relevant_submission.overall_score|floatformat:3 }}
+                      <a href="{{ approach.relevant_submission.get_absolute_url }}"><span class="has-tooltip"><i class="material-icons">search</i><span class="tooltip is-right">View Submission</span></a>
                     </span>
                   </p>
                 </div>
@@ -67,7 +67,7 @@
       </div>
 
       <div class="column is-half">
-        <h2>Reviewed Approaches</h2>
+          <h2>Reviewed Approaches ({{ reviewed_approaches|length }})</h2>
         <div class="approach-review reviewed">
           <div class="approach-list">
 
@@ -98,8 +98,8 @@
                   <p class="team-score">
                     <span>Score</span>
                     <span class="text-with-icon icon-right">
-                      {{ approach.latest_successful_submission.overall_score|floatformat:3 }}
-                      <a href="{{ approach.latest_successful_submission.get_absolute_url }}"><span class="has-tooltip"><i class="material-icons">search</i><span class="tooltip is-right">View Submission</span></a>
+                      {{ approach.relevant_submission.overall_score|floatformat:3 }}
+                      <a href="{{ approach.relevant_submission.get_absolute_url }}"><span class="has-tooltip"><i class="material-icons">search</i><span class="tooltip is-right">View Submission</span></a>
                     </span>
                   </p>
                 </div>
