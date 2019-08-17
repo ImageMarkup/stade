@@ -248,7 +248,10 @@ class ApproachForm(forms.ModelForm):
                 )
 
         # Unique together constraints don't provide validation out of the box
-        if Approach.objects.filter(name=self.cleaned_data['name'], task=task, team=team).exists():
+        duplicate_name_approaches = Approach.objects.filter(name=self.cleaned_data['name'], task=task, team=team)
+        if self.instance.pk:
+            duplicate_name_approaches = duplicate_name_approaches.exclude(pk=self.instance.id)
+        if duplicate_name_approaches.exists():
             raise ValidationError(
                 f'An approach with this name already exists for the {task.name} task.'
             )
