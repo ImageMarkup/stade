@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
-from django.db import transaction
+from django.db import connection, transaction
 from django.db.models import Count, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -25,15 +25,7 @@ from core.forms import (
     TeamForm,
 )
 from core.leaderboard import submissions_by_approach, submissions_by_team
-from core.models import (
-    Approach,
-    Challenge,
-    Submission,
-    SubmissionApproach,
-    Task,
-    Team,
-    TeamInvitation,
-)
+from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from core.serializers import LeaderboardEntrySerializer
 from core.tasks import generate_submission_bundle, score_submission, send_team_invitation
 from core.utils import safe_redirect
@@ -107,18 +99,52 @@ def index(request):
 @user_passes_test(lambda u: u.is_staff)
 def review_approaches(request, task_id):
     task = get_object_or_404(Task.objects, pk=task_id)
+
+    with connection.cursor() as cursor:
+        # fmt: off
+        cursor.execute(
+            """
+    SELECT
+    t.id, t.submission_id
+    FROM
+    core_task,
+    (
+        SELECT
+            core_approach.id,
+                core_approach.task_id,
+            core_submission.id AS submission_id,
+            ROW_NUMBER() OVER (PARTITION BY core_approach.id
+            ORDER BY core_submission.created DESC) AS rn
+        FROM
+            core_approach
+            INNER JOIN
+                core_submission
+                ON core_submission.approach_id = core_approach.id
+        WHERE
+            core_submission.status = 'succeeded'
+    )
+    t
+    WHERE
+    core_task.id = t.task_id
+    AND t.task_id = %s
+    AND t.rn = 1
+                """,
+            [task.id],
+        )
+        # fmt: on
+        approaches_to_subs = dict(cursor.fetchall())
     approaches = []
     reviewed_approaches = []
 
-    all_approaches = task.approach_set(manager='successful').select_related('team').order_by('name')
-    relevant_submissions = SubmissionApproach.index_by_approach(
-        SubmissionApproach.objects.select_related('submission', 'approach').filter(
-            approach__in=all_approaches
-        )
+    all_approaches = (
+        Approach.objects.filter(id__in=approaches_to_subs).select_related('team').order_by('name')
     )
+    relevant_submissions = {
+        x.approach_id: x for x in Submission.objects.filter(id__in=approaches_to_subs.values())
+    }
 
     for approach in all_approaches:
-        approach.relevant_submission = relevant_submissions[approach.id].submission
+        approach.relevant_submission = relevant_submissions[approach.id]
 
         if approach.review_state == '':
             approaches.append(approach)
