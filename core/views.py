@@ -443,7 +443,9 @@ def edit_approach(request, approach_id):
 @login_required
 @permission_required('approaches.add_submission', fn=objectgetter(Approach, 'approach_id'))
 def create_submission(request, approach_id):
-    approach = get_object_or_404(Approach, pk=approach_id)
+    approach = get_object_or_404(Approach.objects.exclude(task__locked=True), pk=approach_id)
+    if approach.team_id not in request.user.teams.only('id').values_list(flat=True):
+        raise Http404()
 
     if request.method == 'POST':
         form = CreateSubmissionForm(
