@@ -1,7 +1,7 @@
 from django.urls import reverse
 import pytest
 
-from core.tests.factories import TaskFactory
+from core.tests.factories import ApproachFactory, SubmissionFactory, TaskFactory, TeamFactory
 
 
 @pytest.fixture
@@ -37,3 +37,20 @@ def test_task_detail_hidden(transactional_db, client):
     task.save()
     r = client.get(reverse('task-detail', args=[task.id]), follow=True)
     assert r.status_code == 403
+
+
+def test_submission_detail_hidden(transactional_db, client, user):
+    assert client.login(username='someone', password='something')
+
+    task = TaskFactory()
+    team = TeamFactory(challenge=task.challenge)
+
+    t0_a0 = ApproachFactory(task=task, team=team)
+    submission = SubmissionFactory(approach=t0_a0, status='succeeded', overall_score=0.90)
+
+    r = client.get(reverse('submission-detail', args=[submission.id]), follow=True)
+    assert r.status_code == 403
+
+    team.user_set.add(user)
+    r = client.get(reverse('submission-detail', args=[submission.id]))
+    assert r.status_code == 200

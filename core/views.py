@@ -256,13 +256,12 @@ def task_detail(request, task_id):
 
 
 @login_required
+@permission_required('submissions.view_submission', fn=objectgetter(Submission, 'submission_id'))
 def submission_detail(request, submission_id):
-    submission = Submission.objects.select_related('approach', 'approach__task', 'approach__team')
-
-    if not request.user.is_superuser:
-        submission = submission.filter(approach__team_id__in=request.user.teams.only('id'))
-
-    submission = get_object_or_404(submission, pk=submission_id)
+    submission = get_object_or_404(
+        Submission.objects.select_related('approach', 'approach__task', 'approach__team'),
+        pk=submission_id,
+    )
 
     return render(request, 'submission-detail.html', {'submission': submission})
 

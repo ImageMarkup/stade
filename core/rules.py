@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import rules
 
-from core.models import Approach, Task
+from core.models import Approach, Submission, Task
 
 
 @rules.predicate
@@ -36,8 +36,14 @@ def is_task_hidden(user: User, task: Task) -> bool:
     return task.hidden
 
 
+@rules.predicate
+def is_submission_team_member(user: User, submission: Submission) -> bool:
+    return is_approach_team_member(user, submission.approach)
+
+
 rules.add_perm(
     'approaches.add_submission',
     ~is_approach_task_locked & is_approach_team_member & ~is_approach_rate_limited,
 )
 rules.add_perm('tasks.view_task', ~is_task_hidden)
+rules.add_perm('submissions.view_submission', is_submission_team_member)
