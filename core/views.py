@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.db import connection, transaction
-from django.db.models import Count, Q
+from django.db.models import Count, Prefetch, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -248,7 +248,7 @@ def task_detail(request, task_id):
 
     if request.user.is_authenticated:
         context['teams'] = request.user.teams.filter(challenge=task.challenge).prefetch_related(
-            'users', 'approach_set'
+            'users', Prefetch('approach_set', queryset=Approach.objects.filter(task=task))
         )
 
     return render(request, 'task-detail.html', context)
