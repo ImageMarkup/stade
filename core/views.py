@@ -241,8 +241,9 @@ def dashboard(request):
     return render(request, 'staff/dashboard.html', context)
 
 
+@permission_required('tasks.view_task', fn=objectgetter(Task, 'task_id'))
 def task_detail(request, task_id):
-    task = get_object_or_404(Task.objects, pk=task_id)
+    task = get_object_or_404(Task, pk=task_id)
 
     context = {'task': task}
 
