@@ -210,13 +210,18 @@
   padding: 0 10px;
 }
 
-.approach-body .approach-team .team-score {
+.approach-body .approach-team .approach-external {
+  width: 100px;
+  padding: 0 10px;
+}
+
+.approach-body .approach-team .approach-score {
   justify-self: end;
   padding-left: 10px;
   width: 65px;
 }
 
-.approach-team .team-score i {
+.approach-team .approach-score i {
   font-size: 20px;
 }
 
