@@ -99,6 +99,7 @@ def index(request):
 @user_passes_test(lambda u: u.is_staff)
 def review_approaches(request, task_id):
     task = get_object_or_404(Task.objects, pk=task_id)
+    mine = request.GET.get('mine')
 
     with connection.cursor() as cursor:
         # fmt: off
@@ -135,10 +136,17 @@ def review_approaches(request, task_id):
         approaches_to_subs = dict(cursor.fetchall())
     approaches = []
     reviewed_approaches = []
+    num_assigned_to_user = 0
 
     all_approaches = (
-        Approach.objects.filter(id__in=approaches_to_subs).select_related('team').order_by('name')
+        Approach.objects.filter(id__in=approaches_to_subs)
+        .select_related('team', 'review_assignee')
+        .order_by('name')
     )
+
+    if mine:
+        all_approaches = all_approaches.filter(review_assignee=request.user)
+
     relevant_submissions = {
         x.approach_id: x for x in Submission.objects.filter(id__in=approaches_to_subs.values())
     }
@@ -151,6 +159,9 @@ def review_approaches(request, task_id):
         else:
             reviewed_approaches.append(approach)
 
+        if approach.review_assignee == request.user:
+            num_assigned_to_user += 1
+
     return render(
         request,
         'staff/review-approaches.html',
@@ -159,6 +170,8 @@ def review_approaches(request, task_id):
             'approaches': approaches,
             'form': ReviewApproachForm(request=request),
             'reviewed_approaches': reviewed_approaches,
+            'mine': mine,
+            'num_assigned_to_user': num_assigned_to_user,
         },
     )
 

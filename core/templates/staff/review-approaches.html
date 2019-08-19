@@ -6,6 +6,19 @@
   </div>
 
   <div class="section-content approach-reviews">
+      {% if not mine %}
+      <p>
+          <a href="?mine=1">
+          <span class="tag is-link is-medium">Assigned to you ({{ num_assigned_to_user }})</span>
+          </a>
+      </p>
+      {% else %}
+      <p>
+          <a href="{{ request.path }}">
+              <span class="tag is-link is-medium">All</span>
+          </a>
+      </p>
+      {% endif %}
     <div class="columns">
       <div class="column is-half">
         <h2>Approaches for review ({{ approaches|length }})</h2>
@@ -15,7 +28,7 @@
             <div class="approach">
               <div class="approach-header">
                 <div class="approach-name">
-                  {{ approach.name }} {% if approach.uses_external_data %}*{% endif %}
+                    {{ approach.name }} <p class="is-italic" style="font-size: 14px;font-weight: 100;">{% if approach.review_assignee %}assigned to: {{ approach.review_assignee.first_name }} {{ approach.review_assignee.last_name }}{% else %}unassigned{% endif %}</p>
                 </div>
                 <a href="{{ approach.manuscript.url }}" class="button btn-nobg is-small text-with-icon icon-left" target="_blank"><i class="material-icons">find_in_page</i> View Manuscript</a>
                 <div class="approach-id">
@@ -49,7 +62,7 @@
                 </div>
               </div>
               <div class="approach-footer">
-                <form class="accept-reject" action="{% url 'submit-approach-review' approach.id %}?next={{ request.path|urlencode }}" method="POST">
+                <form class="accept-reject" action="{% url 'submit-approach-review' approach.id %}?next={{ request.get_full_path|urlencode }}" method="POST">
                   {% csrf_token %}
                     <button class="button is-small is-success" type="submit" name="action" value="accepted">Accept</button>
                     <button class="button is-small is-danger" type="submit" name="action" value="rejected">Reject</button>
@@ -79,7 +92,7 @@
             <div class="approach{% if approach.review_state == 'rejected' %} rejected{% else %} accepted{% endif %}">
               <div class="approach-header">
                 <div class="approach-name">
-                  {{ approach.name }}
+                    {{ approach.name }} <p class="is-italic" style="font-size: 14px;font-weight: 100;">{% if approach.review_assignee %}assigned to: {{ approach.review_assignee.first_name }} {{ approach.review_assignee.last_name }}{% else %}unassigned{% endif %}</p>
                 </div>
                 <a href="{{ approach.manuscript.url }}" class="button btn-nobg is-small text-with-icon icon-left" target="_blank"><i class="material-icons">find_in_page</i> View Manuscript</a>
                 <div class="approach-id">
@@ -116,7 +129,7 @@
                 <strong>{{ approach.get_review_state_display }}</strong>
                 {% if approach.review_state == 'rejected' %}<span>{{ approach.get_reject_reason_display }}</span>{% endif %}
 
-                <form action="{% url 'submit-approach-review' approach.id %}?next={{ request.path|urlencode }}" method="POST">
+                <form action="{% url 'submit-approach-review' approach.id %}?next={{ request.get_full_path|urlencode }}" method="POST">
                   {% csrf_token %}
                   <input class="button is-small" type="submit" name="action" value="reset">
                   <input type="hidden" name="approach_id" value="{{ approach.id }}">
