@@ -275,6 +275,9 @@ class Approach(models.Model):
         validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True
     )
 
+    review_assignee = models.ForeignKey(
+        get_user_model(), null=True, blank=True, on_delete=models.DO_NOTHING
+    )
     review_state = models.CharField(
         max_length=8, blank=True, default='', choices=REVIEW_STATE_CHOICES.items()
     )
