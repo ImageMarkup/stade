@@ -35,6 +35,10 @@
                       {% endif %}
                     </p>
                   {% endif %}
+                  <p class="approach-external">
+                    <span>External Data</span>
+                    <span>{% if approach.uses_external_data %}Yes{% else %}No{% endif %}</span>
+                  </p>
                   <p class="approach-score">
                     <span>Score</span>
                     <span class="text-with-icon icon-right">
@@ -75,7 +79,7 @@
             <div class="approach{% if approach.review_state == 'rejected' %} rejected{% else %} accepted{% endif %}">
               <div class="approach-header">
                 <div class="approach-name">
-                  {{ approach.name }} {% if approach.uses_external_data %}*{% endif %}
+                  {{ approach.name }}
                 </div>
                 <a href="{{ approach.manuscript.url }}" class="button btn-nobg is-small text-with-icon icon-left" target="_blank"><i class="material-icons">find_in_page</i> View Manuscript</a>
                 <div class="approach-id">
@@ -95,6 +99,10 @@
                       {% endif %}
                     </p>
                   {% endif %}
+                  <p class="approach-external">
+                    <span>External Data</span>
+                    <span>{% if approach.uses_external_data %}Yes{% else %}No{% endif %}</span>
+                  </p>
                   <p class="approach-score">
                     <span>Score</span>
                     <span class="text-with-icon icon-right">

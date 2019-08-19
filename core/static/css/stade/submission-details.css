@@ -210,6 +210,11 @@
   padding: 0 10px;
 }
 
+.approach-body .approach-team .approach-external {
+  width: 100px;
+  padding: 0 10px;
+}
+
 .approach-body .approach-team .approach-score {
   justify-self: end;
   padding-left: 10px;
