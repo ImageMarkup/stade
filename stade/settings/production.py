@@ -1,9 +1,12 @@
+import logging
 import os
 
 import django_heroku
 import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+
 
 from .base import *  # noqa: F401, F403
 
@@ -12,7 +15,13 @@ SECRET_KEY = os.environ['SECRET_KEY']
 CORS_ORIGIN_ALLOW_ALL = True  # todo change
 
 sentry_sdk.init(
-    dsn=os.environ['SENTRY_DSN'], integrations=[DjangoIntegration(), CeleryIntegration()]
+    dsn=os.environ['SENTRY_DSN'],
+    integrations=[
+        DjangoIntegration(),
+        CeleryIntegration(),
+        LoggingIntegration(level=logging.INFO, event_level=logging.WARNING),
+    ],
+    send_default_pii=True,
 )
 
 CELERY_BROKER_POOL_LIMIT = 1
