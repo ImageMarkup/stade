@@ -155,14 +155,6 @@ def generate_submission_bundle(task_id, notify_user_id):
     send_mail('Submission bundle generated', message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
 
-@shared_task(time_limit=30)
-def rescore_task_submissions(task_id):
-    task = Task.objects.get(pk=task_id)
-
-    for submission in Submission.objects.filter(approach__task=task).all():
-        score_submission.delay(submission.id)
-
-
 def _score_submission(submission):
     try:
         with submission.approach.task.test_ground_truth_file.open() as truth_file:
