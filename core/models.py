@@ -143,8 +143,9 @@ class Task(models.Model):
 
     def next_available_submission(self, team) -> datetime:
         """
-        Return a datetime of when the next submission can be made, or None if the
-        submission can be made now.
+        Return a datetime of when the next submission can be made.
+
+        Returns None if the submission can be made now.
         """
         if self.max_submissions_per_week == 0:
             return None
@@ -350,7 +351,5 @@ def reset_review_state_on_manuscript_change(sender, instance: Approach, **kwargs
 
 @receiver(pre_save, sender=User)
 def set_username_to_email_address(sender, instance: User, **kwargs):
-    """
-    Forcibly sets the username of every user to their email address.
-    """
+    """Forcibly sets the username of every user to their email address."""
     instance.username = instance.email

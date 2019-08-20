@@ -6,14 +6,13 @@ from core.tests.factories import ApproachFactory, SubmissionFactory, TaskFactory
 @pytest.fixture
 def task_with_submissions():
     """
-    this is designed to return a set of teams, approaches, and submissions to a task that
-    will exercise edge cases that the leaderboard should correctly handle, namely:
+    Return a set of teams, approaches, and submissions to a task to exercise edge cases.
 
+    Namely, this includes:
     - a team and approach with no submissions at all (t2)
     - an approach where the most recent submission has failed (t0_a0)
     - an approach where the most recent score is worse than a prior score (t1_a0)
     - a team with a better approach which has been rejected (t3)
-
     """
     task = TaskFactory(challenge__name='Test Challenge', name='Test Task', scores_published=True)
 

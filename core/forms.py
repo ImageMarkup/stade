@@ -30,8 +30,9 @@ class CustomSignupForm(SignupForm):
 
 class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
     """
-    Provide a custom form for setting password such that resetting a password
-    implies the email has been verified.
+    Provide a custom form for setting password.
+
+    This causes resetting a password to imply the email has been verified.
     """
 
     def save(self):
