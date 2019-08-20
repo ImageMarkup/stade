@@ -496,7 +496,7 @@ def create_submission(request, approach_id):
 
         if form.is_valid():
             form.save()
-            score_submission.delay(form.instance.id)
+            score_submission.delay(form.instance.id, notify=True)
             return HttpResponseRedirect(reverse('submission-detail', args=[form.instance.id]))
     else:
         form = CreateSubmissionForm(approach_id=approach_id, request=request)
