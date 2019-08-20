@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+import io
 import os
 import tempfile
 import uuid
@@ -160,9 +161,17 @@ def _score_submission(submission):
     try:
         truth_file: FieldFile = submission.approach.task.test_ground_truth_file
         prediction_file: FieldFile = submission.test_prediction_file
-        # Must open in non-binary mode, as compute_metrics needs TextIO
-        with truth_file.open('r'), prediction_file.open('r'):
-            results = compute_metrics(truth_file, prediction_file)
+        # If the S3Boto3Storage backend is used, then the FieldFile contains a S3Boto3StorageFile,
+        # which always provides a binary I/O object (requests for a text I/O object are ignored)
+        # The FileSystemStorage will honor requests for text I/O mode, but both must be supported
+        # consistently
+        with truth_file.open('rb'), prediction_file.open('rb'):
+            # compute_metrics requires TextIO, so use the wrapper utility
+            # Calling .file to get the File object isn't strictly necessary, as the FieldFile will
+            # proxy operations to it, but it will make the type checker happy
+            results = compute_metrics(
+                io.TextIOWrapper(truth_file.file), io.TextIOWrapper(prediction_file.file)
+            )
         submission.score = results
         submission.overall_score = results['overall']
         submission.validation_score = results['validation']
