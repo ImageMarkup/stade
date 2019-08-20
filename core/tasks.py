@@ -14,6 +14,7 @@ from django.contrib.sites.models import Site
 from django.core.mail import send_mail
 from django.db import connection, transaction
 from django.db.models import FileField
+from django.db.models.fields.files import FieldFile
 from django.template.loader import render_to_string
 import requests
 
@@ -157,9 +158,11 @@ def generate_submission_bundle(task_id, notify_user_id):
 
 def _score_submission(submission):
     try:
-        with submission.approach.task.test_ground_truth_file.open() as truth_file:
-            with submission.test_prediction_file.open() as prediction_file:
-                results = compute_metrics(truth_file, prediction_file)
+        truth_file: FieldFile = submission.approach.task.test_ground_truth_file
+        prediction_file: FieldFile = submission.test_prediction_file
+        # Must open in non-binary mode, as compute_metrics needs TextIO
+        with truth_file.open('r'), prediction_file.open('r'):
+            results = compute_metrics(truth_file, prediction_file)
         submission.score = results
         submission.overall_score = results['overall']
         submission.validation_score = results['validation']
