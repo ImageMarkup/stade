@@ -1,7 +1,28 @@
 from django.contrib import admin
 
 from core.models import Approach, Team, TeamInvitation
+from core.tasks import score_submission
 from .models import Challenge, Submission, Task
+
+
+def rescore_submission_without_notifying(modeladmin, request, queryset):
+    for submission in queryset:
+        score_submission.delay(submission.id, notify=False)
+
+
+rescore_submission_without_notifying.short_description = (  # type: ignore
+    'Rescore (without notifying)'
+)
+
+
+def rescore_submission_with_notification(modeladmin, request, queryset):
+    for submission in queryset:
+        score_submission.delay(submission.id, notify=True)
+
+
+rescore_submission_with_notification.short_description = (  # type: ignore
+    'Rescore (with notification)'
+)
 
 
 class ApproachInline(admin.TabularInline):
@@ -24,6 +45,8 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     # exclude detailed metrics from the form since they're big and impractical to edit
     exclude = ['score']
+
+    actions = [rescore_submission_with_notification, rescore_submission_without_notifying]
 
 
 @admin.register(Task)
