@@ -141,7 +141,7 @@ class Task(models.Model):
             status__in=['queued', 'scoring', 'succeeded'], approach__task=self, approach__team=team
         )
 
-    def next_available_submission(self, team) -> datetime:
+    def next_available_submission(self, team) -> Optional[datetime]:
         """
         Return a datetime of when the next submission can be made.
 
