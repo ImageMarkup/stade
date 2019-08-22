@@ -15,7 +15,7 @@ setup(
         'django-markdownify',
         'django-storages',
         'celery',
-        'isic-challenge-scoring==4.3.2',
+        'isic-challenge-scoring',
         'psycopg2',
         'requests',
         'rules',

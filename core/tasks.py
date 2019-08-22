@@ -23,8 +23,7 @@ from django.db.models.fields.files import FieldFile
 from django.template.loader import render_to_string
 from storages.backends.s3boto3 import S3Boto3StorageFile
 
-from isic_challenge_scoring.task3 import compute_metrics
-from isic_challenge_scoring.types import ScoreException
+from isic_challenge_scoring import ClassificationScore, ScoreException, SegmentationScore
 
 from core.models import Approach, Submission, Task, TeamInvitation
 
@@ -173,15 +172,21 @@ def _score_submission(submission):
         # The FileSystemStorage will honor requests for text I/O mode, but both must be supported
         # consistently
         with truth_file.open('rb'), prediction_file.open('rb'):
-            # compute_metrics requires TextIO, so use the wrapper utility
-            # Calling .file to get the File object isn't strictly necessary, as the FieldFile will
-            # proxy operations to it, but it will make the type checker happy
-            results = compute_metrics(
-                io.TextIOWrapper(truth_file.file), io.TextIOWrapper(prediction_file.file)
-            )
-        submission.score = results
-        submission.overall_score = results['overall']
-        submission.validation_score = results['validation']
+            if submission.approach.task.type == 'segmentation':
+                score = SegmentationScore.from_zip_file(
+                    truth_file.file.name, prediction_file.file.name
+                )
+            elif submission.approach.task.type == 'classification':
+                # compute_metrics requires TextIO, so use the wrapper utility
+                # Calling .file to get the File object isn't strictly necessary, as the FieldFile
+                # will proxy operations to it, but it will make the type checker happy
+                score = ClassificationScore.from_stream(
+                    io.TextIOWrapper(truth_file.file), io.TextIOWrapper(prediction_file.file)
+                )
+
+        submission.overall_score = score.overall
+        submission.validation_score = score.validation
+        submission.score = score.to_dict()
         submission.status = 'succeeded'
     except ScoreException as e:
         submission.status = 'failed'
