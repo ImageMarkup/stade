@@ -1,8 +1,12 @@
+from contextlib import contextmanager
 import csv
 from datetime import datetime
 import io
 import os
+from pathlib import PosixPath
+import shutil
 import tempfile
+from typing import Generator
 import uuid
 from zipfile import ZipFile
 
@@ -12,12 +16,12 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.core.files import File
 from django.core.mail import send_mail
 from django.db import connection, transaction
-from django.db.models import FileField
 from django.db.models.fields.files import FieldFile
 from django.template.loader import render_to_string
-import requests
+from storages.backends.s3boto3 import S3Boto3StorageFile
 
 from isic_challenge_scoring.task3 import compute_metrics
 from isic_challenge_scoring.types import ScoreException
@@ -51,17 +55,19 @@ def notify_creator_of_scoring_attempt(submission):
     )
 
 
-def file_field_to_tmp_file(f: FileField) -> str:
-    with tempfile.NamedTemporaryFile('wb', delete=False) as outfile:
-        r = requests.get(f.url, stream=True)
-        r.raise_for_status()
+@contextmanager
+def _field_file_to_local_path(field_file: FieldFile) -> Generator[PosixPath, None, None]:
+    with field_file.open('rb'):
+        file_obj: File = field_file.file
 
-        for chunk in r.iter_content(5 * 1024 * 1024):
-            outfile.write(chunk)
+        if isinstance(file_obj, S3Boto3StorageFile):
+            with tempfile.NamedTemporaryFile('wb') as dest_stream:
+                shutil.copyfileobj(file_obj, dest_stream)
+                dest_stream.flush()
 
-        outfile.flush()
-
-    return outfile.name
+                yield PosixPath(dest_stream.name)
+        else:
+            yield PosixPath(file_obj.name)
 
 
 def upload_and_sign_submission_bundle(bundle_filename):
@@ -123,15 +129,15 @@ def generate_bundle_as_zip(task, successful_approaches):
         prediction_filename = f'predictions.{"zip" if task.type == "segmentation" else "csv"}'
         for approach in successful_approaches:
             if approach.manuscript:  # manuscripts weren't always required in the past (or for live)
-                bundle.write(
-                    file_field_to_tmp_file(approach.manuscript),
-                    f'{bundle_root_dir}/{approach.id}/manuscript.pdf',
-                )
+                with _field_file_to_local_path(approach.manuscript) as manuscript_path:
+                    bundle.write(manuscript_path, f'{bundle_root_dir}/{approach.id}/manuscript.pdf')
 
-            bundle.write(
-                file_field_to_tmp_file(approach.latest_successful_submission.test_prediction_file),
-                f'{bundle_root_dir}/{approach.id}/{prediction_filename}',
-            )
+            with _field_file_to_local_path(
+                approach.latest_successful_submission.test_prediction_file
+            ) as prediction_path:
+                bundle.write(
+                    prediction_path, f'{bundle_root_dir}/{approach.id}/{prediction_filename}'
+                )
 
     return bundle_filename
 
