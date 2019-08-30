@@ -46,7 +46,7 @@ services:
       - .docker/uploads:/uploads
     networks:
       - primary
-    entrypoint: celery worker --app stade.celery --concurrency 2 --loglevel info
+    command: ["celery", "worker", "--app", "stade.celery", "--concurrency", "2", "--loglevel", "info"]
 
 networks:
   primary:
