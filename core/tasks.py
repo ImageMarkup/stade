@@ -167,8 +167,8 @@ def _score_submission(submission):
         submission.status = 'failed'
         submission.fail_reason = e.args[0]
         submission.reset_scores()
-    except Exception:
-        logger.exception(f'internal error scoring submission {submission.id}')
+    except Exception as e:
+        logger.exception(f'internal error scoring submission {submission.id}: {e}')
         submission.status = 'internal_failure'
         submission.reset_scores()
 
