@@ -77,28 +77,29 @@ def generate_bundle_as_zip(task, successful_approaches):
 
         # add the submitter metadata file
         with tempfile.NamedTemporaryFile('w') as outfile:
-            writer = csv.writer(outfile)
-            writer.writerow(
-                [
+            writer = csv.DictWriter(
+                outfile,
+                fieldnames=[
                     'approach_id',
                     'approach_name',
                     'uses_external_data',
                     'team_id',
                     'team_name',
                     'overall_score',
-                ]
+                ],
             )
+            writer.writeheader()
 
             for approach in successful_approaches:
                 writer.writerow(
-                    [
-                        approach.id,
-                        approach.name,
-                        approach.uses_external_data,
-                        approach.team.id,
-                        approach.team.name,
-                        approach.latest_successful_submission.overall_score,
-                    ]
+                    {
+                        'approach_id': approach.id,
+                        'approach_name': approach.name,
+                        'uses_external_data': approach.uses_external_data,
+                        'team_id': approach.team.id,
+                        'team_name': approach.team.name,
+                        'overall_score': approach.latest_successful_submission.overall_score,
+                    }
                 )
 
             outfile.flush()
