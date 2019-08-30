@@ -12,11 +12,12 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from django.core.files import File
 from django.core.mail import send_mail
 from django.db import connection, transaction
+from django.db.models import FileField
 from django.db.models.fields.files import FieldFile
 from django.template.loader import render_to_string
+import requests
 
 from isic_challenge_scoring.task3 import compute_metrics
 from isic_challenge_scoring.types import ScoreException
@@ -48,6 +49,19 @@ def notify_creator_of_scoring_attempt(submission):
         [submission.creator.email],
         html_message=html_message,
     )
+
+
+def file_field_to_tmp_file(f: FileField) -> str:
+    with tempfile.NamedTemporaryFile('wb', delete=False) as outfile:
+        r = requests.get(f.url, stream=True)
+        r.raise_for_status()
+
+        for chunk in r.iter_content(5 * 1024 * 1024):
+            outfile.write(chunk)
+
+        outfile.flush()
+
+    return outfile.name
 
 
 def upload_and_sign_submission_bundle(bundle_filename):
@@ -109,15 +123,14 @@ def generate_bundle_as_zip(task, successful_approaches):
         prediction_filename = f'predictions.{"zip" if task.type == "segmentation" else "csv"}'
         for approach in successful_approaches:
             if approach.manuscript:  # manuscripts weren't always required in the past (or for live)
-                # Even for S3Boto3StorageFile, calling FieldFile.file gives a local File object
-                manuscript_file: File = approach.manuscript.file
                 bundle.write(
-                    manuscript_file.name, f'{bundle_root_dir}/{approach.id}/manuscript.pdf'
+                    file_field_to_tmp_file(approach.manuscript),
+                    f'{bundle_root_dir}/{approach.id}/manuscript.pdf',
                 )
 
-            prediction_file: File = approach.latest_successful_submission.test_prediction_file.file
             bundle.write(
-                prediction_file.name, f'{bundle_root_dir}/{approach.id}/{prediction_filename}'
+                file_field_to_tmp_file(approach.latest_successful_submission.test_prediction_file),
+                f'{bundle_root_dir}/{approach.id}/{prediction_filename}',
             )
 
     return bundle_filename
