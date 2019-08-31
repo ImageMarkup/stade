@@ -47,7 +47,7 @@ def leaderboard(request, task_id, cluster):
         task = get_object_or_404(Task.objects.filter(scores_published=True), pk=task_id)
 
     paginator = LimitOffsetPagination()
-    paginator.default_limit = paginator.max_limit = 100
+    paginator.default_limit = paginator.max_limit = 200
 
     if cluster == 'approach':
         submission_ids = submissions_by_approach(task.id)
