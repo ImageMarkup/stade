@@ -27,4 +27,8 @@ class LeaderboardEntrySerializer(serializers.Serializer):
         )
 
     def get_approach_manuscript_url(self, submission):
-        return self.context['request'].build_absolute_uri(submission.approach.manuscript.url)
+        if submission.approach.manuscript:
+            return self.context['request'].build_absolute_uri(submission.approach.manuscript.url)
+        else:
+            # historical reasons, as well as the live challenge not requiring manuscripts
+            return None
