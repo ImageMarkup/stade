@@ -90,6 +90,9 @@ TASK_TYPE_CHOICES = {'segmentation': 'Segmentation', 'classification': 'Classifi
 
 
 class Task(models.Model):
+    class Meta:
+        ordering = ['id']
+
     type = models.CharField(max_length=20, choices=TASK_TYPE_CHOICES.items())
     created = models.DateTimeField(default=timezone.now)
     challenge = models.ForeignKey(Challenge, on_delete=models.DO_NOTHING, related_name='tasks')
