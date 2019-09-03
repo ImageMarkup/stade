@@ -1,5 +1,21 @@
 from rest_framework import serializers
 
+from core.models import Challenge, Task
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['id', 'name', 'type']
+
+
+class ChallengeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Challenge
+        fields = ['id', 'name', 'tasks']
+
+    tasks = TaskSerializer(many=True, read_only=True)
+
 
 class LeaderboardEntrySerializer(serializers.Serializer):
     submission_id = serializers.IntegerField(source='id')

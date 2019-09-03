@@ -14,6 +14,7 @@ import requests
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
 from rules.contrib.views import objectgetter, permission_required
 
 from core.forms import (
@@ -26,7 +27,7 @@ from core.forms import (
 )
 from core.leaderboard import submissions_by_approach, submissions_by_team
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
-from core.serializers import LeaderboardEntrySerializer
+from core.serializers import ChallengeSerializer, LeaderboardEntrySerializer
 from core.tasks import generate_submission_bundle, score_submission, send_team_invitation
 from core.utils import safe_redirect
 
@@ -36,6 +37,13 @@ logger = logging.getLogger(__name__)
 
 def handler500(request):
     return render(request, 'errors/application-error.html', status=500)
+
+
+@api_view(['GET'])
+def challenge_detail(request, challenge_id):
+    challenge = get_object_or_404(Challenge, pk=challenge_id)
+    serializer = ChallengeSerializer(challenge)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
