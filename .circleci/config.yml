@@ -1,4 +1,5 @@
-version: 2
+---
+version: 2.1
 jobs:
   build:
     docker:
@@ -19,3 +20,18 @@ jobs:
           name: run tests
           command: |
             tox
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - build
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 * * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build
