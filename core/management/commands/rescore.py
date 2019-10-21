@@ -37,6 +37,8 @@ def changes(s1: Submission, s2: Submission) -> dict:
                 c[key] = ['', 'changed']
             else:
                 c[key] = d[2]
+        elif d[0] == 'add':
+            c[d[1]] = ['', 'added']
         elif d[0] == 'remove':
             c[d[1]] = ['', 'removed']
         else:
