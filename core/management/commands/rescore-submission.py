@@ -13,10 +13,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--dry-run',
+            '--persist',
             action='store_true',
-            default=True,
-            help='Just print the difference in rescoring',
+            default=False,
+            help='Persist the scoring changes to the database.',
         )
 
         parser.add_argument('submission', help='The submission ID to scope rescoring to.')
@@ -28,7 +28,9 @@ class Command(BaseCommand):
             self.stderr.write(f'unable to find submission {options["submission"]}')
             sys.exit(1)
 
-        if options['dry_run']:
+        if options['persist']:
+            score_submission.delay(submission.id, notify=False)
+        else:
             new_submission = _score_submission(submission)
 
             if new_submission.status == 'failed':
@@ -47,5 +49,3 @@ class Command(BaseCommand):
             if c:
                 for k, v in c.items():
                     writer.writerow({'field': k, 'before': v[0], 'after': v[1]})
-        else:
-            score_submission.delay(submission.id, notify=False)

@@ -4,7 +4,6 @@ from typing import Iterable
 
 from django.core.management.base import BaseCommand
 
-import core.models
 from core.models import Submission, Task
 from core.tasks import _score_submission, score_submission
 from core.utils import changes
@@ -15,16 +14,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--status',
-            choices=core.models.SUBMISSION_STATUS_CHOICES.keys(),
-            help='The status of submissions to rescore.',
-        )
-
-        parser.add_argument(
-            '--dry-run',
+            '--persist',
             action='store_true',
-            default=True,
-            help='Just print the difference in rescoring',
+            default=False,
+            help='Persist the scoring changes to the database.',
         )
 
         parser.add_argument('task', help='The task ID to scope rescoring to.')
@@ -43,14 +36,14 @@ class Command(BaseCommand):
             submissions = submissions.filter(status=options['status'])
         self.stderr.write(f'found {submissions.count()} submissions to rescore')
 
-        if options['dry_run']:
+        if not options['persist']:
             writer = csv.DictWriter(
                 sys.stdout, fieldnames=['submission', 'field', 'before', 'after']
             )
             writer.writeheader()
 
         for submission in submissions:
-            if options['dry_run']:
+            if not options['persist']:
                 new_submission = _score_submission(submission)
                 old_submission = Submission.objects.get(pk=submission.id)
                 c = changes(old_submission, new_submission)
