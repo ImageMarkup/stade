@@ -1,4 +1,5 @@
 import math
+from typing import Any, Dict
 
 from dictdiffer import diff
 from django.conf import settings
@@ -19,8 +20,8 @@ def safe_redirect(request, redirect_to):
     return HttpResponseRedirect(reverse('index'))
 
 
-def changes(s1: Submission, s2: Submission) -> dict:
-    c = {}
+def changes(s1: Submission, s2: Submission) -> Dict[str, Any]:
+    c: Dict[str, Any] = {}
 
     if s1.status != s2.status:
         c['status'] = [s1.status, s2.status]
