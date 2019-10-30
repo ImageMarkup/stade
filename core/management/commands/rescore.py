@@ -1,60 +1,23 @@
 import csv
-import math
 import sys
 from typing import Iterable
 
-from dictdiffer import diff
 from django.core.management.base import BaseCommand
 
 import core.models
 from core.models import Submission, Task
 from core.tasks import _score_submission, score_submission
-
-
-def changes(s1: Submission, s2: Submission) -> dict:
-    c = {}
-
-    if s1.status != s2.status:
-        c['status'] = [s1.status, s2.status]
-
-    if s1.overall_score != s2.overall_score:
-        if (s1.overall_score is None or s2.overall_score is None) or (
-            not math.isclose(s1.overall_score, s2.overall_score)
-        ):
-            c['overall score'] = [s1.overall_score, s2.overall_score]
-
-    if s1.validation_score != s2.validation_score:
-        if (s1.validation_score is None or s2.validation_score is None) or (
-            not math.isclose(s1.validation_score, s2.validation_score)
-        ):
-            c['validation score'] = [s1.validation_score, s2.validation_score]
-
-    for d in diff(s1.score, s2.score):
-        if d[0] == 'change':
-            key = d[1] if d[1] != '' else 'score'
-
-            if key in ['roc', 'score']:
-                c[key] = ['', 'changed']
-            else:
-                c[key] = d[2]
-        elif d[0] == 'add':
-            c[d[1]] = ['', 'added']
-        elif d[0] == 'remove':
-            c[d[1]] = ['', 'removed']
-        else:
-            raise Exception(d)
-
-    return c
+from core.utils import changes
 
 
 class Command(BaseCommand):
-    help = 'Rescore submissions'
+    help = 'Rescore task submissions'
 
     def add_arguments(self, parser):
         parser.add_argument(
             '--status',
             choices=core.models.SUBMISSION_STATUS_CHOICES.keys(),
-            help='The status of submission to rescore.',
+            help='The status of submissions to rescore.',
         )
 
         parser.add_argument(
