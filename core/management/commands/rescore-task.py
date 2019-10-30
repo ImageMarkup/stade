@@ -21,7 +21,10 @@ class Command(BaseCommand):
         )
 
         parser.add_argument(
-            '--dry-run', action='store_true', help='Just print the difference in rescoring'
+            '--dry-run',
+            action='store_true',
+            default=True,
+            help='Just print the difference in rescoring',
         )
 
         parser.add_argument('task', help='The task ID to scope rescoring to.')
