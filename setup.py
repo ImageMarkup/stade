@@ -7,6 +7,7 @@ setup(
     install_requires=[
         'boto3',
         'coreapi',  # todo why does this have to be pulled in as a top level?
+        'dictdiffer',
         'django',
         'django-allauth',
         'django-cors-headers',
