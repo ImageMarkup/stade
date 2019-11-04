@@ -1,4 +1,4 @@
 #!/bin/bash
 set -ex
 
-docker-compose down
+docker-compose stop
