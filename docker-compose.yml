@@ -7,7 +7,7 @@ services:
       POSTGRES_DB: stade
       POSTGRES_PASSWORD: postgres
     volumes:
-      - .docker/pgdata:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
@@ -29,7 +29,7 @@ services:
         CLOUDAMQP_URL: "amqp://rabbitmq/"
       volumes:
         - .:/code
-        - .docker/uploads:/uploads
+        - uploads:/uploads
       ports:
         - 8000:8000
       networks:
@@ -43,10 +43,13 @@ services:
       CLOUDAMQP_URL: "amqp://rabbitmq/"
     volumes:
       - .:/code
-      - .docker/uploads:/uploads
+      - uploads:/uploads
     networks:
       - primary
     command: ["celery", "worker", "--app", "stade.celery", "--concurrency", "2", "--loglevel", "info"]
+
+volumes:
+  uploads:
 
 networks:
   primary:

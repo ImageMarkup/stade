@@ -1,9 +1,7 @@
 #!/bin/bash
 set -ex
 
-./scripts/stop.sh
-
-sudo rm -rf .docker/{pgdata,uploads}
+./scripts/destroy.sh
 
 docker-compose build
 
