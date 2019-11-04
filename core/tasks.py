@@ -3,7 +3,7 @@ import csv
 from datetime import datetime
 import io
 import os
-from pathlib import PosixPath
+from pathlib import Path
 import shutil
 import tempfile
 from typing import Generator
@@ -55,7 +55,7 @@ def notify_creator_of_scoring_attempt(submission):
 
 
 @contextmanager
-def _field_file_to_local_path(field_file: FieldFile) -> Generator[PosixPath, None, None]:
+def _field_file_to_local_path(field_file: FieldFile) -> Generator[Path, None, None]:
     with field_file.open('rb'):
         file_obj: File = field_file.file
 
@@ -64,9 +64,9 @@ def _field_file_to_local_path(field_file: FieldFile) -> Generator[PosixPath, Non
                 shutil.copyfileobj(file_obj, dest_stream)
                 dest_stream.flush()
 
-                yield PosixPath(dest_stream.name)
+                yield Path(dest_stream.name)
         else:
-            yield PosixPath(file_obj.name)
+            yield Path(file_obj.name)
 
 
 def upload_and_sign_submission_bundle(bundle_filename):
