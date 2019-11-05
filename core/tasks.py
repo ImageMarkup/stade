@@ -3,7 +3,7 @@ import csv
 from datetime import datetime
 import io
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 import shutil
 import tempfile
 from typing import Generator
@@ -60,7 +60,8 @@ def _field_file_to_local_path(field_file: FieldFile) -> Generator[Path, None, No
         file_obj: File = field_file.file
 
         if isinstance(file_obj, S3Boto3StorageFile):
-            with tempfile.NamedTemporaryFile('wb') as dest_stream:
+            field_file_basename = PurePath(field_file.name).name
+            with tempfile.NamedTemporaryFile('wb', suffix=field_file_basename) as dest_stream:
                 shutil.copyfileobj(file_obj, dest_stream)
                 dest_stream.flush()
 
