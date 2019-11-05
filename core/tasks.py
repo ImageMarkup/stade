@@ -167,16 +167,22 @@ def _score_submission(submission):
     try:
         truth_file: FieldFile = submission.approach.task.test_ground_truth_file
         prediction_file: FieldFile = submission.test_prediction_file
-        # If the S3Boto3Storage backend is used, then the FieldFile contains a S3Boto3StorageFile,
-        # which always provides a binary I/O object (requests for a text I/O object are ignored)
-        # The FileSystemStorage will honor requests for text I/O mode, but both must be supported
-        # consistently
-        with truth_file.open('rb'), prediction_file.open('rb'):
-            if submission.approach.task.type == 'segmentation':
-                score = SegmentationScore.from_zip_file(
-                    truth_file.file.name, prediction_file.file.name
-                )
-            elif submission.approach.task.type == 'classification':
+
+        if submission.approach.task.type == 'segmentation':
+            with _field_file_to_local_path(
+                truth_file
+            ) as truth_file_path, _field_file_to_local_path(
+                prediction_file
+            ) as prediction_file_path:
+                score = SegmentationScore.from_zip_file(truth_file_path, prediction_file_path)
+
+        elif submission.approach.task.type == 'classification':
+            # If the S3Boto3Storage backend is used, then the FieldFile contains a
+            # S3Boto3StorageFile, which always provides a binary I/O object (requests for a text
+            # I/O object are ignored)
+            # The FileSystemStorage will honor requests for text I/O mode, but both must be
+            # supported consistently
+            with truth_file.open('rb'), prediction_file.open('rb'):
                 # compute_metrics requires TextIO, so use the wrapper utility
                 # Calling .file to get the File object isn't strictly necessary, as the FieldFile
                 # will proxy operations to it, but it will make the type checker happy
