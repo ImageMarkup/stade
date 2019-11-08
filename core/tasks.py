@@ -207,7 +207,7 @@ def _score_submission(submission):
     return submission
 
 
-@shared_task(soft_time_limit=60, time_limit=120)
+@shared_task(soft_time_limit=600, time_limit=610)
 def score_submission(submission_id, dry_run=False, notify=False):
     submission = Submission.objects.get(pk=submission_id)
     if not dry_run:
