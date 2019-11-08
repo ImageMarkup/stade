@@ -25,14 +25,32 @@ rescore_submission_with_notification.short_description = (  # type: ignore
 )
 
 
-class ApproachInline(admin.TabularInline):
-    model = Approach
+class ReadonlyTabularInline(admin.TabularInline):
+    can_delete = False
     show_change_link = True
+    view_on_site = False
     extra = 0
 
+    def get_readonly_fields(self, request, obj=None):
+        return self.fields
 
-class SubmissionInline(admin.TabularInline):
-    pass
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+class TaskInline(ReadonlyTabularInline):
+    model = Task
+    fields = ['id', 'name', 'type', 'locked', 'hidden', 'scores_published']
+
+
+class ApproachInline(ReadonlyTabularInline):
+    model = Approach
+    fields = ['id', 'task', 'created', 'name', 'manuscript']
+
+
+class SubmissionInline(ReadonlyTabularInline):
+    model = Submission
+    fields = ['id', 'created', 'test_prediction_file', 'status', 'overall_score']
 
 
 @admin.register(Submission)
@@ -49,13 +67,13 @@ class SubmissionAdmin(admin.ModelAdmin):
     actions = [rescore_submission_with_notification, rescore_submission_without_notifying]
 
 
-@admin.register(Task)
-class TaskAdmin(admin.ModelAdmin):
-    pass
-
-
 @admin.register(Challenge)
 class ChallengeAdmin(admin.ModelAdmin):
+    inlines = [TaskInline]
+
+
+@admin.register(Task)
+class TaskAdmin(admin.ModelAdmin):
     pass
 
 
@@ -91,3 +109,5 @@ class ApproachAdmin(admin.ModelAdmin):
     list_filter = ['task']
 
     search_fields = ['name']
+
+    inlines = [SubmissionInline]
