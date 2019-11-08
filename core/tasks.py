@@ -80,7 +80,7 @@ def upload_and_sign_submission_bundle(bundle_filename):
     return s3.generate_presigned_url(
         'get_object',
         Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': key},
-        ExpiresIn=86400,
+        ExpiresIn=24 * 60 * 60,
     )
 
 
@@ -143,7 +143,7 @@ def generate_bundle_as_zip(task, successful_approaches):
     return bundle_filename
 
 
-@shared_task(time_limit=600)
+@shared_task(time_limit=60 * 10)
 def generate_submission_bundle(task_id, notify_user_id):
     with transaction.atomic():
         cursor = connection.cursor()
@@ -207,7 +207,7 @@ def _score_submission(submission):
     return submission
 
 
-@shared_task(soft_time_limit=600, time_limit=610)
+@shared_task(soft_time_limit=60 * 20, time_limit=60 * 21)
 def score_submission(submission_id, dry_run=False, notify=False):
     submission = Submission.objects.get(pk=submission_id)
     if not dry_run:
