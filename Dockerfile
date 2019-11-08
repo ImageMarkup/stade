@@ -13,6 +13,3 @@ RUN pip install psycopg2-binary
 RUN pip install -r /code/requirements.txt
 RUN pip install -r /code/requirements-dev.txt
 RUN cd /usr/local/lib/python3.7/site-packages && python /code/setup.py develop
-
-COPY ./scripts/web-entrypoint.sh /entrypoint.sh
-CMD ["/entrypoint.sh"]

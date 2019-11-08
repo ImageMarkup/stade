@@ -4,7 +4,7 @@ set -ex
 export HEROKU_APP=isic-stade
 
 # stop containers accessing the db
-docker-compose stop web worker
+docker-compose stop worker
 
 docker-compose exec db bash -c "PGPASSWORD=postgres dropdb --host localhost --username postgres --if-exists stade && createdb --host localhost --username postgres stade"
 

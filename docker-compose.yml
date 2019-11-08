@@ -21,20 +21,6 @@ services:
     networks:
       - primary
 
-  web:
-      build: .
-      environment:
-        DJANGO_SETTINGS_MODULE: stade.settings.development
-        POSTGRES_HOST: "db"
-        CLOUDAMQP_URL: "amqp://rabbitmq/"
-      volumes:
-        - .:/code
-        - uploads:/uploads
-      ports:
-        - 8000:8000
-      networks:
-        - primary
-
   worker:
     build: .
     environment:
