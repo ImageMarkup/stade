@@ -39,7 +39,7 @@ class Command(BaseCommand):
             submissions = submissions.filter(status=options['status'])
         self.stderr.write(f'found {submissions.count()} submissions to rescore')
 
-        if not options['persist']:
+        if options['persist']:
             for submission in submissions:
                 score_submission.delay(submission.id, notify=False)
         else:
