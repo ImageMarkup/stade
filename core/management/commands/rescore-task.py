@@ -1,10 +1,10 @@
 import csv
 import sys
-from typing import Iterable
 
 from django.core.management.base import BaseCommand
+from django.db.models import QuerySet
 
-from core.models import Submission, Task
+from core.models import Submission, SUBMISSION_STATUS_CHOICES, Task
 from core.tasks import _score_submission, score_submission
 from core.utils import changes
 
@@ -19,6 +19,11 @@ class Command(BaseCommand):
             default=False,
             help='Persist the scoring changes to the database.',
         )
+        parser.add_argument(
+            '--status',
+            choices=SUBMISSION_STATUS_CHOICES.keys(),
+            help='Only run on submissions with a certain status.',
+        )
 
         parser.add_argument('task', help='The task ID to scope rescoring to.')
 
@@ -29,21 +34,20 @@ class Command(BaseCommand):
             self.stderr.write(f'unable to find task {options["task"]}')
             sys.exit(1)
 
-        submissions: Iterable[Submission] = Submission.objects.filter(approach__task=task).order_by(
-            'created'
-        )
+        submissions: QuerySet = Submission.objects.filter(approach__task=task).order_by('created')
         if options.get('status'):
             submissions = submissions.filter(status=options['status'])
         self.stderr.write(f'found {submissions.count()} submissions to rescore')
 
         if not options['persist']:
+            for submission in submissions:
+                score_submission.delay(submission.id, notify=False)
+        else:
             writer = csv.DictWriter(
                 sys.stdout, fieldnames=['submission', 'field', 'before', 'after']
             )
             writer.writeheader()
-
-        for submission in submissions:
-            if not options['persist']:
+            for submission in submissions:
                 new_submission = _score_submission(submission)
                 old_submission = Submission.objects.get(pk=submission.id)
                 c = changes(old_submission, new_submission)
@@ -53,5 +57,3 @@ class Command(BaseCommand):
                         writer.writerow(
                             {'submission': submission.id, 'field': k, 'before': v[0], 'after': v[1]}
                         )
-            else:
-                score_submission.delay(submission.id, notify=False)
