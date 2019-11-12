@@ -177,8 +177,7 @@
 }
 
 .dashboard-items .global .section-header,
-.dashboard-items .global .section-content,
-.dashboard-items .global-section-footer {
+.dashboard-items .global .section-content {
   background: none;
   color: #fff;
   position: relative;
@@ -189,25 +188,10 @@
   height: 100%;
 }
 
-.dashboard-items .global-section-footer {
-  padding: 20px;
-}
-
 .dashboard-items .global .section-content ul {
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .dashboard-items .global .section-content ul li {
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dashboard-items .global-section-footer .button {
-  background: #3a434a;
-  box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.25);
-  text-align: center;
-  width: 100%;
-}
-
-.dashboard-items .global-section-footer .button:hover {
-  background: #475158;
 }

@@ -1,5 +1,4 @@
 from django.urls import path
-from django.views.generic import TemplateView
 
 from . import views
 
@@ -39,11 +38,6 @@ urlpatterns = [
         'staff/request-submission-bundle/<int:task_id>',
         views.request_submission_bundle,
         name='request-submission-bundle',
-    ),
-    path(
-        'internal-leaderboard',
-        TemplateView.as_view(template_name='internal-leaderboard.html'),
-        name='internal-leaderboard',
     ),
     path('api/challenge/<int:challenge_id>', views.challenge_detail, name='challenge-detail'),
     path(
