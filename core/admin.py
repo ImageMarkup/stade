@@ -1,4 +1,8 @@
+from typing import List, Optional, Tuple
+
 from django.contrib import admin
+from django.db.models.query import QuerySet
+from django.utils.translation import gettext_lazy as _
 
 from core.models import Approach, Team, TeamInvitation
 from core.tasks import score_submission
@@ -53,11 +57,30 @@ class SubmissionInline(ReadonlyTabularInline):
     fields = ['id', 'created', 'test_prediction_file', 'status', 'overall_score']
 
 
+class TaskListFilter(admin.SimpleListFilter):
+    title = _('task')
+    parameter_name = 'approach__task'
+
+    # Remove type ignore on release of https://github.com/typeddjango/django-stubs/pull/217
+    def lookups(self, request, model_admin) -> List[Tuple[int, str]]:  # type: ignore
+        # Sorting has to be done in python because the string representation of a task
+        # differs from the name.
+        return sorted(
+            [(t.id, str(t)) for t in Task.objects.all()], key=lambda x: str(x[1]), reverse=True
+        )
+
+    def queryset(self, request, queryset) -> Optional[QuerySet]:
+        if self.value():
+            return queryset.filter(approach__task=self.value())
+        else:
+            return None
+
+
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ['approach', 'id', 'status']
+    list_display = ['task', 'approach', 'id', 'created', 'status']
     list_display_links = ['id']
-    list_filter = ['status']
+    list_filter = ['status', TaskListFilter]
 
     autocomplete_fields = ['creator', 'approach']
 
@@ -65,6 +88,9 @@ class SubmissionAdmin(admin.ModelAdmin):
     exclude = ['score']
 
     actions = [rescore_submission_with_notification, rescore_submission_without_notifying]
+
+    def task(self, obj: Submission):
+        return obj.approach.task
 
 
 @admin.register(Challenge)
