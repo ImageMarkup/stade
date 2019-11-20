@@ -123,6 +123,11 @@ class Task(models.Model):
             'Set to 0 to disable.'
         ),
     )
+    requires_manuscript = models.BooleanField(
+        verbose_name='Requires a manuscript',
+        default=True,
+        help_text='Whether approaches should require a manuscript.',
+    )
     test_ground_truth_file = CollisionSafeFileField()
 
     # Define custom "objects" first, so it will be the "_default_manager", which is more efficient

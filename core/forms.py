@@ -217,7 +217,10 @@ class ApproachForm(forms.ModelForm):
         self.team_id = kwargs.pop('team_id', None)
         self.task_id = kwargs.pop('task_id', None)
         super().__init__(*args, **kwargs)
-        if self.instance.pk is None:
+
+        task = get_object_or_404(Task, pk=self.task_id)
+        # if the approach is being created and the task indicates a manuscript is required
+        if self.instance.pk is None and task.requires_manuscript:
             self.fields['manuscript'].required = True
 
     def clean_description(self):

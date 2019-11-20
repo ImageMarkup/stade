@@ -467,13 +467,19 @@ def edit_approach(request, approach_id):
     approach = get_object_or_404(Approach.objects.filter(team__users=request.user), pk=approach_id)
 
     if request.method == 'POST':
-        form = ApproachForm(request.POST, request.FILES, request=request, instance=approach)
+        form = ApproachForm(
+            request.POST,
+            request.FILES,
+            request=request,
+            instance=approach,
+            task_id=approach.task.id,
+        )
 
         if form.is_valid():
             form.save()
             return safe_redirect(request, request.POST.get('next'))
     else:
-        form = ApproachForm(request=request, instance=approach)
+        form = ApproachForm(request=request, instance=approach, task_id=approach.task.id)
 
     return render(
         request,
