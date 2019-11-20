@@ -1,6 +1,8 @@
 from typing import List, Optional, Tuple
 
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from django.utils.translation import gettext_lazy as _
 
@@ -40,6 +42,14 @@ class ReadonlyTabularInline(admin.TabularInline):
 
     def has_add_permission(self, request, obj=None):
         return False
+
+
+class TeamInline(ReadonlyTabularInline):
+    model = Team
+    fields = ['id', 'name', 'num_users']
+
+    def num_users(self, obj):
+        return obj.users.count()
 
 
 class TaskInline(ReadonlyTabularInline):
@@ -137,3 +147,12 @@ class ApproachAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
     inlines = [SubmissionInline]
+
+
+class UserAdmin(BaseUserAdmin):
+    inlines = (TeamInline,)
+
+
+# Re-register UserAdmin
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
