@@ -63,7 +63,7 @@
                 <p class="p-label">Manuscript{% if not form.manuscript.field.required %} (Optional){% endif %}</p>
                 <label class="file-label">
                     <input class="file-input" id="id_manuscript" name="manuscript"
-                        {% if form.manuscript.field.required %}required{% endif %} type="file">
+                        {% if form.manuscript.field.required %}required{% endif %} type="file" data-s3fileinput data-auto-upload>
                     <span class="file-cta">
                         <span class="file-icon">
                             <i class="material-icons">file_copy</i>
@@ -127,5 +127,9 @@
             document.getElementById('file-name').innerHTML = file.files[0].name;
         }
     };
+
+    $(function() {
+        $('.s3fileinput-wrapper button').addClass('button');
+    });
 </script>
 {% endblock %}
