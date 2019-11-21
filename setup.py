@@ -17,6 +17,7 @@ setup(
         'django-storages',
         'celery',
         'isic-challenge-scoring',
+        'joist',
         'psycopg2',
         'requests',
         'rules',

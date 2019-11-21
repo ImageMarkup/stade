@@ -6,6 +6,7 @@ from uuid import uuid4
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields.jsonb import JSONField
+from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
 from django.db.models import Count, Q, QuerySet
@@ -37,6 +38,13 @@ class CollisionSafeFileField(models.FileField):
     @staticmethod
     def uuid_prefix_filename(instance, filename):
         return f'{uuid4()}/{filename}'
+
+
+if settings.DEBUG:
+    EnvBasedFileField = CollisionSafeFileField
+else:
+    from joist.models import S3FileField
+    EnvBasedFileField = S3FileField
 
 
 class DeferredFieldsManager(models.Manager):
@@ -128,7 +136,7 @@ class Task(models.Model):
         default=True,
         help_text='Whether approaches should require a manuscript.',
     )
-    test_ground_truth_file = CollisionSafeFileField()
+    test_ground_truth_file = EnvBasedFileField()
 
     # Define custom "objects" first, so it will be the "_default_manager", which is more efficient
     # for many automatically generated queries
@@ -230,7 +238,7 @@ class Submission(models.Model):
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
     accepted_terms = models.BooleanField(default=False)
-    test_prediction_file = CollisionSafeFileField()
+    test_prediction_file = EnvBasedFileField()
     status = models.CharField(
         max_length=20, default='queued', choices=SUBMISSION_STATUS_CHOICES.items()
     )
@@ -274,7 +282,7 @@ class Approach(models.Model):
     description = models.TextField(blank=True)
     docker_tag = models.CharField(blank=True, max_length=120)
     uses_external_data = models.BooleanField(default=False, choices=((True, 'Yes'), (False, 'No')))
-    manuscript = CollisionSafeFileField(
+    manuscript = EnvBasedFileField(
         validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True
     )
 
