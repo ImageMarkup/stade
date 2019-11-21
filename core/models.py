@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from pathlib import PurePath
-from typing import Optional
+from typing import Optional, Type
 from uuid import uuid4
 
 from django.conf import settings
@@ -40,11 +40,11 @@ class CollisionSafeFileField(models.FileField):
         return f'{uuid4()}/{filename}'
 
 
-if not hasattr(settings, 'JOIST_UPLOAD_STS_ARN'):
-    EnvBasedFileField: models.FileField = CollisionSafeFileField
-else:
+EnvBasedFileField: Type[models.FileField] = CollisionSafeFileField
+if hasattr(settings, 'JOIST_UPLOAD_STS_ARN'):
     from joist.models import S3FileField
-    EnvBasedFileField: models.FileField = S3FileField
+
+    EnvBasedFileField = S3FileField
 
 
 class DeferredFieldsManager(models.Manager):
