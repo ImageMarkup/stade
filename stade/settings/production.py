@@ -10,7 +10,6 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 
 from .base import *  # noqa: F401, F403
 
-INSTALLED_APPS.append('joist')
 
 ALLOWED_HOSTS = ['challenge.isic-archive.com']
 SECRET_KEY = os.environ['SECRET_KEY']
@@ -38,7 +37,10 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_AUTO_CREATE_BUCKET = False
 AWS_QUERYSTRING_EXPIRE = 3600 * 6  # 6 hours
 AWS_DEFAULT_ACL = None
+
+INSTALLED_APPS.append('joist')
 JOIST_UPLOAD_STS_ARN = os.environ['UPLOAD_STS_ARN']
+
 EMAIL_HOST = 'smtp.mailgun.org'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'noreply@isic-archive.com'

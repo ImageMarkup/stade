@@ -18,5 +18,6 @@ if settings.DEBUG:
     urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-else:
-    urlpatterns += path('api/joist', include('joist.urls'))
+
+if hasattr(settings, 'JOIST_UPLOAD_STS_ARN'):
+    urlpatterns.append(path('api/joist/', include('joist.urls')))

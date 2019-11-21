@@ -40,7 +40,7 @@ class CollisionSafeFileField(models.FileField):
         return f'{uuid4()}/{filename}'
 
 
-if settings.DEBUG:
+if not hasattr(settings, 'JOIST_UPLOAD_STS_ARN'):
     EnvBasedFileField = CollisionSafeFileField
 else:
     from joist.models import S3FileField
