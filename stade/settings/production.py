@@ -38,7 +38,7 @@ AWS_AUTO_CREATE_BUCKET = False
 AWS_QUERYSTRING_EXPIRE = 3600 * 6  # 6 hours
 AWS_DEFAULT_ACL = None
 
-INSTALLED_APPS.append('joist')
+INSTALLED_APPS.append('joist')  # noqa: F405
 JOIST_UPLOAD_STS_ARN = os.environ['UPLOAD_STS_ARN']
 
 EMAIL_HOST = 'smtp.mailgun.org'

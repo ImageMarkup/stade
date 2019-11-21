@@ -3,10 +3,10 @@ from pathlib import PurePath
 from typing import Optional
 from uuid import uuid4
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields.jsonb import JSONField
-from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
 from django.db.models import Count, Q, QuerySet
@@ -41,10 +41,10 @@ class CollisionSafeFileField(models.FileField):
 
 
 if not hasattr(settings, 'JOIST_UPLOAD_STS_ARN'):
-    EnvBasedFileField = CollisionSafeFileField
+    EnvBasedFileField: models.FileField = CollisionSafeFileField
 else:
     from joist.models import S3FileField
-    EnvBasedFileField = S3FileField
+    EnvBasedFileField: models.FileField = S3FileField
 
 
 class DeferredFieldsManager(models.Manager):
