@@ -141,7 +141,7 @@ h6 {
 .button.is-disabled {
   background: #d8dadc;
   color: #58636b;
-  cursor: not-allowed;  
+  cursor: not-allowed;
 }
 
 .button:after,
