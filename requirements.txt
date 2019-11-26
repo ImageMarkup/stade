@@ -40,7 +40,7 @@ jedi==0.14.1
 Jinja2==2.10.1
 jmespath==0.9.4
 joblib==0.13.2
-joist>=0.0.2
+joist==0.0.2
 kombu==4.6.3
 Markdown==3.1.1
 MarkupSafe==1.1.1
