@@ -6,8 +6,7 @@ from core.tests.factories import TaskFactory
 
 
 @pytest.fixture
-@pytest.mark.transactional_db
-def task(request):
+def task(request, transactional_db):
     t: Task = TaskFactory(
         challenge__name='foo', challenge__locked=False, hidden=False, locked=False
     )
