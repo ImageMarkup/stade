@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework.documentation import include_docs_urls
 
+# include_docs_urls requires the 'coreapi' package to be installed
+
 urlpatterns = [
     path('', include('core.urls')),
     path('api/tracker/', include('tracker.urls')),

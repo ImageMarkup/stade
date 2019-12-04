@@ -28,7 +28,6 @@ django-storages==1.7.1
 djangorestframework==3.9.4
 docutils==0.14
 et-xmlfile==1.0.1
-Faker==1.0.7
 gunicorn==19.9.0
 idna==2.8
 ipython==7.6.1
