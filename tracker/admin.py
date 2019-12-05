@@ -8,7 +8,7 @@ from tracker.models import Email
 @admin.register(Email)
 class EmailAdmin(ExportActionMixin, admin.ModelAdmin):
     model = Email
-    list_display = ('email', 'created')
+    list_display = ['email', 'created']
 
 
 class EmailResource(resources.ModelResource):
