@@ -4,6 +4,9 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
+import uritemplate  # noqa: F401
+
+# the 'uritemplate' package is required for 'get_schema_view' to render, so ensure it's available
 
 urlpatterns = [
     path('', include('core.urls')),

@@ -19,6 +19,7 @@ setup(
         'psycopg2',
         'requests',
         'rules',
+        'uritemplate',
         # Production-only
         'django-heroku',
         'gunicorn',
