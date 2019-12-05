@@ -6,13 +6,13 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils.http import is_safe_url
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from core.models import Submission
 
 
 def safe_redirect(request, redirect_to):
-    url_is_safe = is_safe_url(
+    url_is_safe = url_has_allowed_host_and_scheme(
         url=redirect_to, allowed_hosts=settings.ALLOWED_HOSTS, require_https=request.is_secure()
     )
     if url_is_safe and redirect_to:
