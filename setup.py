@@ -7,7 +7,6 @@ setup(
     install_requires=[
         'boto3',
         'celery',
-        'coreapi',
         'dictdiffer',
         'django<3',
         'django-allauth',
