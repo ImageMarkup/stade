@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.db import connection, transaction
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Exists, OuterRef, Prefetch
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -97,9 +97,9 @@ def index(request):
 
     # for users, only show challenges with > 0 non-hidden tasks
     if not request.user.is_superuser:
-        challenges = challenges.annotate(
-            num_visible_tasks=Count('tasks', filter=Q(tasks__hidden=False))
-        ).filter(num_visible_tasks__gt=0)
+        pure_tasks = Task.objects.select_related(None)
+        visible_tasks = pure_tasks.filter(challenge=OuterRef('pk'), hidden=False)
+        challenges = challenges.filter(Exists(visible_tasks))
 
     return render(request, 'index.html', {'challenges': challenges.all()})
 

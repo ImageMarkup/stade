@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
-from django.db.models import Count, Q, QuerySet
+from django.db.models import Exists, OuterRef, QuerySet
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.urls import reverse
@@ -60,16 +60,10 @@ class SelectRelatedManager(models.Manager):
 
 class SuccessfulApproachesManager(models.Manager):
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .annotate(
-                num_successful_submissions=Count(
-                    'submission', filter=Q(submission__status='succeeded')
-                )
-            )
-            .filter(num_successful_submissions__gt=0)
+        successful_submissions = Submission.objects.filter(
+            approach=OuterRef('pk'), status=Submission.Status.SUCCEEDED
         )
+        return super().get_queryset().filter(Exists(successful_submissions))
 
 
 class Challenge(models.Model):
