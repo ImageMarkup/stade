@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'import_export',
     'rules.apps.AutodiscoverRulesConfig',
     'markdownify',
+    'joist',
 ]
 SITE_ID = 1
 

@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
 from pathlib import PurePath
-from typing import Optional, Type
+from typing import Optional
 from uuid import uuid4
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields.jsonb import JSONField
@@ -14,6 +13,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
+from joist.models import S3FileField
 
 
 # Don't use this, it will be deleted when past migrations are squashed.
@@ -38,13 +38,6 @@ class CollisionSafeFileField(models.FileField):
     @staticmethod
     def uuid_prefix_filename(instance, filename):
         return f'{uuid4()}/{filename}'
-
-
-EnvBasedFileField: Type[models.FileField] = CollisionSafeFileField
-if hasattr(settings, 'JOIST_UPLOAD_STS_ARN'):
-    from joist.models import S3FileField
-
-    EnvBasedFileField = S3FileField
 
 
 class DeferredFieldsManager(models.Manager):
@@ -136,7 +129,7 @@ class Task(models.Model):
         default=True,
         help_text='Whether approaches should require a manuscript.',
     )
-    test_ground_truth_file = EnvBasedFileField()
+    test_ground_truth_file = S3FileField()
 
     # Define custom "objects" first, so it will be the "_default_manager", which is more efficient
     # for many automatically generated queries
@@ -238,7 +231,7 @@ class Submission(models.Model):
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
     accepted_terms = models.BooleanField(default=False)
-    test_prediction_file = EnvBasedFileField()
+    test_prediction_file = S3FileField()
     status = models.CharField(
         max_length=20, default='queued', choices=SUBMISSION_STATUS_CHOICES.items()
     )
@@ -282,7 +275,7 @@ class Approach(models.Model):
     description = models.TextField(blank=True)
     docker_tag = models.CharField(blank=True, max_length=120)
     uses_external_data = models.BooleanField(default=False, choices=((True, 'Yes'), (False, 'No')))
-    manuscript = EnvBasedFileField(
+    manuscript = S3FileField(
         validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True
     )
 
