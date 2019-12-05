@@ -22,6 +22,7 @@ setup(
         # Production-only
         'django-heroku',
         'gunicorn',
+        'sentry_sdk',
         # Development-only
         'django-debug-toolbar',
         'django-extensions',
