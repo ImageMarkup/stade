@@ -101,7 +101,7 @@ def index(request):
         visible_tasks = pure_tasks.filter(challenge=OuterRef('pk'), hidden=False)
         challenges = challenges.filter(Exists(visible_tasks))
 
-    return render(request, 'index.html', {'challenges': challenges.all()})
+    return render(request, 'index.html', {'challenges': challenges})
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -245,7 +245,7 @@ def dashboard(request):
     else:
         context['num_mailchimp_subscribers'] = 5000
 
-    for challenge in Challenge.objects.exclude(name='ISIC Sandbox').all():
+    for challenge in Challenge.objects.exclude(name='ISIC Sandbox'):
         context['challenges'].append(
             {
                 'challenge': challenge,
@@ -298,11 +298,9 @@ def submission_list(request, task_id, team_id):
         task = get_object_or_404(Task.objects.filter(hidden=False), pk=task_id)
         team = get_object_or_404(request.user.teams, pk=team_id)
 
-    submissions = (
-        Submission.objects.filter(approach__team=team, approach__task=task)
-        .select_related('approach')
-        .all()
-    )
+    submissions = Submission.objects.filter(
+        approach__team=team, approach__task=task
+    ).select_related('approach')
 
     return render(
         request,
@@ -342,9 +340,7 @@ def create_team(request, task):
             'show_initial_invites': True,
             'form': form,
             'task': task,
-            'teams': request.user.teams.prefetch_related('users')
-            .filter(challenge=task.challenge)
-            .all(),
+            'teams': request.user.teams.prefetch_related('users').filter(challenge=task.challenge),
         },
     )
 
