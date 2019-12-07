@@ -30,7 +30,7 @@
       <div class="column is-full field email">
         <p class="control has-icons-left">
           <input class="input{% if form.email.errors %} is-danger{% endif %}" id="id_email"
-          name="email" placeholder="Email Address" required autofocus type="email" value="{{ request.POST.email }}">
+          name="email" placeholder="Email Address" required autofocus type="email" autocomplete="username" value="{{ request.POST.email }}">
           <span class="icon is-small is-left">
             <i class="material-icons">email</i>
           </span>
@@ -78,7 +78,7 @@
 
       <div class="column is-full field password">
         <p class="control has-icons-left">
-          <input class="input{% if form.password1.errors %} is-danger{% endif %}" id="id_password1" name="password1" placeholder="Password" required type="password">
+          <input class="input{% if form.password1.errors %} is-danger{% endif %}" id="id_password1" name="password1" placeholder="Password" required type="password" autocomplete="new-password">
           <span class="icon is-small is-left">
             <i class="material-icons">lock</i>
           </span>
@@ -92,7 +92,7 @@
 
       <div class="column is-full field confirmpassword">
         <p class="control has-icons-left">
-          <input class="input{% if form.password2.errors %} is-danger{% endif %}" id="id_password2" name="password2" placeholder="Confirm Password" required type="password">
+          <input class="input{% if form.password2.errors %} is-danger{% endif %}" id="id_password2" name="password2" placeholder="Confirm Password" required type="password" autocomplete="new-password">
           <span class="icon is-small is-left">
             <i class="material-icons">lock</i>
           </span>
