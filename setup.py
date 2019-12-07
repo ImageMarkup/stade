@@ -9,6 +9,7 @@ setup(
         'celery',
         'dictdiffer',
         'django<3',
+        'django-admin-display',
         'django-allauth',
         'django-cors-headers',
         'django-import-export',
