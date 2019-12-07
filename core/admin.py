@@ -5,30 +5,23 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from django.utils.translation import gettext_lazy as _
+from django_admin_display import admin_display
 
 from core.models import Approach, Team, TeamInvitation
 from core.tasks import score_submission
 from .models import Challenge, Submission, Task
 
 
+@admin_display(short_description='Rescore (without notifying)')
 def rescore_submission_without_notifying(modeladmin, request, queryset):
     for submission in queryset:
         score_submission.delay(submission.id, notify=False)
 
 
-rescore_submission_without_notifying.short_description = (  # type: ignore
-    'Rescore (without notifying)'
-)
-
-
+@admin_display(short_description='Rescore (with notification)')
 def rescore_submission_with_notification(modeladmin, request, queryset):
     for submission in queryset:
         score_submission.delay(submission.id, notify=True)
-
-
-rescore_submission_with_notification.short_description = (  # type: ignore
-    'Rescore (with notification)'
-)
 
 
 class ReadonlyTabularInline(admin.TabularInline):
