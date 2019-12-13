@@ -13,9 +13,7 @@ urlpatterns = [
     path('api/tracker/', include('tracker.urls')),
     path(
         'api/docs/schema/',
-        # get_schema_view typing needs
-        # https://github.com/typeddjango/djangorestframework-stubs/pull/44 to be released
-        get_schema_view(  # type: ignore
+        get_schema_view(
             title='ISIC Challenge',
             description='REST API for ISIC Challenge submission platform.',
             version='1.0.0',
