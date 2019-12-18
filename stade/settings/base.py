@@ -80,6 +80,24 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
 DEFAULT_FROM_EMAIL = 'ISIC Challenge <support@isic-archive.com>'
 
+# Celery
+# "CELERY_BROKER_URL" must be set
+# CloudAMQP-suggested settings
+# https://www.cloudamqp.com/docs/celery.html
+CELERY_BROKER_POOL_LIMIT = 1
+CELERY_BROKER_HEARTBEAT = None
+CELERY_BROKER_CONNECTION_TIMEOUT = 30
+CELERY_EVENT_QUEUE_EXPIRES = 60
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+# Stade-required settings
+# only acknowledge a task being done after the function finishes
+CELERY_TASK_ACKS_LATE = True
+# TODO: Try removing this restart and see if there are any memory leaks
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 20
+# TODO: concurrency could be increased for non-memory intensive tasks
+CELERY_WORKER_CONCURRENCY = 1
+CELERY_RESULT_BACKEND = None
+
 
 def show_user_display_name(user):
     return user.email

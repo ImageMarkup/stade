@@ -24,8 +24,9 @@ sentry_sdk.init(
     send_default_pii=True,
 )
 
-CELERY_BROKER_POOL_LIMIT = 1
-CELERY_TASK_ACKS_LATE = True
+# Celery
+CELERY_BROKER_URL = os.environ['CLOUDAMQP_URL']
+
 SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
