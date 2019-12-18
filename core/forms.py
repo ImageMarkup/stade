@@ -49,7 +49,7 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
 class ReviewApproachForm(forms.Form):
     approach_id = forms.IntegerField(widget=forms.HiddenInput())
     action = forms.ChoiceField(
-        choices=[['accepted', 'Accept'], ['rejected', 'Reject'], ['reset', 'Reset']]
+        choices=[('accepted', 'Accept'), ('rejected', 'Reject'), ('reset', 'Reset')]
     )
     reason = forms.ChoiceField(choices=core.models.REJECT_REASON_CHOICES.items(), required=False)
 
