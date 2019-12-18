@@ -46,7 +46,7 @@ services:
       - uploads:/uploads
     networks:
       - primary
-    command: ["celery", "worker", "--app", "stade.celery", "--concurrency", "2", "--loglevel", "info"]
+    command: ["celery", "worker", "--app", "stade.celery", "--loglevel", "info", "--without-heartbeat"]
 
 volumes:
   uploads:
