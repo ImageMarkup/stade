@@ -1,18 +1,21 @@
 from django.contrib.auth.models import User
 import factory
 
+from core import models
+
 
 class ChallengeFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'core.challenge'
+        model = models.Challenge
 
     name = factory.Faker('sentence', nb_words=2)
 
 
 class TaskFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'core.task'
+        model = models.Task
 
+    type = models.Task.Type.CLASSIFICATION
     name = factory.Faker('sentence', nb_words=2)
     challenge = factory.SubFactory(ChallengeFactory)
 
@@ -27,7 +30,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 class TeamFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'core.team'
+        model = models.Team
 
     name = factory.Sequence(lambda n: 'team_%d' % n)
     creator = factory.SubFactory(UserFactory)
@@ -36,7 +39,7 @@ class TeamFactory(factory.django.DjangoModelFactory):
 
 class ApproachFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'core.approach'
+        model = models.Approach
 
     name = factory.Sequence(lambda n: 'approach_%d' % n)
     uses_external_data = factory.Faker('boolean')
@@ -47,7 +50,7 @@ class ApproachFactory(factory.django.DjangoModelFactory):
 
 class SubmissionFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'core.submission'
+        model = models.Submission
 
     creator = factory.SubFactory(UserFactory)
     approach = factory.SubFactory(ApproachFactory)
