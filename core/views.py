@@ -265,7 +265,7 @@ def dashboard(request):
 def task_detail(request, task_id):
     task = get_object_or_404(Task.objects, pk=task_id)
 
-    context = {'task': task}
+    context = {'task': task, 'Submission': Submission}
 
     if request.user.is_authenticated:
         context['teams'] = request.user.teams.filter(challenge=task.challenge).prefetch_related(
@@ -284,7 +284,9 @@ def submission_detail(request, submission_id):
 
     submission = get_object_or_404(submission, pk=submission_id)
 
-    return render(request, 'submission-detail.html', {'submission': submission})
+    return render(
+        request, 'submission-detail.html', {'submission': submission, 'Submission': Submission}
+    )
 
 
 @login_required
@@ -303,7 +305,9 @@ def submission_list(request, task_id, team_id):
     )
 
     return render(
-        request, 'submission-list.html', {'task': task, 'team': team, 'submissions': submissions}
+        request,
+        'submission-list.html',
+        {'task': task, 'team': team, 'submissions': submissions, 'Submission': Submission},
     )
 
 

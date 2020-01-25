@@ -1,6 +1,6 @@
 import pytest
 
-from core.models import Approach
+from core.models import Approach, Submission
 from core.tests.factories import ApproachFactory, SubmissionFactory
 
 
@@ -17,15 +17,15 @@ def test_approach_successful_manager(approaches):
     assert Approach.objects.count() == 2
 
     # approaches have submissions, neither have succeeded
-    SubmissionFactory(status='queued', approach=a1)
-    SubmissionFactory(status='failed', approach=a1)
-    SubmissionFactory(status='failed', approach=a2)
+    SubmissionFactory(status=Submission.Status.QUEUED, approach=a1)
+    SubmissionFactory(status=Submission.Status.FAILED, approach=a1)
+    SubmissionFactory(status=Submission.Status.FAILED, approach=a2)
 
     assert Approach.successful.count() == 0
     assert Approach.objects.count() == 2
 
     # give a2 a successful submission
-    SubmissionFactory(status='succeeded', approach=a2)
+    SubmissionFactory(status=Submission.Status.SUCCEEDED, approach=a2)
 
     assert Approach.successful.count() == 1
     assert Approach.successful.first() == a2

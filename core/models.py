@@ -13,6 +13,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 # Don't use this, it will be deleted when past migrations are squashed.
@@ -86,14 +87,15 @@ class Challenge(models.Model):
         return self.name
 
 
-TASK_TYPE_CHOICES = {'segmentation': 'Segmentation', 'classification': 'Classification'}
-
-
 class Task(models.Model):
     class Meta:
         ordering = ['id']
 
-    type = models.CharField(max_length=20, choices=TASK_TYPE_CHOICES.items())
+    class Type(models.TextChoices):
+        SEGMENTATION = 'segmentation', _('Segmentation')
+        CLASSIFICATION = 'classification', _('Classification')
+
+    type = models.CharField(max_length=20, choices=Type.choices)
     created = models.DateTimeField(default=timezone.now)
     challenge = models.ForeignKey(Challenge, on_delete=models.DO_NOTHING, related_name='tasks')
     name = models.CharField(max_length=100)
@@ -139,14 +141,20 @@ class Task(models.Model):
 
     @property
     def allowed_submission_extension(self):
-        return 'zip' if self.type == 'segmentation' else 'csv'
+        return {self.Type.SEGMENTATION: 'zip', self.Type.CLASSIFICATION: 'csv'}[self.type]
 
     def get_absolute_url(self):
         return reverse('task-detail', args=[self.id])
 
     def pending_or_succeeded_submissions(self, team) -> QuerySet:
         return Submission.objects.filter(
-            status__in=['queued', 'scoring', 'succeeded'], approach__task=self, approach__team=team
+            status__in=[
+                Submission.Status.QUEUED,
+                Submission.Status.SCORING,
+                Submission.Status.SUCCEEDED,
+            ],
+            approach__task=self,
+            approach__team=team,
         )
 
     def next_available_submission(self, team) -> Optional[datetime]:
@@ -213,27 +221,23 @@ class TeamInvitation(models.Model):
         return f'{self.team} invite'
 
 
-SUBMISSION_STATUS_CHOICES = {
-    'queued': 'Queued for scoring',
-    'scoring': 'Scoring',
-    'internal_failure': 'Internal failure',
-    'failed': 'Failed',
-    'succeeded': 'Succeeded',
-}
-
-
 class Submission(models.Model):
     class Meta:
         ordering = ['-created']
+
+    class Status(models.TextChoices):
+        QUEUED = 'queued', _('Queued for scoring')
+        SCORING = 'scoring', _('Scoring')
+        INTERNAL_FAILURE = 'internal_failure', _('Internal failure')
+        FAILED = 'failed', _('Failed')
+        SUCCEEDED = 'succeeded', _('Succeeded')
 
     created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
     accepted_terms = models.BooleanField(default=False)
     test_prediction_file = CollisionSafeFileField()
-    status = models.CharField(
-        max_length=20, default='queued', choices=SUBMISSION_STATUS_CHOICES.items()
-    )
+    status = models.CharField(max_length=20, default=Status.QUEUED, choices=Status.choices)
     score = JSONField(blank=True, null=True)
     overall_score = models.FloatField(blank=True, null=True)
     validation_score = models.FloatField(blank=True, null=True)
@@ -254,20 +258,24 @@ class Submission(models.Model):
         return self
 
 
-REVIEW_STATE_CHOICES = {'accepted': 'Accepted', 'rejected': 'Rejected'}
-REJECT_REASON_CHOICES = {
-    'blank_or_corrupt_manuscript': 'Blank or corrupt manuscript',
-    'low_quality_manuscript': 'Low quality manuscript',
-    'rule_violation': 'Violation of rules',
-}
-
-
 class Approach(models.Model):
     class Meta:
         verbose_name_plural = 'approaches'
         constraints = [
             models.UniqueConstraint(fields=['name', 'task', 'team'], name='unique_approaches')
         ]
+
+    class ReviewState(models.TextChoices):
+        ACCEPTED = 'accepted', _('Accepted')
+        REJECTED = 'rejected', _('Rejected')
+
+    class RejectReason(models.TextChoices):
+        BLANK_OR_CORRUPT_MANUSCRIPT = (
+            'blank_or_corrupt_manuscript',
+            _('Blank or corrupt manuscript'),
+        )
+        LOW_QUALITY_MANUSCRIPT = 'low_quality_manuscript', _('Low quality manuscript')
+        RULE_VIOLATION = 'rule_violation', _('Violation of rules')
 
     created = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=100)
@@ -282,10 +290,10 @@ class Approach(models.Model):
         get_user_model(), null=True, blank=True, on_delete=models.DO_NOTHING
     )
     review_state = models.CharField(
-        max_length=8, blank=True, default='', choices=REVIEW_STATE_CHOICES.items()
+        max_length=8, blank=True, default='', choices=ReviewState.choices
     )
     reject_reason = models.CharField(
-        max_length=27, blank=True, default='', choices=REJECT_REASON_CHOICES.items()
+        max_length=27, blank=True, default='', choices=RejectReason.choices
     )
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
@@ -304,14 +312,10 @@ class Approach(models.Model):
     @property
     def latest_successful_submission(self) -> Optional[Submission]:
         return (
-            Submission.objects.filter(approach=self, status='succeeded')
+            Submission.objects.filter(approach=self, status=Submission.Status.SUCCEEDED)
             .order_by('-created')
             .first()
         )
-
-    @property
-    def friendly_status(self):
-        return SUBMISSION_STATUS_CHOICES[self.latest_submission.status]
 
 
 class SubmissionApproach(models.Model):
@@ -342,9 +346,9 @@ class ReviewHistory(models.Model):
     approach = models.ForeignKey(Approach, on_delete=models.CASCADE, related_name='review_history')
     reviewed_by = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
     created = models.DateTimeField(default=timezone.now)
-    review_state = models.CharField(max_length=8, choices=REVIEW_STATE_CHOICES.items())
+    review_state = models.CharField(max_length=8, choices=Approach.ReviewState.choices)
     reject_reason = models.CharField(
-        max_length=27, blank=True, default='', choices=REJECT_REASON_CHOICES.items()
+        max_length=27, blank=True, default='', choices=Approach.RejectReason.choices
     )
 
 

@@ -36,11 +36,11 @@ def notify_creator_of_scoring_attempt(submission):
     html_message = render_to_string(f'email/submission_{submission.status}.html', context)
     subject_prefix = f'[{submission.approach.task.name}] '
 
-    if submission.status == 'succeeded':
+    if submission.status == Submission.Status.SUCCEEDED:
         subject = f'{subject_prefix}Submission succeeded (#{submission.id})'
-    elif submission.status == 'failed':
+    elif submission.status == Submission.Status.FAILED:
         subject = f'{subject_prefix}Submission failed (#{submission.id})'
-    elif submission.status == 'internal_failure':
+    elif submission.status == Submission.Status.INTERNAL_FAILURE:
         subject = f'{subject_prefix}Submission failed (internal error) (#{submission.id})'
     else:
         raise Exception(f'Encountered unexpected submission status {submission.status}.')
@@ -169,7 +169,7 @@ def _score_submission(submission):
         truth_file: FieldFile = submission.approach.task.test_ground_truth_file
         prediction_file: FieldFile = submission.test_prediction_file
 
-        if submission.approach.task.type == 'segmentation':
+        if submission.approach.task.type == Task.Type.SEGMENTATION:
             with _field_file_to_local_path(
                 truth_file
             ) as truth_file_path, _field_file_to_local_path(
@@ -177,7 +177,7 @@ def _score_submission(submission):
             ) as prediction_file_path:
                 score = SegmentationScore.from_zip_file(truth_file_path, prediction_file_path)
 
-        elif submission.approach.task.type == 'classification':
+        elif submission.approach.task.type == Task.Type.CLASSIFICATION:
             # If the S3Boto3Storage backend is used, then the FieldFile contains a
             # S3Boto3StorageFile, which always provides a binary I/O object (requests for a text
             # I/O object are ignored)
@@ -194,14 +194,14 @@ def _score_submission(submission):
         submission.overall_score = score.overall
         submission.validation_score = score.validation
         submission.score = score.to_dict()
-        submission.status = 'succeeded'
+        submission.status = Submission.Status.SUCCEEDED
     except ScoreException as e:
-        submission.status = 'failed'
+        submission.status = Submission.Status.FAILED
         submission.fail_reason = e.args[0]
         submission.reset_scores()
     except Exception as e:
         logger.exception(f'internal error scoring submission {submission.id}: {e}')
-        submission.status = 'internal_failure'
+        submission.status = Submission.Status.INTERNAL_FAILURE
         submission.reset_scores()
 
     return submission
@@ -211,7 +211,7 @@ def _score_submission(submission):
 def score_submission(submission_id, dry_run=False, notify=False):
     submission = Submission.objects.get(pk=submission_id)
     if not dry_run:
-        submission.status = 'scoring'
+        submission.status = Submission.Status.SCORING
         submission.save()
 
     submission = _score_submission(submission)

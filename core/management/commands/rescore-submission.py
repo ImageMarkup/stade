@@ -33,10 +33,10 @@ class Command(BaseCommand):
         else:
             new_submission = _score_submission(submission)
 
-            if new_submission.status == 'failed':
+            if new_submission.status == Submission.Status.FAILED:
                 self.stderr.write(f'failed to score submission: {new_submission.fail_reason}')
                 return
-            elif new_submission.status == 'internal_failure':
+            elif new_submission.status == Submission.Status.INTERNAL_FAILURE:
                 self.stderr.write(f'failed to score submission: internal failure')
                 return
 

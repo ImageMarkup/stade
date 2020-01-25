@@ -8,7 +8,6 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
-import core.models
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 
 
@@ -51,7 +50,7 @@ class ReviewApproachForm(forms.Form):
     action = forms.ChoiceField(
         choices=[('accepted', 'Accept'), ('rejected', 'Reject'), ('reset', 'Reset')]
     )
-    reason = forms.ChoiceField(choices=core.models.REJECT_REASON_CHOICES.items(), required=False)
+    reason = forms.ChoiceField(choices=Approach.RejectReason.choices, required=False)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -69,10 +68,10 @@ class ReviewApproachForm(forms.Form):
         super().clean()
 
         if self.cleaned_data['action'] == 'rejected' and self.cleaned_data['reason'] == '':
-            raise forms.ValidationError(f'A rejection reason must be provided.')
+            raise forms.ValidationError('A rejection reason must be provided.')
 
         if not self.request.user.is_staff:
-            raise forms.ValidationError(f"You don't have permission to do that.")
+            raise forms.ValidationError("You don't have permission to do that.")
 
 
 class AcceptInvitationForm(forms.Form):

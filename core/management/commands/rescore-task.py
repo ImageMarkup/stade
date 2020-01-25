@@ -4,7 +4,7 @@ import sys
 from django.core.management.base import BaseCommand
 from django.db.models import QuerySet
 
-from core.models import Submission, SUBMISSION_STATUS_CHOICES, Task
+from core.models import Submission, Task
 from core.tasks import _score_submission, score_submission
 from core.utils import changes
 
@@ -21,7 +21,7 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             '--status',
-            choices=SUBMISSION_STATUS_CHOICES.keys(),
+            choices=Submission.Status.values,
             help='Only run on submissions with a certain status.',
         )
 
