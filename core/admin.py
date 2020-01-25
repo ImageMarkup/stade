@@ -92,6 +92,7 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     actions = [rescore_submission_with_notification, rescore_submission_without_notifying]
 
+    @admin_display(admin_order_field='approach__task')
     def task(self, obj: Submission):
         return obj.approach.task
 
@@ -127,6 +128,7 @@ class TeamInvitationAdmin(admin.ModelAdmin):
         qs = qs.select_related('team', 'sender')
         return qs
 
+    @admin_display(admin_order_field='team__name')
     def team_name(self, invitation):
         return invitation.team.name
 

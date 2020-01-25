@@ -8,7 +8,7 @@
 
   <div class="team-details">
     <h2 class="team-name"><i class="material-icons">people</i> {{ submission.approach.team.name }}</h2>
-    {% if submission.status != 'succeeded' %}
+    {% if submission.status != Submission.Status.SUCCEEDED %}
     <p class="overall-score">
         --
     </p>
@@ -19,7 +19,7 @@
     </p>
     {% endif %}
 
-    {% if submission.status != 'succeeded' %}
+    {% if submission.status != Submission.Status.SUCCEEDED %}
         <p class="overall-score">
             --
         </p>
@@ -38,10 +38,10 @@
       <li class="submitted-by"><strong>Submitted by:</strong> {{ submission.creator.first_name }} {{ submission.creator.last_name }}</li>
       <li class="status"><strong>Status:</strong> <span class="is-success">{{  submission.get_status_display }}</span></li>
     </ul>
-    {% if submission.status == 'failed' %}
+    {% if submission.status == Submission.Status.FAILED %}
     There was a problem with your submission.
 
-    <pre>{{  submission.fail_reason }}</pre>
+    <pre>{{ submission.fail_reason }}</pre>
     {% endif %}
     <div class="data-download">
       <h3 class="title">Download {% if request.user.is_superuser %}the{% else %}your{% endif %} submission</h3>

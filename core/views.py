@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.db import connection, transaction
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Exists, OuterRef, Prefetch
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -97,11 +97,11 @@ def index(request):
 
     # for users, only show challenges with > 0 non-hidden tasks
     if not request.user.is_superuser:
-        challenges = challenges.annotate(
-            num_visible_tasks=Count('tasks', filter=Q(tasks__hidden=False))
-        ).filter(num_visible_tasks__gt=0)
+        pure_tasks = Task.objects.select_related(None)
+        visible_tasks = pure_tasks.filter(challenge=OuterRef('pk'), hidden=False)
+        challenges = challenges.filter(Exists(visible_tasks))
 
-    return render(request, 'index.html', {'challenges': challenges.all()})
+    return render(request, 'index.html', {'challenges': challenges})
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -245,7 +245,7 @@ def dashboard(request):
     else:
         context['num_mailchimp_subscribers'] = 5000
 
-    for challenge in Challenge.objects.exclude(name='ISIC Sandbox').all():
+    for challenge in Challenge.objects.exclude(name='ISIC Sandbox'):
         context['challenges'].append(
             {
                 'challenge': challenge,
@@ -265,7 +265,7 @@ def dashboard(request):
 def task_detail(request, task_id):
     task = get_object_or_404(Task.objects, pk=task_id)
 
-    context = {'task': task}
+    context = {'task': task, 'Submission': Submission}
 
     if request.user.is_authenticated:
         context['teams'] = request.user.teams.filter(challenge=task.challenge).prefetch_related(
@@ -284,7 +284,9 @@ def submission_detail(request, submission_id):
 
     submission = get_object_or_404(submission, pk=submission_id)
 
-    return render(request, 'submission-detail.html', {'submission': submission})
+    return render(
+        request, 'submission-detail.html', {'submission': submission, 'Submission': Submission}
+    )
 
 
 @login_required
@@ -296,14 +298,14 @@ def submission_list(request, task_id, team_id):
         task = get_object_or_404(Task.objects.filter(hidden=False), pk=task_id)
         team = get_object_or_404(request.user.teams, pk=team_id)
 
-    submissions = (
-        Submission.objects.filter(approach__team=team, approach__task=task)
-        .select_related('approach')
-        .all()
-    )
+    submissions = Submission.objects.filter(
+        approach__team=team, approach__task=task
+    ).select_related('approach')
 
     return render(
-        request, 'submission-list.html', {'task': task, 'team': team, 'submissions': submissions}
+        request,
+        'submission-list.html',
+        {'task': task, 'team': team, 'submissions': submissions, 'Submission': Submission},
     )
 
 
@@ -338,9 +340,7 @@ def create_team(request, task):
             'show_initial_invites': True,
             'form': form,
             'task': task,
-            'teams': request.user.teams.prefetch_related('users')
-            .filter(challenge=task.challenge)
-            .all(),
+            'teams': request.user.teams.prefetch_related('users').filter(challenge=task.challenge),
         },
     )
 

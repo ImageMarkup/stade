@@ -8,7 +8,7 @@ setup(
         'boto3',
         'celery',
         'dictdiffer',
-        'django<3',
+        'django',
         'django-admin-display',
         'django-allauth',
         'django-cors-headers',

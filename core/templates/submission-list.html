@@ -39,7 +39,7 @@
                                 <strong>{{ submission.approach.name }}</strong>
                             </div>
                             <div class="status column is-one-fifth">
-                                {% if submission.status == 'succeeded' %}
+                                {% if submission.status == Submission.Status.SUCCEEDED %}
                                     <span class="score">{{ submission.validation_score|floatformat:3 }}</span>
                                 {% else %}
                                     <span class="score">--</span>
@@ -47,7 +47,7 @@
                             </div>
                             {% if task.scores_published %}
                                 <div class="status column is-one-fifth">
-                                    {% if submission.status == 'succeeded' %}
+                                    {% if submission.status == Submission.Status.SUCCEEDED %}
                                         <span class="score">{{ submission.overall_score|floatformat:3 }}</span>
                                     {% else %}
                                         <span class="score">--</span>

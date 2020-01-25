@@ -63,13 +63,13 @@
                 {% with latest_submission=approach.latest_submission %}
                     {% if latest_submission %}
                     <span class="status">{{ latest_submission.get_status_display }}
-                        {% if latest_submission.status == 'failed' %}
+                        {% if latest_submission.status == Submission.Status.FAILED %}
                         <a href="{% url 'create-submission' approach.id %}">
                             <i class="material-icons is-trans-rotate is-180">cached</i>
                         </a>
                         {% endif %}
                     </span>
-                    {% if latest_submission.status == 'succeeded' %}
+                    {% if latest_submission.status == Submission.Status.SUCCEEDED %}
                         {% if task.scores_published %}
                             <span class="score">{{ latest_submission.overall_score|floatformat:3 }}</span>
                         {% else %}

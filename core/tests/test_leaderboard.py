@@ -1,5 +1,6 @@
 import pytest
 
+from core.models import Approach, Submission
 from core.tests.factories import ApproachFactory, SubmissionFactory, TaskFactory, TeamFactory
 
 
@@ -24,25 +25,31 @@ def task_with_submissions():
     ]
 
     t0_a0 = ApproachFactory(task=task, team=teams[0], name='approach_0')
-    SubmissionFactory(approach=t0_a0, status='succeeded', overall_score=0.90)
-    SubmissionFactory(approach=t0_a0, status='succeeded', overall_score=0.95)
-    SubmissionFactory(approach=t0_a0, status='failed')
+    SubmissionFactory(approach=t0_a0, status=Submission.Status.SUCCEEDED, overall_score=0.90)
+    SubmissionFactory(approach=t0_a0, status=Submission.Status.SUCCEEDED, overall_score=0.95)
+    SubmissionFactory(approach=t0_a0, status=Submission.Status.FAILED)
 
     t0_a1 = ApproachFactory(task=task, team=teams[0], name='approach_1')
-    SubmissionFactory(approach=t0_a1, status='succeeded', overall_score=0.80)
+    SubmissionFactory(approach=t0_a1, status=Submission.Status.SUCCEEDED, overall_score=0.80)
 
-    t1_a0 = ApproachFactory(task=task, team=teams[1], name='approach_0', review_state='accepted')
-    SubmissionFactory(approach=t1_a0, status='succeeded', overall_score=0.82)
-    SubmissionFactory(approach=t1_a0, status='succeeded', overall_score=0.78)
+    t1_a0 = ApproachFactory(
+        task=task, team=teams[1], name='approach_0', review_state=Approach.ReviewState.ACCEPTED
+    )
+    SubmissionFactory(approach=t1_a0, status=Submission.Status.SUCCEEDED, overall_score=0.82)
+    SubmissionFactory(approach=t1_a0, status=Submission.Status.SUCCEEDED, overall_score=0.78)
 
     t2_a0 = ApproachFactory(task=task, team=teams[2], name='approach_0')  # noqa
     # intentionally no associated submissions
 
-    t3_a0 = ApproachFactory(task=task, team=teams[3], name='approach_0', review_state='rejected')
-    SubmissionFactory(approach=t3_a0, status='succeeded', overall_score=1.0)
+    t3_a0 = ApproachFactory(
+        task=task, team=teams[3], name='approach_0', review_state=Approach.ReviewState.REJECTED
+    )
+    SubmissionFactory(approach=t3_a0, status=Submission.Status.SUCCEEDED, overall_score=1.0)
 
-    t3_a1 = ApproachFactory(task=task, team=teams[3], name='approach_1', review_state='accepted')
-    SubmissionFactory(approach=t3_a1, status='succeeded', overall_score=0.60)
+    t3_a1 = ApproachFactory(
+        task=task, team=teams[3], name='approach_1', review_state=Approach.ReviewState.ACCEPTED
+    )
+    SubmissionFactory(approach=t3_a1, status=Submission.Status.SUCCEEDED, overall_score=0.60)
 
     yield task
 
