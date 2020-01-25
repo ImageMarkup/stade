@@ -10,16 +10,12 @@ services:
       - /var/lib/postgresql/data
     ports:
       - 5432:5432
-    networks:
-      - primary
 
   rabbitmq:
     image: rabbitmq:latest
     restart: always
     ports:
       - 5672:5672
-    networks:
-      - primary
 
   web:
       build: .
@@ -32,8 +28,6 @@ services:
         - uploads:/uploads
       ports:
         - 8000:8000
-      networks:
-        - primary
 
   worker:
     build: .
@@ -44,12 +38,7 @@ services:
     volumes:
       - .:/code
       - uploads:/uploads
-    networks:
-      - primary
     command: ["celery", "worker", "--app", "stade.celery", "--loglevel", "info", "--without-heartbeat"]
 
 volumes:
   uploads:
-
-networks:
-  primary:
