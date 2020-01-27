@@ -13,9 +13,10 @@ setup(
         'django-allauth',
         'django-cors-headers',
         'django-import-export',
-        'djangorestframework',
         'django-markdownify',
+        'django-s3-file-field',
         'django-storages',
+        'djangorestframework',
         'isic-challenge-scoring',
         'psycopg2',
         'requests',
@@ -28,6 +29,7 @@ setup(
         # Development-only
         'django-debug-toolbar',
         'django-extensions',
+        'django-minio-storage',
         # TODO: 'psycopg2-binary' instead of 'psycopg2' for development
     ],
 )
