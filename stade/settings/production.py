@@ -50,4 +50,6 @@ MAILCHIMP_LIST_ID = 'aa0e7aa1b1'
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
+S3FF_UPLOAD_STS_ARN = 'arn:aws:iam::698941954577:role/challenge-stade-upload'
+
 django_heroku.settings(locals())
