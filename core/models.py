@@ -14,6 +14,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from s3_file_field import S3FileField
 
 
 # Don't use this, it will be deleted when past migrations are squashed.
@@ -124,7 +125,7 @@ class Task(models.Model):
         default=True,
         help_text='Whether approaches should require a manuscript.',
     )
-    test_ground_truth_file = CollisionSafeFileField()
+    test_ground_truth_file = S3FileField()
 
     # Define custom "objects" first, so it will be the "_default_manager", which is more efficient
     # for many automatically generated queries
