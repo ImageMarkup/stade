@@ -333,6 +333,13 @@ def create_team(request, task):
     else:
         form = TeamForm(task_id=task.id, request=request)
 
+    teams = request.user.teams.prefetch_related('users').filter(challenge=task.challenge)
+
+    for team in teams:
+        team.next_available_submission = task.next_available_submission(team)
+
+    has_rate_limited_teams = any(team.next_available_submission for team in teams)
+
     return render(
         request,
         'wizard/create-team.html',
@@ -340,7 +347,8 @@ def create_team(request, task):
             'show_initial_invites': True,
             'form': form,
             'task': task,
-            'teams': request.user.teams.prefetch_related('users').filter(challenge=task.challenge),
+            'teams': teams,
+            'has_rate_limited_teams': has_rate_limited_teams,
         },
     )
 
@@ -494,7 +502,9 @@ def edit_approach(request, approach_id):
 
 
 @login_required
-@permission_required('approaches.add_submission', fn=objectgetter(Approach, 'approach_id'))
+@permission_required(
+    'approaches.add_submission', fn=objectgetter(Approach, 'approach_id'), raise_exception=True
+)
 def create_submission(request, approach_id):
     approach = get_object_or_404(Approach.objects.exclude(task__locked=True), pk=approach_id)
     if approach.team_id not in request.user.teams.only('id').values_list(flat=True):

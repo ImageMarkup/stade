@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from datetime import datetime, timedelta
 from pathlib import PurePath
-from typing import Optional
+from typing import cast, Optional
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
@@ -162,13 +164,14 @@ class Task(models.Model):
 
         one_week_ago = timezone.now() - timedelta(weeks=1)
 
-        oldest_submission_in_last_week = (
+        submissions_in_last_week = (
             self.pending_or_succeeded_submissions(team)
             .filter(created__gte=one_week_ago)
-            .order_by('created')[0]
+            .order_by('created')
         )
 
-        if oldest_submission_in_last_week:
+        if len(submissions_in_last_week) >= self.max_submissions_per_week:
+            oldest_submission_in_last_week = cast(Submission, submissions_in_last_week.first())
             return oldest_submission_in_last_week.created + timedelta(weeks=1)
         else:
             return None
