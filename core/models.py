@@ -142,7 +142,7 @@ class Task(models.Model):
     def get_absolute_url(self):
         return reverse('task-detail', args=[self.id])
 
-    def pending_or_succeeded_submissions(self, team) -> QuerySet:
+    def pending_or_succeeded_submissions(self, team) -> QuerySet[Submission]:
         return Submission.objects.filter(
             status__in=[
                 Submission.Status.QUEUED,
@@ -328,9 +328,8 @@ class SubmissionApproach(models.Model):
     overall_score = models.FloatField()
 
     @staticmethod
-    def index_by_approach(qs: QuerySet):
+    def index_by_approach(qs: QuerySet[SubmissionApproach]):
         ret = {}
-        sa: SubmissionApproach
         for sa in qs:
             ret[sa.approach.id] = sa
         return ret
