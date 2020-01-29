@@ -72,7 +72,7 @@ class TaskListFilter(admin.SimpleListFilter):
             [(t.id, str(t)) for t in Task.objects.all()], key=lambda x: str(x[1]), reverse=True
         )
 
-    def queryset(self, request, queryset) -> Optional[QuerySet]:
+    def queryset(self, request, queryset) -> 'Optional[QuerySet[Task]]':
         if self.value():
             return queryset.filter(approach__task=self.value())
         else:

@@ -2,7 +2,6 @@ import csv
 import sys
 
 from django.core.management.base import BaseCommand
-from django.db.models import QuerySet
 
 from core.models import Submission, Task
 from core.tasks import _score_submission, score_submission
@@ -34,7 +33,7 @@ class Command(BaseCommand):
             self.stderr.write(f'unable to find task {options["task"]}')
             sys.exit(1)
 
-        submissions: QuerySet = Submission.objects.filter(approach__task=task).order_by('created')
+        submissions = Submission.objects.filter(approach__task=task).order_by('created')
         if options.get('status'):
             submissions = submissions.filter(status=options['status'])
         self.stderr.write(f'found {submissions.count()} submissions to rescore')

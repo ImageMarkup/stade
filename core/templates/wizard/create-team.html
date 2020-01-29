@@ -27,15 +27,32 @@
     <div class="columns">
       <div class="column new-team">
         <h2>Create New Team</h2>
-        {% include "partial-team.html" %}
+        {% if has_rate_limited_teams %}
+          <div class="help is-danger">
+                  <i class="material-icons">error</i>
+                  <ul class="errorlist nonfield">
+                    <li>
+                      This task only allows {{task.max_submissions_per_week }} submissions per team per week. You have one or more teams which have reached the maximum number of submissions per week.
+                    </li>
+                  </ul>
+                </div>
+        {% else %}
+          {% include "partial-team.html" %}
+        {% endif %}
       </div>
       <div class="column existing-team">
         <h2>Choose Existing Team</h2>
         {% if teams %}
         <ul class="teams">
           {% for team in teams %}
-          <li>
-            <a href="{% url 'create-approach' task.id team.id %}">
+          <li {% if team.next_available_submission %} class="has-tooltip choice-list-item"{% endif %}>
+            <a {% if not team.next_available_submission %}href="{% url 'create-approach' task.id team.id %}"{% else %}class="rate-limited"{% endif %}>
+            {% if team.next_available_submission %}
+            <span class="has-tooltip">
+                <i class="material-icons">lock</i><span class="tooltip is-top">
+                  This task only allows {{ task.max_submissions_per_week }} submissions per team per week. You can submit again in {{ team.next_available_submission|timeuntil }}.</span>
+                </span>
+            {% endif %}
               <i class="material-icons">group</i>
               <p>
                 {{ team.name }}

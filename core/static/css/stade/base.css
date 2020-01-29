@@ -141,7 +141,7 @@ h6 {
 .button.is-disabled {
   background: #d8dadc;
   color: #58636b;
-  cursor: not-allowed;  
+  cursor: not-allowed;
 }
 
 .button:after,
@@ -618,4 +618,32 @@ h6 {
 
 #temporary-transition-banner {
   margin-bottom: 0;
+}
+
+li.choice-list-item {
+  display: block;
+}
+
+.rate-limited {
+	cursor: not-allowed;
+	color: #ccc;
+}
+
+.rate-limited:hover .has-tooltip .tooltip {
+  display: block;
+}
+
+.new-team > .help {
+	align-items: center;
+	border: 1px solid #ff3860;
+	border-radius: 3px;
+	display: flex;
+	font-size: 16px;
+	line-height: 1.25em;
+	margin-bottom: 10px;
+	padding: 10px 20px;
+}
+
+.new-team > .help > ul {
+  list-style-type: none;
 }
