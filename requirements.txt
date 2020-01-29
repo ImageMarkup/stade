@@ -24,14 +24,14 @@ django-heroku==0.3.1
 django-import-export==2.0.1
 django-markdownify==0.8.0
 django-minio-storage==0.3.5
-django-s3-file-field==0.0.5
+django-s3-file-field==0.0.6
 django-storages==1.8
 djangorestframework==3.11.0
 docutils==0.15.2
 et-xmlfile==1.0.1
 gunicorn==20.0.4
 idna==2.8
-importlib-metadata==1.4.0
+importlib-metadata==1.5.0
 isic-challenge-scoring==5.2.4
 jdcal==1.4.1
 jmespath==0.9.4
