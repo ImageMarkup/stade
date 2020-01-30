@@ -234,7 +234,7 @@ class Submission(models.Model):
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
     accepted_terms = models.BooleanField(default=False)
-    test_prediction_file = CollisionSafeFileField()
+    test_prediction_file = S3FileField()
     status = models.CharField(max_length=20, default=Status.QUEUED, choices=Status.choices)
     score = JSONField(blank=True, null=True)
     overall_score = models.FloatField(blank=True, null=True)
@@ -280,7 +280,7 @@ class Approach(models.Model):
     description = models.TextField(blank=True)
     docker_tag = models.CharField(blank=True, max_length=120)
     uses_external_data = models.BooleanField(default=False, choices=((True, 'Yes'), (False, 'No')))
-    manuscript = CollisionSafeFileField(
+    manuscript = S3FileField(
         validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True
     )
 
