@@ -13,9 +13,11 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    {% include "sentry.html" %}
 
   </head>
   <body class="content">
+  <script>throw new Error('Front-end Sentry test');</script>
     <header class="main-header">
       <div class="container">
         <div class="logo">
