@@ -173,7 +173,10 @@ class CreateSubmissionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.approach_id = kwargs.pop('approach_id', None)
         self.request = kwargs.pop('request', None)
+
         super().__init__(*args, **kwargs)
+
+        self.fields['test_prediction_file'].widget.attrs.update({'class': 'file-input'})
 
     def clean_accepted_terms(self):
         data = self.cleaned_data['accepted_terms']
@@ -217,10 +220,14 @@ class ApproachForm(forms.ModelForm):
         self.task_id = kwargs.pop('task_id', None)
         super().__init__(*args, **kwargs)
 
+        self.fields['manuscript'].widget.attrs.update({'class': 'file-input'})
+
         task = get_object_or_404(Task, pk=self.task_id)
         # if the approach is being created and the task indicates a manuscript is required
         if self.instance.pk is None and task.requires_manuscript:
             self.fields['manuscript'].required = True
+            # The widget must be explicitly updated, since it already was instantiated
+            self.fields['manuscript'].widget.is_required = True
 
     def clean_description(self):
         # We can't put this in the model layer since the description field was introduced

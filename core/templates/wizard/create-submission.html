@@ -68,7 +68,7 @@ ISIC_0001102,0.54389,0.64057,0.61898,0.554,0.2462,0.0586,0.4182,0.124,0.6313</pr
           <div class="field file-upload">
             <div class="file has-name is-medium is-fullwidth is-right{% if form.test_prediction_file.errors %} is-danger{% endif %}">
               <label class="file-label">
-                <input class="file-input" id="id_test_prediction_file" name="test_prediction_file" required type="file" data-s3fileinput="/api/s3-upload" data-auto-upload>
+                {{ form.test_prediction_file }}
                 <span class="file-cta">
                   <span class="file-icon">
                     <i class="material-icons">file_copy</i>
@@ -112,17 +112,4 @@ ISIC_0001102,0.54389,0.64057,0.61898,0.554,0.2462,0.0586,0.4182,0.124,0.6313</pr
 
   </div>
 </section>
-
-<script type="text/javascript">
-  var file = document.getElementById("id_test_prediction_file");
-  file.onchange = function(){
-    if(file.files.length > 0) {
-      document.getElementById('file-name').innerHTML = file.files[0].name;
-    }
-  };
-
-  $(function() {
-    $('.s3fileinput-wrapper button').addClass('button');
-  });
-</script>
 {% endblock %}
