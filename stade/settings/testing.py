@@ -17,5 +17,3 @@ DATABASES = {
     }
 }
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-MEDIA_ROOT = 'uploads/'
-MEDIA_URL = '/uploads/'

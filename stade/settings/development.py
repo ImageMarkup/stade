@@ -18,8 +18,6 @@ DATABASES = {
     }
 }
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-MEDIA_ROOT = '/uploads/'
-MEDIA_URL = '/uploads/'
 INSTALLED_APPS += ['debug_toolbar', 'django_extensions']  # noqa: F405
 
 MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
@@ -35,3 +33,12 @@ DEBUG_TOOLBAR_CONFIG = {'SHOW_TOOLBAR_CALLBACK': show_toolbar}
 
 # Celery
 CELERY_BROKER_URL = 'amqp://localhost:5672/'
+
+# Storage
+DEFAULT_FILE_STORAGE = 'minio_storage.storage.MinioMediaStorage'
+MINIO_STORAGE_ENDPOINT = 'localhost:9000'
+MINIO_STORAGE_USE_HTTPS = False
+MINIO_STORAGE_MEDIA_BUCKET_NAME = 'stade'
+MINIO_STORAGE_ACCESS_KEY = 'stadeAccessKey'
+MINIO_STORAGE_SECRET_KEY = 'stadeSecretKey'
+MINIO_STORAGE_MEDIA_USE_PRESIGNED = True
