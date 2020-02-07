@@ -62,8 +62,7 @@
                 class="file has-name is-medium is-fullwidth is-right{% if form.manuscript.errors %} is-danger{% endif %}">
                 <p class="p-label">Manuscript{% if not form.manuscript.field.required %} (Optional){% endif %}</p>
                 <label class="file-label">
-                    <input class="file-input" id="id_manuscript" name="manuscript"
-                        {% if form.manuscript.field.required %}required{% endif %} type="file" data-s3fileinput="/api/s3-upload" data-auto-upload>
+                    {{ form.manuscript }}
                     <span class="file-cta">
                         <span class="file-icon">
                             <i class="material-icons">file_copy</i>
@@ -119,17 +118,4 @@
 
     {{ form.media }}
 </form>
-
-<script type="text/javascript">
-    var file = document.getElementById("id_manuscript");
-    file.onchange = function () {
-        if (file.files.length > 0) {
-            document.getElementById('file-name').innerHTML = file.files[0].name;
-        }
-    };
-
-    $(function() {
-        $('.s3fileinput-wrapper button').addClass('button');
-    });
-</script>
 {% endblock %}
