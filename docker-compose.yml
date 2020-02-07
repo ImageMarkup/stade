@@ -17,6 +17,17 @@ services:
     ports:
       - 5672:5672
 
+  minio:
+    image: minio/minio
+    command: server /data
+    environment:
+      MINIO_ACCESS_KEY: minioAdminAccessKey
+      MINIO_SECRET_KEY: minioAdminSecretKey
+    volumes:
+      - /data
+    ports:
+      - 9000:9000
+
   web:
       build: .
       environment:
@@ -25,7 +36,6 @@ services:
         CLOUDAMQP_URL: "amqp://rabbitmq/"
       volumes:
         - .:/code
-        - uploads:/uploads
       ports:
         - 8000:8000
 
@@ -37,8 +47,4 @@ services:
       CLOUDAMQP_URL: "amqp://rabbitmq/"
     volumes:
       - .:/code
-      - uploads:/uploads
     command: ["celery", "worker", "--app", "stade.celery", "--loglevel", "info", "--without-heartbeat"]
-
-volumes:
-  uploads:
