@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-from pathlib import PurePath
 from typing import cast, Optional
-from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
@@ -17,30 +15,6 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from s3_file_field import S3FileField
-
-
-# Don't use this, it will be deleted when past migrations are squashed.
-# See CollisionSafeFileField instead.
-def _deprecated_file_upload_to(instance, filename):
-    extension = PurePath(filename).suffix[1:].lower()
-    return f'{uuid4()}.{extension}'
-
-
-task_data_file_upload_to = _deprecated_file_upload_to
-submission_file_upload_to = _deprecated_file_upload_to
-
-
-class CollisionSafeFileField(models.FileField):
-    description = 'A file field which is uploaded to <randomuuid>/filename.'
-
-    def __init__(self, *args, **kwargs):
-        kwargs['max_length'] = kwargs.get('max_length', 200)
-        kwargs['upload_to'] = self.uuid_prefix_filename
-        super().__init__(*args, **kwargs)
-
-    @staticmethod
-    def uuid_prefix_filename(instance, filename):
-        return f'{uuid4()}/{filename}'
 
 
 class DeferredFieldsManager(models.Manager):
