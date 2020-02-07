@@ -24,7 +24,7 @@ django-heroku==0.3.1
 django-import-export==2.0.1
 django-markdownify==0.8.0
 django-minio-storage==0.3.5
-django-s3-file-field==0.0.6
+django-s3-file-field==0.0.9
 django-storages==1.8
 djangorestframework==3.11.0
 docutils==0.15.2
