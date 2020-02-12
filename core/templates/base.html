@@ -89,5 +89,13 @@
     <div class="help-container">
       <a class="help-button button is-medium is-warning" href="https://forum.isic-archive.com" target="_blank">Report an Issue</a>
     </div>
+    <script src='https://js.sentry-cdn.com/05308c2957b24b918abbfe5a48a52fe2.min.js' crossorigin="anonymous" data-lazy="no"></script>
+    <script>
+      Sentry.onLoad(function() {
+        Sentry.init({
+          environment: 'production'
+        });
+      });
+    </script>
   </body>
 </html>
