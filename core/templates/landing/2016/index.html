@@ -1,0 +1,308 @@
+{% extends "base.html" %} {% block content %}
+<section class="section container">
+        <div class="section-header">
+                <h1>{{ challenge.name }} Challenge {% if challenge.locked%}[Closed]{% endif %}</h1>
+        </div>
+        <div class="section-content">
+                <div class="c-challenge-instructions-container">
+                        <h2>News</h2>
+                        <p><strong>This challenge is completed.
+                        Training and test data continue to be
+                        available through the task links at the
+                        bottom of the page.</strong></p>
+                        <p><strong>December 10th, 2016</strong>:
+                        PLEASE NOTE THAT THE 2017 ISIC-ISBI
+                        CHALLENGE HAS BEEN LAUNCHED. The 2017
+                        Challenge page can be accessed at <a href=
+                        "http://challenge2017.isic-archive.com/">http://challenge2017.isic-archive.com/</a></p>
+                        <p><strong>May 11th, 2016</strong>: New
+                        information regarding the challenge summary
+                        publication, and participant forums have
+                        been posted. See sections below for
+                        details.</p>
+                        <h2>Summary</h2>
+                        <p>The overarching goal of the challenge is
+                        to develop image analysis tools to enable
+                        the automated diagnosis of melanoma from
+                        dermoscopic images. Image analysis of skin
+                        lesions is composed of 3 parts:</p>
+                        <ul>
+                                <li>Part 1: Lesion
+                                Segmentation</li>
+                                <li>Part 2: Detection and
+                                Localization of Visual Dermoscopic
+                                Features/Patterns</li>
+                                <li>Part 3: Disease
+                                Classification</li>
+                        </ul>
+                        <p>This challenge provides training data
+                        (~900 images) for participants to engage in
+                        all 3 components of lesion image analysis.
+                        A separate test dataset (~350 images) will
+                        be provided for participants to generate
+                        and submit automated results.</p>
+                        <h2>Background</h2>
+                        <h4>Melanoma</h4>
+                        <p>Skin cancer is a major public health
+                        problem, with over 5 million newly
+                        diagnosed cases in the United States each
+                        year. Melanoma is the deadliest form of
+                        skin cancer, responsible for over 9,000
+                        deaths each year.</p>
+                        <p><a href=
+                        "http://isdis.net/wp-content/uploads/2016/01/Melanoma-tutorial-for-ISBI-challenge.pptx">
+                        <img src=
+                        "http://isdis.net/wp-content/uploads/2016/01/MelanomaTutorial-e1452108735778.png"
+                        alt="Melanoma Tutorial"></a></p>
+                        <h4>Dermoscopy</h4>
+                        <p>As pigmented lesions occurring on the
+                        surface of the skin, melanoma is amenable
+                        to early detection by expert visual
+                        inspection. It is also amenable to
+                        automated detection with image analysis.
+                        Given the widespread availability of
+                        high-resolution cameras, algorithms that
+                        can improve our ability to screen and
+                        detect troublesome lesions can be of great
+                        value. As a result, many centers have begun
+                        their own research efforts on automated
+                        analysis. However, a centralized,
+                        coordinated, and comparative effort across
+                        institutions has yet to be implemented.</p>
+                        <p>Dermoscopy is an imaging technique that
+                        eliminates the surface reflection of skin.
+                        By removing surface reflection,
+                        visualization of deeper levels of skin is
+                        enhanced. Prior research has shown that
+                        when used by expert dermatologists,
+                        dermoscopy provides improved diagnostic
+                        accuracy, in comparison to standard
+                        photography. As inexpensive consumer
+                        dermatoscope attachments for smart phones
+                        are beginning to reach the market, the
+                        opportunity for automated dermoscopic
+                        assessment algorithms to positively
+                        influence patient care increases.</p>
+                        <p><a href=
+                        "http://isdis.net/wp-content/uploads/2016/01/DermoscopyImageAnalysisPPT_3.pdf">
+                        <img src=
+                        "http://isdis.net/wp-content/uploads/2016/01/DermoscopyImageAnalysis-e1452206148483.png"
+                        alt="Dermoscopic Image Analysis"></a></p>
+                        <h4>ISIC Archive</h4>
+                        <p>The <a href=
+                        "http://www.isdis.net/index.php/isic-project">
+                        International Skin Imaging Collaboration
+                        (ISIC)</a> is an international effort to
+                        improve melanoma diagnosis, sponsored by
+                        the International Society for Digital
+                        Imaging of the Skin (ISDIS). <a href=
+                        "http://ww.isic-archive.com">The ISIC
+                        Archive</a> contains the largest publicly
+                        available collection of quality controlled
+                        dermoscopic images of skin lesions.</p>
+                        <p>Presently, the ISIC Archive contains
+                        over 13,000 dermoscopic images, which were
+                        collected from leading clinical centers
+                        internationally and acquired from a variety
+                        of devices within each center. Broad and
+                        international participation in image
+                        contribution is designed to insure a
+                        representative clinically relevant sample.
+                        Initial data sets derive primarily from the
+                        United States, and the ISIC has ongoing
+                        commitments and contributions of additional
+                        data sets from international
+                        collaborators.</p>
+                        <p>All incoming images to the ISIC Archive
+                        are screened for both privacy and quality
+                        assurance. Most images have associated
+                        clinical metadata, which has been vetted by
+                        recognized melanoma experts. A subset of
+                        the images have undergone annotation and
+                        markup by recognized skin cancer experts.
+                        These markups include dermoscopic features
+                        (i.e., global and focal morphologic
+                        elements in the image known to discriminate
+                        between types of skin lesions).</p>
+                        <p>The software infrastructure of the ISIC
+                        Archive is built using the open-source
+                        <a href=
+                        "https://girder.readthedocs.org/">Girder
+                        platform</a>, and the source code for the
+                        Archive itself is <a href=
+                        "https://github.com/ImageMarkup/isic-archive">
+                        freely available on GitHub</a>. All the
+                        data and annotations presently within the
+                        ISIC Archive are licensed for free public
+                        download and use, under the <a href=
+                        "https://creativecommons.org/publicdomain/zero/1.0/">
+                        CC-0 license</a>.</p>
+                        <h2>Challenge Details</h2>
+                        <h4>Timeline <em>(subject to
+                        change)</em></h4>
+                        <ul>
+                                <li>Jan 5: Release initial data
+                                (images + ground truth)</li>
+                                <li>March 18: Release test data for
+                                Part 1 (images)</li>
+                                <li>March 25: Release test data for
+                                Part 2-3</li>
+                                <li>Apr. 1: Part 1, 2, 3 submission
+                                deadline</li>
+                                <li>Apr. 8: Part 2B, 3B submission
+                                deadline</li>
+                                <li>Apr. 14: Winners announced</li>
+                        </ul>
+                        <h4>Challenge Tasks</h4>
+                        <p>Part 1: Lesion Segmentation.
+                        Participants are asked to submit automated
+                        predictions of lesion segmentations from
+                        dermoscopic images. Human expert ground
+                        truth will be provided as the comparison
+                        standard. Performance metrics used will
+                        include the dice coefficient, as well as
+                        pixel level accuracy, specificity,
+                        sensitivity, and average precision at
+                        sensitivity of 100%.</p>
+                        <p>Part 2: Lesion Dermoscopic Feature
+                        Extraction. Participants are challenged to
+                        submit automated predictions of dermoscopic
+                        features, including both localization and
+                        classification. Expert-annotated
+                        dermatological ground truth will be
+                        provided as the comparison standard.
+                        Performance metrics used will include the
+                        dice coefficient, as well as pixel level
+                        accuracy, specificity, and sensitivity.
+                        Participants will be ranked according to
+                        average precision. The chosen features are
+                        streaks (incl. starburst pattern) and
+                        globules.</p>
+                        <p>Part 3: Lesion Classification.
+                        Participants are challenged to extract
+                        their own features in order to predict
+                        lesion disease state of benign or
+                        malignant. Performance metrics will include
+                        accuracy, specificity, sensitivity,
+                        specificity at 99% sensitivity, and average
+                        precision evaluated at sensitivity of 100%.
+                        Participants will be ranked according to
+                        average precision.</p>
+                        <h4>Datasets</h4>
+                        <p>The "Skin Lesion Analysis Towards
+                        Melanoma Detection" challenge leverages a
+                        dataset of annotated skin lesion images
+                        from the ISIC Archive, The dataset contains
+                        a representative mix of images of both
+                        malignant and benign skin lesions, Before
+                        release, the challenge dataset was randomly
+                        partitioned into both a training and test
+                        sets, with ~900 images in the training set
+                        and ~350 images in the test set.</p>
+                        <p>Participants are allowed to use prior
+                        work and outside data sources, but works
+                        must be cited and participants will be
+                        placed into a different category for
+                        evaluation.</p>
+                        <h4>Reference Standard</h4>
+                        <p>There will be 3 reference standard
+                        annotations for the 3 sub-challenges.</p>
+                        <ul>
+                                <li>Segmentation: Lesions have been
+                                segmented against background normal
+                                skin and miscellaneous structures
+                                by expert dermatologists.</li>
+                                <li>Dermoscopic Features: Lesions
+                                have been locally annotated for
+                                clinical dermoscopic features by
+                                expert dermatologists.</li>
+                                <li>Disease State: The gold
+                                standard for diagnosis of skin
+                                lesions is pathology. Images in the
+                                ISIC archive have been derived from
+                                centers with expert pathology that
+                                can be deemed the gold standard.
+                                Benign lesions included in the
+                                archive without benefit of
+                                pathology diagnosis are reviewed by
+                                multiple experts and only included
+                                in the event of unanimous clinical
+                                diagnosis.</li>
+                        </ul>
+                        <h2>Journal Paper & Data Citation</h2>
+                        <p><strong>Updated: May 11th,
+                        2016</strong></p>
+                        <p>An article has been posted to arXiv,
+                        where we have summarized the dataset, the
+                        evaluation protocol, and preliminary
+                        analyses of the results. We strongly
+                        encourage you to write manuscripts
+                        describing your approaches and submit for
+                        publication to peer reviewed journals, or
+                        to arXiv. As you publish your work, please
+                        use the following citation to refer to the
+                        challenge:</p>
+                        <p>Gutman, David; Codella, Noel C. F.;
+                        Celebi, Emre; Helba, Brian; Marchetti,
+                        Michael; Mishra, Nabin; Halpern, Allan.
+                        "Skin Lesion Analysis toward Melanoma
+                        Detection: A Challenge at the International
+                        Symposium on Biomedical Imaging (ISBI)
+                        2016, hosted by the International Skin
+                        Imaging Collaboration (ISIC)". eprint
+                        arXiv:1605.01397. 2016.</p>
+                        <p>This paper is accessible from the
+                        following link: <a href=
+                        "https://arxiv.org/abs/1605.01397">https://arxiv.org/abs/1605.01397</a></p>
+                        <h2>ISIC Challenge Forum</h2>
+                        <p><strong>Updated: May 11th,
+                        2016</strong></p>
+                        <p>We have created a public forum for
+                        registrants to provide feedback, which may
+                        influence the organization of next year’s
+                        challenge. We invite all to participate in
+                        discussion, and help make next year’s
+                        challenge as good as possible.</p>
+                        <p>The forum can be found at the following
+                        link: <a href=
+                        "http://forum.isic-archive.com">http://forum.isic-archive.com</a></p>
+                        <h2>Contact Information</h2>
+                        <p>Support for the challenge can be
+                        attained by contacting the sponsors at
+                        <a href=
+                        "mailto:isbi-sponsors@isic-archive.com">isbi-sponsors@isic-archive.com</a>.</p>
+                        <h4>Organizers</h4>
+                        <ul>
+                                <li><strong>The International Skin
+                                Imaging Collaboration</strong></li>
+                                <li><strong>Allan Halpern</strong>
+                                (Clinical Leader) (Memorial Sloan
+                                Kettering Cancer Center, New York,
+                                USA)</li>
+                                <li><strong>Brian Helba</strong>
+                                (Technical Leader) (Kitware, New
+                                York, USA)</li>
+                                <li><strong>David Gutman</strong>
+                                (Technical Leader) (Emory
+                                University, Atlanta, USA)</li>
+                                <li><strong>Noel Codella</strong>
+                                (Image Analysis) (IBM, New York,
+                                USA)</li>
+                                <li><strong>M. Emre Celebi</strong>
+                                (Image Analysis) (Louisiana State
+                                University, Shreveport,
+                                Louisiana)</li>
+                        </ul>
+                </div>
+                <ul>
+                        {% for task in challenge.tasks.all %}
+                        <li>
+                                <a href="{% url 'task-landing' challenge_nicename task.id %}"><i class=
+                                "material-icons">timelapse</i>
+                                <p>{{task.name}}</p></a>
+                        </li>{% endfor %}
+                </ul>
+        </div>
+</section>
+
+{% endblock %}

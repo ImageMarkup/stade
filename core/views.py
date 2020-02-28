@@ -92,6 +92,40 @@ def submission_scores(request, submission_id):
     return JsonResponse(submission.score)
 
 
+def task_landing(request, challenge_nicename, task_id):
+    challenge_ids = {'sandbox': 37, '2018': 36, '2017': 35, '2016': 34, 'live': 38, '2019': 39}
+
+    if challenge_nicename not in challenge_ids:
+        raise Http404('Challenge not found.')
+
+    challenge = get_object_or_404(Challenge, pk=challenge_ids[challenge_nicename])
+    task = get_object_or_404(Task.objects.filter(challenge=challenge), pk=task_id)
+
+    return render(
+        request,
+        f'landing/{challenge_nicename}/{task_id}.html',
+        {'challenge': challenge, 'task': task},
+    )
+
+
+def challenge_landing(request, challenge_nicename):
+    challenge_ids = {'sandbox': 37, '2018': 36, '2017': 35, '2016': 34, 'live': 38, '2019': 39}
+    if challenge_nicename not in challenge_ids:
+        raise Http404('Challenge not found.')
+
+    challenge = get_object_or_404(
+        Challenge.objects.prefetch_related(
+            Prefetch('tasks', queryset=Task.objects.order_by('name'))
+        ),
+        pk=challenge_ids[challenge_nicename],
+    )
+    return render(
+        request,
+        f'landing/{challenge_nicename}/index.html',
+        {'challenge': challenge, 'challenge_nicename': challenge_nicename},
+    )
+
+
 def index(request):
     challenges = Challenge.objects.prefetch_related('tasks')
 
