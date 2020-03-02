@@ -61,6 +61,13 @@
   font-size: 42px;
 }
 
+.team-details .overall-score .score-small {
+  color: #fff;
+  font-size: 24px;
+  display: block;
+  text-align: left;
+}
+
 .team-details .team-name,
 .team-details .overall-score .score {
   align-items: center;

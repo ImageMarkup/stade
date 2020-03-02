@@ -25,7 +25,7 @@
         </p>
     {% else %}
         <p class="overall-score">
-            <span class="score"><i class="material-icons">stars</i> {{ submission.validation_score|floatformat:3 }}</span>
+            <span class="score{% if submission.approach.task.scores_published %}-small{% endif %}">{% if not submission.approach.task.scores_published %}<i class="material-icons">stars</i>{% endif %} {{ submission.validation_score|floatformat:3 }}</span>
             Validation Score
         </p>
     {% endif %}
