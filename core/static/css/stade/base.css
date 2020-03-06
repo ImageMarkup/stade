@@ -647,3 +647,13 @@ li.choice-list-item {
 .new-team > .help > ul {
   list-style-type: none;
 }
+
+.is-divider,
+.is-divider-vertical {
+  display: block;
+  position: relative;
+  border-top: 0.1rem solid #dbdbdb;
+  height: 0.1rem;
+  margin: 2rem 0;
+  text-align: center;
+}

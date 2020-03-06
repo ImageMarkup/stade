@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
 from . import views
 
@@ -57,6 +58,7 @@ urlpatterns = [
         views.submission_scores,
         name='submission-scores',
     ),
+    path('data', TemplateView.as_view(template_name='data.html'), name='data'),
 ]
 
 handler500 = views.handler500
