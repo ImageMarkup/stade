@@ -657,3 +657,8 @@ li.choice-list-item {
   margin: 2rem 0;
   text-align: center;
 }
+
+td,
+th {
+  vertical-align: middle !important;
+}
