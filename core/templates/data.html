@@ -1,4 +1,11 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block extra_head %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/stade/data.css' %}" />
+{% endblock %}
+
+{% block content %}
 <section class="section container">
   <div class="section-header">
     <h1>ISIC Challenge Datasets</h1>
@@ -440,4 +447,5 @@
       Wild”, 2019; arXiv:1908.02288.</p>
     </blockquote>
   </div>
-</section>{% endblock %}
+</section>
+{% endblock %}
