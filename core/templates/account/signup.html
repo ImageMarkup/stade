@@ -104,7 +104,21 @@
         {% endif %}
       </div>
 
-    </div>
+      <hr class="column is-full">
+
+      <div class="column is-full field subscribe">
+        <div class="control">
+          <label class="checkbox">
+            <input id="id_subscribe" name="subscribe" type="checkbox" checked>
+            <p>Notify me with updates about ISIC Challenges.</p>
+          </label>
+          {% if form.subscribe.errors %}
+          <div class="help is-danger">
+            {{ form.subscribe.errors }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
 
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />

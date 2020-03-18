@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
 from core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
+from tracker.tasks import add_mailchimp_subscriber
 
 
 logger = logging.getLogger(__name__)
@@ -19,11 +20,16 @@ class CustomSignupForm(SignupForm):
         super().__init__(*args, **kwargs)
         self.fields['first_name'] = forms.CharField()
         self.fields['last_name'] = forms.CharField()
+        self.fields['subscribe'] = forms.BooleanField(required=False)
 
     def save(self, request):
         user = super().save(request)
         user.email = user.email.lower()
         user.save()
+
+        if self.cleaned_data['subscribe']:
+            add_mailchimp_subscriber.delay(user.email)
+
         return user
 
 
