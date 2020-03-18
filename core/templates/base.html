@@ -24,10 +24,10 @@
       });
     }
 
-    $(document).ready(function() {
-        $('a.track-outbound').each(function() {
-            $(this).attr('onclick', 'getOutboundLink("' + $(this).attr('href') + '"); return false;');
-        });
+    $(function() {
+      $('a.track-outbound').attr('onclick', function() {
+        return 'getOutboundLink("' + $(this).attr('href') + '"); return false;';
+      });
     });
     </script>
 
