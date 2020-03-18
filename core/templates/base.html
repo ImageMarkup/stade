@@ -12,6 +12,25 @@
     </script>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <script>
+    // See https://support.google.com/analytics/answer/7478520?hl=en
+    var getOutboundLink = function(url) {
+      gtag('event', 'click', {
+        'event_category': 'outbound',
+        'event_label': url,
+        'transport_type': 'beacon',
+        'event_callback': function(){document.location = url;}
+      });
+    }
+
+    $(document).ready(function() {
+        $('a.track-outbound').each(function() {
+            $(this).attr('onclick', 'getOutboundLink("' + $(this).attr('href') + '"); return false;');
+        });
+    });
+    </script>
+
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
     {% block extra_head %}{% endblock %}
