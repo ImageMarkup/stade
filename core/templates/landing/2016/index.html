@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 <section class="section container">
         <div class="section-header">
-                <h1>{{ challenge.name }} Challenge {% if challenge.locked%}[Closed]{% endif %}</h1>
+                <h1>{{ challenge.name }} Challenge {% if challenge.locked %}[Closed]{% endif %}</h1>
         </div>
         <div class="section-content">
                 <div class="c-challenge-instructions-container">
@@ -294,15 +294,15 @@
                                 Louisiana)</li>
                         </ul>
                 </div>
-                <ul>
+                <ul class="landing-tasks">
                         {% for task in challenge.tasks.all %}
                         <li>
-                                <a href="{% url 'task-landing' challenge_nicename task.id %}"><i class=
+                                <a href=
+                                "{% url 'task-landing' challenge_nicename task.id %}">
+                                <i class=
                                 "material-icons">timelapse</i>
                                 <p>{{task.name}}</p></a>
                         </li>{% endfor %}
                 </ul>
         </div>
-</section>
-
-{% endblock %}
+</section>{% endblock %}

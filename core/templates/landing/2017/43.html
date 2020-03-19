@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
+<section class="section container">
+    <div class="section-header">
+        <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked %}[Closed]{% endif %}</h1>
+    </div>
+    <div class="section-content">
+        <div class="c-phase-instructions-container">
+            <h2><strong>Streaks</strong></h2>
+            <p><img src=
+            "{% static 'img/landing/2017/43/streaks-collage.png' %}"
+            alt="streaks.jpg"></p>
+            <h2><strong>Pigment Network</strong></h2>
+            <p><img src=
+            "{% static 'img/landing/2017/43/pigment-network.png' %}"
+            alt="pnetwork.jpg"></p>
+            <h2><strong>Goal</strong></h2>
+            <p>Participants are asked to submit automated predictions
+            of clinical dermoscopic features on supplied superpixel
+            tiles. Clinical dermoscopic features are recognized by
+            expert dermatologists when evaluating skin lesions and
+            inform their decision to biopsy suspicious skin
+            lesions.</p>
+            <h2><strong>Data</strong></h2>
+            <p>Lesion dermoscopic feature data includes the original
+            lesion image, a corresponding superpixel mask, and
+            superpixel-mapped expert annotations of the presence and
+            absence of the following features:</p>
+            <ul>
+                <li>Network</li>
+                <li>Negative Network</li>
+                <li>Streaks</li>
+                <li>Milia-like Cysts</li>
+            </ul>
+            <h4><strong>Superpixel Parsing Overview</strong></h4>
+            <p>To reduce the variability and dimensionality of spatial
+            feature annotations, the lesion images have been subdivided
+            into superpixels using the <a href=
+            "http://ivrl.epfl.ch/research/superpixels#SLICO">SLIC0
+            algorithm</a>.</p>
+            <p>Tools to automatically extract super pixels from images,
+            to help fascinate ingestion into established image
+            classification pipelines, have been developed to assist
+            participants. These tools generate a single image per
+            superpixel, and a corresponding ground truth file, in a
+            similar format to Part 3 of the challenge. The tools are
+            available <a href=
+            "https://gist.github.com/brianhelba/da6b3b305cb475b6166bda22226ac7c8">
+            here</a>.</p>
+            <p>A lesion image's superpixels should be semantically
+            considered as an integer-valued label map mask image. All
+            superpixel mask images will have the exact same X and Y
+            spatial dimensions as their corresponding lesion image.
+            However, to simplify storage and distribution, superpixel
+            masks are encoded as 8-bit-per-channel 3-channel RGB
+            <a href=
+            "https://en.wikipedia.org/wiki/Portable_Network_Graphics">PNG
+            images</a>. To decode a PNG superpixel image into a label
+            map, use the following algorithm (expressed as
+            pseudocode):</p>
+            <pre><code>uint32 decodeSuperpixelIndex(uint8 pixelValue[3]) {
+    uint8 red = pixelValue[0]
+    uint8 green = pixelValue[1]
+    uint8 blue = pixelValue[2]
+    // "&lt;&lt;" is the bit-shift operator
+    uint32 index = (red) + (green &lt;&lt; 8) + (blue &lt;&lt; 16)
+    return index
+    }
+    </code></pre>
+            <h4><strong>Training Data</strong></h4>
+            <p><strong>Dermoscopy Image & Superpixel Data</strong></p>
+            <p>The training image and superpixel data file is a ZIP
+            file, containing 2000 lesion images in JPEG format and 2000
+            corresponding superpixel masks in PNG format. All lesion
+            images are named using the scheme
+            <code>ISIC_&lt;image_id&gt;.jpg</code>, where
+            <code>&lt;image_id&gt;</code> is a 7-digit unique
+            identifier. EXIF tags in the lesion images have been
+            removed; any remaining EXIF tags should not be relied upon
+            to provide accurate metadata. All superpixel masks are
+            named using the scheme
+            <code>ISIC_&lt;image_id&gt;_superpixels.png</code>, where
+            <code>&lt;image_id&gt;</code> matches the corresponding
+            lesion image for the superpixel mask.</p>
+            <p><strong>Ground Truth Annotations</strong></p>
+            <p>The training ground truth annotations file is a ZIP
+            file, containing 2000 dermoscopic feature files in <a href=
+            "http://www.json.org/">JSON format</a>. All feature files
+            are named using the scheme
+            <code>ISIC_&lt;image_id&gt;.json</code>, where
+            <code>&lt;image_id&gt;</code> matches the corresponding
+            Training Data lesion image and superpixel mask for the
+            feature file.</p>
+            <p>Each feature file contains a top-level JSON Object
+            (key-value map) with 4 keys: "network," "negative network,"
+            "streaks," and "milia-like cysts," representing the
+            dermoscopic features of interest. The value of each of
+            theses Object elements is a JSON Array, of length
+            <em>N</em>, where <em>N</em> is the total number of
+            superpixels in the corresponding superpixel mask. Each
+            value within the Array at position <em>k</em>, where
+            <em>0&lt;= k &lt; N</em>, corresponds to the region within
+            the decoded superpixel index <em>k</em>. The Array values
+            are each JSON Numbers, and equal to either:</p>
+            <ul>
+                <li><code>0</code>: representing the absence of a given
+                dermoscopic feature somewhere within the corresponding
+                superpixel's spatial extent</li>
+                <li><code>1</code>: representing the presence of a
+                given dermoscopic feature somewhere within the
+                corresponding superpixel's spatial extent</li>
+            </ul>
+            <p>For example, the feature file:</p>
+            <pre><code>{
+    "network": [0, 0, 1, 0, 1, 0],
+    "streaks": [1, 1, 0, 0, 0, 0]
+    }
+    </code></pre>
+            <p>would correspond to a superpixel file with 6 superpixels
+            (encoded in PNG as <code>R=0, G=0, B=0</code> through
+            <code>R=5, G=0, B=0</code>). The lesion image pixels
+            overlaid by superpixels 2 and 4 (counting from 0) would
+            contain the "network" dermoscopic feature, while the lesion
+            image pixels overlaid by superpixels 0 and 1 would contain
+            the "streaks" dermoscopic feature.</p>
+            <p>Feature data were obtained from expert superpixel-level
+            annotations, with cross-validation from multiple
+            evaluators.</p>
+            <p>The dermoscopic features are not mutually exclusive
+            (i.e. both may be present within the same spatial region or
+            superpixel). Any superpixel tile not annotated as positive
+            for a feature may be considered to be a negative
+            example.</p>
+            <p>Participants are not strictly required to utilize the
+            training data in the development of their lesion
+            classification algorithm and are free to train their
+            algorithm using external data sources. Any such sources
+            must be properly cited in the supplied 4 page abstract.</p>
+                <h2><strong>Submission Instructions</strong></h2>
+                <p>The <strong>Test Data</strong> files are in a ZIP
+                container, and are the exact same format as the
+                <strong>Training
+                Data</strong>. The <strong>Test Data</strong> files
+                should be downloaded via the "Download test dataset"
+                button below. <em>Note: you must be signed-in and
+                registered to participate in this phase of the
+                challenge in order for this link to be
+                visible.</em></p>
+                <p>The submitted *<em>Test Results</em> file should be
+                in the same format as the <strong>Training
+                Ground Truth</strong> file. Specifically, the
+                results file should be a ZIP file of 600 feature files
+                in JSON format. Each feature file should contain the
+                participant's best attempt at a fully automated
+                per-superpixel detection of the features on the
+                corresponding lesion image and superpixel mask. Each
+                feature file should be named and encoded according to
+                the conventions of the training ground truth.</p>
+                <p>Note, the JSON Numbers in the submitted Test Results
+                should not be only <code>0.0</code> and
+                <code>1.0</code>, but instead should be floating-point
+                values in the closed interval <code>[0.0, 1.0]</code>,
+                where values:</p>
+                <ul>
+                    <li><code>0.0</code> to <code>0.5</code>: represent
+                    some confidence that the feature is absent from the
+                    lesion image anywhere within the given superpixel,
+                    with relatively lesser values indicating relatively
+                    more confidence in the absence</li>
+                    <li><code>&gt; 0.5</code> to <code>1.0</code>:
+                    represent some confidence that the feature is
+                    present in the lesion image anywhere within the
+                    given superpixel, with relatively greater values
+                    indicating relatively more confidence in the
+                    presence</li>
+                </ul>
+                <p>Note, arbitrary score ranges and thresholds can be
+                converted to the range of 0.0 to 1.0, with a threshold
+                of 0.5, trivially using the following sigmoid
+                conversion:</p>
+                <pre><code>1 / (1 + e^(-(a(x - b))))
+    </code></pre>
+                <p>where <code>x</code> is the original score,
+                <code>b</code> is the binary threshold, and
+                <code>a</code> is a scaling parameter (i.e. the inverse
+                measured standard deviation on a held-out dataset).</p>
+            <h2><strong>Evaluation</strong></h2>
+            <p>Participants will be ranked and awards granted based
+            only on AUC. However, submissions will additionally be
+            compared using using a variety of common classification
+            metrics, including:</p>
+            <ul>
+                <li>
+                    <a href=
+                    "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity">
+                    sensitivity</a>
+                </li>
+                <li>
+                    <a href=
+                    "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity">
+                    specificity</a>
+                </li>
+                <li>
+                    <a href=
+                    "https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification">
+                    accuracy</a>
+                </li>
+                <li>
+                    <a href=
+                    "https://en.wikipedia.org/wiki/Information_retrieval#Average_precision">
+                    average precision evaluated at sensitivity of
+                    100%</a>
+                </li>
+            </ul>
+            <p>Some useful resources for metrics computation
+            include:</p>
+            <ul>
+                <li>
+                    <a href=
+                    "https://en.wikipedia.org/wiki/Roc_curve">the ROC
+                    curve</a>
+                </li>
+                <li>
+                    <a href=
+                    "http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">
+                    sklearn library metric functions</a>
+                    <ul>
+                        <li>
+                            <a href=
+                            "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score">
+                            average precision</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
