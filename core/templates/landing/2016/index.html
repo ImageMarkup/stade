@@ -5,21 +5,6 @@
         </div>
         <div class="section-content">
                 <div class="c-challenge-instructions-container">
-                        <h2>News</h2>
-                        <p><strong>This challenge is completed.
-                        Training and test data continue to be
-                        available through the task links at the
-                        bottom of the page.</strong></p>
-                        <p><strong>December 10th, 2016</strong>:
-                        PLEASE NOTE THAT THE 2017 ISIC-ISBI
-                        CHALLENGE HAS BEEN LAUNCHED. The 2017
-                        Challenge page can be accessed at <a href=
-                        "http://challenge2017.isic-archive.com/">http://challenge2017.isic-archive.com/</a></p>
-                        <p><strong>May 11th, 2016</strong>: New
-                        information regarding the challenge summary
-                        publication, and participant forums have
-                        been posted. See sections below for
-                        details.</p>
                         <h2>Summary</h2>
                         <p>The overarching goal of the challenge is
                         to develop image analysis tools to enable
@@ -254,18 +239,6 @@
                         <p>This paper is accessible from the
                         following link: <a href=
                         "https://arxiv.org/abs/1605.01397">https://arxiv.org/abs/1605.01397</a></p>
-                        <h2>ISIC Challenge Forum</h2>
-                        <p><strong>Updated: May 11th,
-                        2016</strong></p>
-                        <p>We have created a public forum for
-                        registrants to provide feedback, which may
-                        influence the organization of next year’s
-                        challenge. We invite all to participate in
-                        discussion, and help make next year’s
-                        challenge as good as possible.</p>
-                        <p>The forum can be found at the following
-                        link: <a href=
-                        "http://forum.isic-archive.com">http://forum.isic-archive.com</a></p>
                         <h2>Contact Information</h2>
                         <p>Support for the challenge can be
                         attained by contacting the sponsors at
@@ -295,7 +268,7 @@
                         </ul>
                 </div>
                 <ul class="landing-tasks">
-                        {% for task in challenge.tasks.all %}
+                        {% for task in challenge.tasks.all|dictsort:"name" %}
                         <li>
                                 <a href=
                                 "{% url 'task-landing' challenge_nicename task.id %}">

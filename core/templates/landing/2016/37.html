@@ -1,11 +1,13 @@
 {% extends "base.html" %} {% block content %}
+{% load static %}
+
 <section class="section container">
         <div class="section-header">
                 <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked%}[Closed]{% endif %}</h1>
         </div>
         <div class="section-content">
-
-<h2>Goal
+          <img src="{% static 'img/landing/2016/37/segmentation.jpg' %}" alt="" />
+          <h2>Goal</h2>
 <p>Participants are asked to submit automated predictions of lesion
 segmentation boundaries from dermoscopic images.</p>
 <h2>Data</h2>
