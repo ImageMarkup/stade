@@ -1,0 +1,72 @@
+{% extends "base.html" %} {% block content %}
+{% load static %}
+
+<section class="section container">
+        <div class="section-header">
+                <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked%}[Closed]{% endif %}</h1>
+        </div>
+        <div class="section-content">
+          <img src="{% static 'img/landing/2016/41/classification.jpg' %}" alt="" />
+
+<h2>Goal</h2>
+<p>In this task, participants are asked to classify images as either malignant (melanoma) or non-malignant (non-melanoma), given a candidate lesion segmentation.</p>
+<h2>Data</h2>
+<p>This challenge uses set of images as Part 3, but includes lesion segmentations in both the Test Data and Training Data sets.</p>
+<p>Lesion classification data includes the original image, paired with a gold standard (definitive) malignancy diagnosis.</p>
+<h4>Training Data</h4>
+<p><strong><a href="https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part3B_Training_Data.zip">Download Training Data</a></strong></p>
+<p>The <strong>Training Data</strong> file is a ZIP file, containing 900 dermoscopic lesion images in JPEG format and 900 associated segmentation binary masks in PNG format. All lesion images are named using the scheme <code>ISIC_&lt;image_id&gt;.jpg</code>, where <code>&lt;image_id&gt;</code> is a 7-digit unique identifier. EXIF tags in the images have been removed; any remaining EXIF tags should not be relied upon to provide accurate metadata. All segmentation masks are named using the scheme <code>ISIC_&lt;image_id&gt;_Segmentation.png</code>, where <code>&lt;image_id&gt;</code> matches the corresponding lesion image for the mask. All segmentation mask images will have the exact same dimensions as their corresponding lesion image. Segmentation mask images are encoded as single-channel (grayscale) 8-bit PNGs (to provide lossless compression), where each pixel is either:</p>
+<ul>
+<li><code>0</code>: representing the background of the image, or areas outside the lesion</li>
+<li><code>255</code>: representing the foreground of the image, or areas inside the lesion</li>
+</ul>
+<h4>Training Ground Truth</h4>
+<p><strong><a href="https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part3B_Training_GroundTruth.csv">Download Training Ground Truth</a></strong></p>
+<p>The <strong>Training Ground Truth</strong> file is a single CSV (<a href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated value</a>) file, containing 2 columns and 900 rows. The first column of each row contains a string of the form <code>ISIC_&lt;image_id&gt;</code>, where <code>&lt;image_id&gt;</code> matches the corresponding Training Data image. The second column of each row contains either the string:</p>
+<ul>
+<li><code>benign</code>: representing non-malignant</li>
+<li><code>malignant</code>: representing malignant</li>
+</ul>
+<h4>Notes</h4>
+<p>Masks were created by an expert clinician, using either a semi-automated process (using a user-provided seed point, a user-tuned flood-fill algorithm, and morphological filtering) or a manual process (from a series of user-provided polyline points).</p>
+<p>Malignancy diagnosis data were obtained from expert consensus and pathology report information.</p>
+<p>Participants are not strictly required to utilize the training data in the development of their lesion classification algorithm and are free to train their algorithm using external data sources.</p>
+<h2>Submission Format</h2>
+<h4>Test Data</h4>
+<p>Given the <strong>Test Data</strong> file, a ZIP file of 379 images and 379 associated segmentation masks, of the exact same format as the Training Data, participants are expected to generate and submit a file of <strong>Test Results</strong>.</p>
+<p>The Test Data file should be downloaded via the "Download test dataset" button below, which becomes available once a participant is signed-in and opts to participate in this phase of the challenge.</p>
+<h4>Test Results</h4>
+<p>The submitted <strong>Test Results</strong> file should <em>not</em> use the same format as the Training Ground Truth file. Rather, the Test Results file should be a single CSV file, containing 2 columns and 379 rows. The first column of each row should contain a string of the form <code>ISIC_&lt;image_id&gt;</code>, where <code>&lt;image_id&gt;</code> matches a corresponding Test Data image. The second column of each row should contain a floating-point value in the closed interval <code>[0.0, 1.0]</code>, where values:</p>
+<ul>
+<li><code>0.0</code> to <code>0.5</code>: represent some confidence in the prediction that the lesion in the image in non-malignant (i.e. benign), with relatively lesser values indicating relatively more confidence in non-malignancy</li>
+<li><code>&gt; 0.5</code> to <code>1.0</code>: represent some confidence in the prediction that the lesion in the image is malignant, with relatively greater values indicating relatively more confidence in malignancy</li>
+</ul>
+<p>Note, arbitrary score ranges and thresholds can be converted to the range of 0.0 to 1.0, with a threshold of 0.5, trivially using the following sigmoid conversion:</p>
+<pre><code>1 / (1 + e^(-(a(x - b))))
+</code></pre>
+<p>where <code>x</code> is the original score, <code>b</code> is the binary threshold, and <code>a</code> is a scaling parameter (often the measured standard deviation on a held-out dataset).</p>
+<h4>Submission Process</h4>
+<p>Shortly after being submitted, participants will receive a confirmation email to their registered email address to confirm that their submission was parsed and scored, or to provide a notification that parsing of their submission failed (with a link to details as to the cause of the failure). <strong>Participants should not consider their submission complete until receiving a confirmation email.</strong></p>
+<p>Multiple submissions may be made with absolutely no penalty. <strong>Only the most recent submission will be used to determine a participant's final score.</strong> Indeed, participants are encouraged to provide trial submissions early to ensure that the format of their submission is parsed and evaluated successfully, even if final results are not yet ready for submission.</p>
+<h2>Evaluation</h2>
+<p>Submitted Test Results classifications will be compared to private (until after the challenge ends) Test Ground Truth. The Test Ground Truth was produced from the exact same source and methodology as the Training Ground Truth (both sets were randomly sub-sampled from a larger data pool).</p>
+<p>Submissions will be compared using using a variety of common classification metrics, including:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity">sensitivity</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity">specificity</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification">accuracy</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Information_retrieval#Average_precision">average precision evaluated at sensitivity of 100%</a></li>
+</ul>
+<p><strong>However, participants will be ranked and awards granted based only on average precision.</strong></p>
+<p>Some useful resources for metrics computation include:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Roc_curve">the ROC curve</a></li>
+<li><a href="http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">sklearn library metric functions</a>
+<ul>
+<li><a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score">average precision</a></li>
+</ul></li>
+</ul>
+</div>
+        </div>
+</section>
+{% endblock %}

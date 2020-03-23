@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
+<section class="section container">
+        <div class="section-header">
+                <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked%}[Closed]{% endif %}</h1>
+        </div>
+        <div class="section-content">
+<div class="c-phase-instructions-container">
+    <p><img src="{% static 'img/landing/2017/42/segmentation.jpg' %}" /></p>
+    <h2><strong>Goal</strong></h2>
+    <p>Participants are asked to submit automated predictions of
+    lesion segmentation boundaries from dermoscopic images.</p>
+    <h2><strong>Data</strong></h2>
+    <p>Lesion segmentation data includes the original image, paired
+    with the expert manual tracing of the lesion boundaries in the
+    form of a binary mask.</p>
+    <h4><strong>Training Data</strong></h4>
+    <p><strong>Dermoscopy Image Data</strong></p>
+    <p>2000 images are provided as training data. The training data
+    file is a ZIP file, containing dermoscopic lesion images in
+    JPEG format. All images are named using the scheme
+    <code>ISIC_&lt;image_id&gt;.jpg</code>, where
+    <code>&lt;image_id&gt;</code> is a 7-digit unique identifier.
+    EXIF tags in the images have been removed; any remaining EXIF
+    tags should not be relied upon to provide accurate
+    metadata.</p>
+    <p><strong>Ground Truth Segmentations</strong></p>
+    <p>The training ground truth file is a ZIP file, containing
+    2000 binary mask images in PNG format. All masks are named
+    using the scheme
+    <code>ISIC_&lt;image_id&gt;_Segmentation.png</code>, where
+    <code>&lt;image_id&gt;</code> matches the corresponding
+    Training Data image for the mask. All mask images will have the
+    exact same dimensions as their corresponding lesion image. Mask
+    images are encoded as single-channel (grayscale) 8-bit PNGs (to
+    provide lossless compression), where each pixel is either:</p>
+    <ul>
+        <li><code>0</code>: representing the background of the
+        image, or areas outside the lesion</li>
+        <li><code>255</code>: representing the foreground of the
+        image, or areas inside the lesion</li>
+    </ul>
+    <p>Masks were created by an expert clinician, using either a
+    semi-automated process (using a user-provided seed point, a
+    user-tuned flood-fill algorithm, and morphological filtering)
+    or a manual process (from a series of user-provided polyline
+    points).</p>
+    <p>Participants are not strictly required to utilize the
+    training data in the development of their lesion segmentation
+    algorithm and are free to train their algorithm using external
+    data sources. Any such external sources of data must be
+    properly cited in the supplied abstract.</p>
+
+
+<h3><strong>Submission Instructions</strong></h3>
+<p>The <strong>Test Data</strong> files are in a ZIP container, and are the exact same format as the <strong>Training Data</strong>. The <strong>Test Data</strong> files should be downloaded via the "Download test dataset" button below. <em>Note: you must be signed-in and registered to participate in this phase of the challenge in order for this link to be visible.</em></p>
+
+
+<p>The submitted <strong>Test Results</strong> file should be in the exact same format as the <strong>Training Ground Truth</strong> file. Specifically, the results file should be a ZIP file of 600 binary mask images in PNG format. Each mask should contain the participant's best attempt at a fully automated lesion segmentation of the corresponding image in the <strong>Test Data</strong>. Each mask should be named and encoded according to the conventions of the <strong>Training Ground Truth</strong>.</p>
+
+    </ul>
+    <p>Participants may make unlimited and independent submissions
+    to each phase, but only the most recent submission to the
+    <strong>Test Phase</strong> will be used for official
+    judging.</p>
+    <h2><strong>Evaluation</strong></h2>
+    <p>Participants will be ranked and awards granted based only on
+    the Jaccard index. Additionally, submitted segmentations will
+    be compared the following variety of metrics, for scientific
+    completeness:</p>
+    <ul>
+        <li>
+            <a href=
+            "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity">
+            sensitivity</a>
+        </li>
+        <li>
+            <a href=
+            "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity">
+            specificity</a>
+        </li>
+        <li>
+            <a href=
+            "https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification">
+            accuracy</a>
+        </li>
+        <li>
+            <a href=
+            "https://en.wikipedia.org/wiki/Jaccard_index">Jaccard
+            index</a>
+        </li>
+        <li>
+            <a href=
+            "https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient">
+            Dice coefficient</a>
+        </li>
+    </ul>
+    <p>Some useful resources for metrics computation include:</p>
+    <ul>
+        <li>
+            <a href="https://en.wikipedia.org/wiki/Roc_curve">the
+            ROC curve</a>
+        </li>
+        <li>
+            <a href=
+            "http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">
+            sklearn library metric functions</a>
+            <ul>
+                <li>
+                    <a href=
+                    "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.jaccard_similarity_score.html#sklearn.metrics.jaccard_similarity_score">
+                    jaccard</a>
+                </li>
+                <li>
+                    <a href=
+                    "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score">
+                    average precision</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+{% endblock %}

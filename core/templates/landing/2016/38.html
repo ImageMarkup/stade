@@ -1,0 +1,115 @@
+{% extends "base.html" %} {% block content %}
+{% load static %}
+
+<section class="section container">
+        <div class="section-header">
+                <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked%}[Closed]{% endif %}</h1>
+        </div>
+        <div class="section-content">
+          <img src="{% static 'img/landing/2016/38/overview.jpg' %}" alt="" />
+<h2>Goal</h2>
+<p>Participants are challenged to submit automated predictions of clinical dermoscopic features on supplied superpixel tiles.</p>
+<h2>Data</h2>
+<p>Lesion dermoscopic feature data includes the original lesion image and a corresponding superpixel mask, paired with superpixel-wise expert annotations of the presence and absence of the "globules" and "streaks" dermoscopic features.</p>
+<h4>Superpixel Overview</h4>
+<p>To reduce the variability and dimensionality of spatial feature annotations, the lesion images have been subdivided into superpixels using the <a href="http://ivrl.epfl.ch/research/superpixels#SLICO">SLIC0 algorithm</a>.</p>
+<p>A lesion image's superpixels should be semantically considered as an integer-valued label map mask image. All superpixel mask images will have the exact same X and Y spatial dimensions as their corresponding lesion image. However, to simplify storage and distribution, superpixel masks are encoded as 8-bit-per-channel 3-channel RGB <a href="https://en.wikipedia.org/wiki/Portable_Network_Graphics">PNG images</a>. To decode a PNG superpixel image into a label map, use the following algorithm (expressed as pseudocode):</p>
+<pre><code>uint32 decodeSuperpixelIndex(uint8 pixelValue[3]) {
+    uint8 red = pixelValue[0]
+    uint8 green = pixelValue[1]
+    uint8 blue = pixelValue[2]
+    // "&lt;&lt;" is the bit-shift operator
+    uint32 index = (red) + (green &lt;&lt; 8) + (blue &lt;&lt; 16)
+    return index
+}
+</code></pre>
+<p>As an actual Python function using NumPy, this algorithm is:</p>
+<pre><code>import numpy
+def decodeSuperpixelIndex(rgbValue):
+    """
+    Decode an RGB representation of a superpixel label into its native scalar value.
+    :param pixelValue: A single pixel, or a 3-channel image.
+    :type pixelValue: numpy.ndarray of uint8, with a shape [3] or [n, m, 3]
+    """
+    return \
+        (rgbValue[..., 0].astype(numpy.uint64)) + \
+        (rgbValue[..., 1].astype(numpy.uint64) &lt;&lt; numpy.uint64(8)) + \
+        (rgbValue[..., 2].astype(numpy.uint64) &lt;&lt; numpy.uint64(16))
+
+# This may be used as:
+from PIL import Image
+image = Image.open('ISIC_0000003_superpixels.png')
+assert image.mode == 'RGB'
+image = numpy.array(image)
+image = decodeSuperpixelIndex(image)
+assert image.shape == (767, 1022)
+assert image.min() == 0
+assert image.max() == 990
+</code></pre>
+<h4>Training Data</h4>
+<p><strong><a href="https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part2_Training_Data.zip">Download Training Data</a></strong></p>
+<p>The <strong>Training Data</strong> file is a ZIP file, containing 807 lesion images in JPEG format and 807 corresponding superpixel masks in PNG format. All lesion images are named using the scheme <code>ISIC_&lt;image_id&gt;.jpg</code>, where <code>&lt;image_id&gt;</code> is a 7-digit unique identifier. EXIF tags in the lesion images have been removed; any remaining EXIF tags should not be relied upon to provide accurate metadata. All superpixel masks are named using the scheme <code>ISIC_&lt;image_id&gt;_superpixels.png</code>, where <code>&lt;image_id&gt;</code> matches the corresponding lesion image for the superpixel mask.</p>
+<h4>Training Ground Truth</h4>
+<p><strong><a href="https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part2_Training_GroundTruth.zip">Download Training Ground Truth</a></strong></p>
+<p>The <strong>Training Ground Truth</strong> file is a ZIP file, containing 807 dermoscopic feature files in <a href="http://www.json.org/">JSON format</a>. All feature files are named using the scheme <code>ISIC_&lt;image_id&gt;.json</code>, where <code>&lt;image_id&gt;</code> matches the corresponding Training Data lesion image and superpixel mask for the feature file.</p>
+<p>Each feature file contains a top-level JSON Object (key-value map) with 2 keys:<code>globules</code> and <code>streaks</code>, representing the dermoscopic features of interest. The value of each of theses Object elements is a JSON Array, of length <em>N</em>, where <em>N</em> is the total number of superpixels in the corresponding superpixel mask. Each value within the Array at position <em>k</em>, where <em>0&lt;= k &lt; N</em>, corresponds to the region within the decoded superpixel index <em>k</em>. The Array values are each JSON Numbers, and equal to either:</p>
+<ul>
+<li><code>0</code>: representing the absence of a given dermoscopic feature somewhere within the corresponding superpixel's spatial extent</li>
+<li><code>1</code>: representing the presence of a given dermoscopic feature somewhere within the corresponding superpixel's spatial extent</li>
+</ul>
+<p>For example, the feature file:</p>
+<pre><code>{
+    "globules": [0, 0, 1, 0, 1, 0],
+    "streaks": [1, 1, 0, 0, 0, 0]
+}
+</code></pre>
+<p>would correspond to a superpixel file with 6 superpixels (encoded in PNG as <code>R=0, G=0, B=0</code> through <code>R=5, G=0, B=0</code>). The lesion image pixels overlaid by superpixels 2 and 4 (counting from 0) would contain the "globules" dermoscopic feature, while the lesion image pixels overlaid by superpixels 0 and 1 would contain the "streaks" dermoscopic feature.</p>
+<h4>Notes</h4>
+<p>Feature data were obtained from expert superpixel-level annotations, with cross-validation from multiple evaluators.</p>
+<p>The dermoscopic features of "globules" and "streaks" are not mutually exclusive (i.e. both may be present within the same spatial region or superpixel). Additionally, <strong>a dermoscopic feature must only be present anywhere within a superpixel region for the superpixel to be considered positive for that feature</strong>; it is not required that the dermoscopic feature fill the entire superpixel region.</p>
+<p>Relevant information to automatically determine the label of a superpixel tile may not necessarily be constrained to within the tile alone, but may involve contextual information of the surrounding region as well.</p>
+<p>Participants are not strictly required to utilize the training data in the development of their lesion classification algorithm and are free to train their algorithm using external data sources.</p>
+<h4>Dermoscopic Feature Tutorial</h4>
+<p>The following tutorial is designed to assist participants in understanding the underlying semantics of the "globules" and "streaks" dermoscopic features:</p>
+<p><a href="http://isdis.net/wp-content/uploads/2016/01/Globules-and-Streaks-tutorial-for-ISBI-landing-page.pptx"><img src="http://isdis.net/wp-content/uploads/2016/01/ChallengeTutorial-e1452087516474.png" alt="Globules and Streaks Tutorial"></a></p>
+<h2>Submission Format</h2>
+<h4>Test Data</h4>
+<p>Given the <strong>Test Data</strong> file, a ZIP file of 335 lesion images and 335 corresponding superpixel masks of the exact same formats as the Training Data, participants are expected to generate and submit a file of <strong>Test Results</strong>.</p>
+<p>The Test Data file should be downloaded via the "Download test dataset" button below, which becomes available once a participant is signed-in and opts to participate in this phase of the challenge.</p>
+<h4>Test Results</h4>
+<p>The submitted <strong>Test Results</strong> file should be in the same format as the Training Ground Truth file. Specifically, the Test Results file should be a ZIP file of 335 feature files in JSON format. Each feature file should contain the participant's best attempt at a fully automated per-superpixel detection of the <code>globules</code> and <code>streaks</code> features on the corresponding lesion image and superpixel mask in the Test Data. Each feature file should be named and encoded according to the conventions of the Training Ground Truth.</p>
+<p>Note, the JSON Numbers in the submitted Test Results should not be only <code>0.0</code> and <code>1.0</code>, but instead should be floating-point values in the closed interval <code>[0.0, 1.0]</code>, where values:</p>
+<ul>
+<li><code>0.0</code> to <code>0.5</code>: represent some confidence that the feature is absent from the lesion image anywhere within the given superpixel, with relatively lesser values indicating relatively more confidence in the absence</li>
+<li><code>&gt; 0.5</code> to <code>1.0</code>: represent some confidence that the feature is present in the lesion image anywhere within the given superpixel, with relatively greater values indicating relatively more confidence in the presence</li>
+</ul>
+<p>Note, arbitrary score ranges and thresholds can be converted to the range of 0.0 to 1.0, with a threshold of 0.5, trivially using the following sigmoid conversion:</p>
+<pre><code>1 / (1 + e^(-(a(x - b))))
+</code></pre>
+<p>where <code>x</code> is the original score, <code>b</code> is the binary threshold, and <code>a</code> is a scaling parameter (often the measured standard deviation on a held-out dataset).</p>
+<h4>Submission Process</h4>
+<p>Shortly after being submitted, participants will receive a confirmation email to their registered email address to confirm that their submission was parsed and scored, or to provide a notification that parsing of their submission failed (with a link to details as to the cause of the failure). <strong>Participants should not consider their submission complete until receiving a confirmation email.</strong></p>
+<p>Multiple submissions may be made with absolutely no penalty. <strong>Only the most recent submission will be used to determine a participant's final score.</strong> Indeed, participants are encouraged to provide trial submissions early to ensure that the format of their submission is parsed and evaluated successfully, even if final results are not yet ready for submission.</p>
+<h2>Evaluation</h2>
+<p>Submitted Test Results feature classifications will be compared to private (until after the challenge ends) Test Ground Truth. The Test Ground Truth was produced from the exact same source and methodology as the Training Ground Truth (both sets were randomly sub-sampled from a larger data pool).</p>
+<p>Submissions will be compared using using a variety of common classification metrics, including:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity">sensitivity</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity">specificity</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification">accuracy</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Information_retrieval#Average_precision">average precision evaluated at sensitivity of 100%</a></li>
+</ul>
+<p><strong>However, participants will be ranked and awards granted based only on average precision.</strong></p>
+<p>Some useful resources for metrics computation include:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Roc_curve">the ROC curve</a></li>
+<li><a href="http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">sklearn library metric functions</a>
+<ul>
+<li><a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score">average precision</a></li>
+</ul></li>
+</ul>
+
+        </div>
+</section>
+
+{% endblock %}

@@ -59,6 +59,8 @@ urlpatterns = [
         name='submission-scores',
     ),
     path('data', TemplateView.as_view(template_name='data.html'), name='data'),
+    path('landing/<challenge_nicename>', views.challenge_landing, name='challenge-landing'),
+    path('landing/<challenge_nicename>/<int:task_id>', views.task_landing, name='task-landing'),
 ]
 
 handler500 = views.handler500

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
+<section class="section container">
+    <div class="section-header">
+        <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked %}[Closed]{% endif %}</h1>
+    </div>
+    <div class="section-content">
+
+					<h2><strong>Goal</strong></h2>
+<p>Submit automated predictions of disease classification within&nbsp;dermoscopic images.</p>
+<p>Possible disease categories are:</p>
+<ol>
+<li><a href="https://dermoscopedia.org/Melanoma" target="_blank" rel="noopener">Melanoma</a></li>
+<li><a href="https://dermoscopedia.org/Benign_Melanocytic_lesions" target="_blank" rel="noopener">Melanocytic nevus</a></li>
+<li><a href="https://dermoscopedia.org/Basal_cell_carcinoma" target="_blank" rel="noopener">Basal cell carcinoma</a></li>
+<li><a href="https://dermoscopedia.org/Actinic_keratosis_/_Bowen%27s_disease_/_keratoacanthoma_/_squamous_cell_carcinoma" target="_blank" rel="noopener">Actinic keratosis / Bowen’s disease (intraepithelial carcinoma)</a></li>
+<li><a href="https://dermoscopedia.org/Solar_lentigines_/_seborrheic_keratoses_/_lichen_planus-like_keratosis" target="_blank" rel="noopener">Benign keratosis (solar lentigo / seborrheic keratosis / lichen planus-like keratosis)</a></li>
+<li><a href="https://dermoscopedia.org/Dermatofibromas" target="_blank" rel="noopener">Dermatofibroma</a></li>
+<li><a href="https://dermoscopedia.org/Vascular_lesions" target="_blank" rel="noopener">Vascular lesion</a></li>
+</ol>
+
+	<img src="{% static 'img/landing/2018/task3.png'%}">
+					<h2><strong>Data</strong></h2>
+<h3>Input Data</h3>
+<p>The input data are&nbsp;dermoscopic lesion images in JPEG format.</p>
+<p>All lesion images are named using the scheme&nbsp;<code>ISIC_<image_id>.jpg</image_id></code>, where <code><image_id></image_id></code>&nbsp;is a 7-digit unique identifier. EXIF tags in the images have been removed; any remaining EXIF tags should not be relied upon to provide accurate metadata.</p>
+<p>The lesion images come from the <a href="https://doi.org/10.7910/DVN/DBW86T">HAM10000 Dataset</a>, and were acquired with a variety of <a href="https://dermoscopedia.org/Principles_of_dermoscopy" target="_blank" rel="noopener">dermatoscope types</a>, from all anatomic sites (excluding mucosa and nails), from a historical sample of patients presented for skin cancer screening, from several different institutions. Images were collected with&nbsp;approval of the Ethics Review Committee of University of Queensland (Protocol-No. 2017001223) and Medical University of Vienna (Protocol-No. 1804/2017).</p>
+<p>The distribution of disease states represent a modified “real world” setting whereby there are more benign lesions than malignant lesions, but an over-representation of malignancies.</p>
+<h3>Response Data</h3>
+<p>The response data are sets of binary classifications for each of the 7 disease states, indicating the diagnosis of each input lesion image.</p>
+<p>Response data are all encoded within a single CSV file&nbsp;(<a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank" rel="noopener">comma-separated value</a>) file, with each classification response in a row. File columns must be:</p>
+<ol type="A">
+<li><code>image</code>: an input image identifier of the form <code>ISIC_<image_id></image_id></code></li>
+<li><code>MEL</code>: “Melanoma” diagnosis confidence</li>
+<li><code>NV</code>: “Melanocytic nevus” diagnosis confidence</li>
+<li><code>BCC</code>: “Basal cell carcinoma” diagnosis confidence</li>
+<li><code>AKIEC</code>: “Actinic keratosis / Bowen’s disease (intraepithelial carcinoma)” diagnosis confidence</li>
+<li><code>BKL</code>: “Benign keratosis (solar lentigo / seborrheic keratosis / lichen planus-like keratosis)” diagnosis confidence</li>
+<li><code>DF</code>: “Dermatofibroma” diagnosis confidence</li>
+<li><code>VASC</code>: “Vascular lesion” diagnosis confidence</li>
+</ol>
+<p>Diagnosis confidences are expressed as floating-point values in the closed interval <code>[0.0, 1.0]</code>, where <code>0.5</code> is used as the binary classification threshold.&nbsp;Note that arbitrary score ranges and thresholds can be converted to the range of <code>0.0</code> to <code>1.0</code>, with a threshold of <code>0.5</code>, trivially using the following sigmoid conversion:</p>
+<pre><code>1 / (1 + e^(-(a(x - b))))</code></pre>
+<p>where <code>x</code> is the original score, <code>b</code> is the binary threshold, and <code>a</code> is a scaling parameter (i.e. the inverse measured standard deviation on a held-out dataset). Predicted responses should set the binary threshold <code>b</code> to a value where the classification system is expected to achieve 89% sensitivity, although this is not required.</p>
+<p>Predicted diagnosis confidence values may vary independently, though exactly one disease state is actually present in each input lesion image.</p>
+<h4>Ground Truth Provenance</h4>
+<p>As detailed in the <a href="https://arxiv.org/abs/1803.10417">HAM10000 Dataset description</a>, diagnosis ground truth&nbsp;(provided for training and used internally for scoring validation and test phases) were established by one of the following methods:</p>
+<ul>
+<li>Histopathology</li>
+<li>Reflectance confocal microscopy</li>
+<li>Lesion did not change during digital dermatoscopic follow up over two years with at least three images</li>
+<li>Consensus of at least three expert dermatologists from a single image</li>
+</ul>
+<p>In all cases of malignancy, disease diagnoses were histopathologically confirmed.</p>
+					<h2><strong>Evaluation</strong></h2>
+<h3>Goal Metric</h3>
+<p>Predicted responses are scored using a&nbsp;normalized multi-class accuracy metric (balanced across categories). Tied positions will be broken using the area under the receiver operating characteristic curve (AUC) metric.</p>
+<h4>Rationale</h4>
+<p>Clinical application on skin lesion classification has two goals eventually: Giving specific information and treatment options for a lesion, and detecting skin cancer with a reasonable sensitivity and specificity. The first task needs a correct specific diagnosis out of multiple classes, whereas the second demands a binary decision “biopsy” versus “don’t biopsy”. In the former ISIC challenges, focus was on the second task, therefore this year we want to rank for the more ambitious metric of normalized multiclass accuracy, as it is also closer to real evaluation of a dermatologist. This is also important for the extending reader study, where the winning algorithm(s) will be compared to physicians performance in classification of digital images.</p>
+<h3>Other Metrics</h3>
+<p>Participants will be ranked and awards granted based only on the multiclass accuracy metric. However, for scientific completeness, predicted responses will also have the following metrics computed (comparing prediction vs. ground truth) for each image:</p>
+<h4>Individual Category Metrics</h4>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity" target="_blank" rel="noopener">sensitivity</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity" target="_blank" rel="noopener">specificity</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification" target="_blank" rel="noopener">accuracy</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve" target="_blank" rel="noopener">area under the receiver operating characteristic curve (AUC)</a></li>
+<li><a href="http://fastml.com/what-you-wanted-to-know-about-mean-average-precision/" target="_blank" rel="noopener">mean average precision</a></li>
+<li><a href="https://en.wikipedia.org/wiki/F1_score" target="_blank" rel="noopener">F1 score</a></li>
+<li>AUC integrated between 80% to 100% sensitivity (AUC80) for Melanoma diagnosis only</li>
+<li><a href="https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values" target="_blank" rel="noopener">positive predictive value (PPV)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values" target="_blank" rel="noopener">negative predictive value (NPV)</a></li>
+</ul>
+<h5>Aggregate Metrics</h5>
+<ul>
+<li>average AUC across all diagnoses</li>
+<li>malignant vs. benign diagnoses category AUC</li>
+</ul>
+<p>&nbsp;
+				</p>
+					<h2><strong>Submission Instructions</strong></h2>
+<p>To participate in this task:</p>
+<ol>
+<li>Train
+<ol>
+<li>Download the training input data and training ground truth response data.</li>
+<li>Develop an algorithm for generating lesion diagnosis classifications in general.</li>
+</ol>
+</li>
+<li>Validate (optional)
+<ol>
+<li>Download the validation input data.</li>
+<li>Run your algorithm on the validation Input data to produce validation predicted responses.</li>
+<li>Submit these validation predicted responses to receive an immediate score. This will provide feedback that your predicted responses have the correct data format and have reasonable performance. You may make unlimited submissions.</li>
+</ol>
+</li>
+<li>Test
+<ol>
+<li>Download the test input data.</li>
+<li>Run your algorithm on the test input data to produce test predicted responses.</li>
+<li>Submit these test predicted responses. You may submit a maximum of 3 separate approaches/algorithms to be evaluated independently. You may make unlimited submissions, but only the most recent submission for each approach will be used for official judging. Use the “brief description of your algorithm’s approach” field on the submission form to distinguish different approaches. Previously submitted approaches are available in the dropdown menu.</li>
+<li>Submit a manuscript describing your algorithm’s approach.</li>
+</ol>
+</li>
+</ol>
+
+    </div>
+</section>
+{% endblock %}
