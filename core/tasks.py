@@ -5,6 +5,7 @@ import io
 import os
 from pathlib import Path, PurePath
 import shutil
+from smtplib import SMTPServerDisconnected
 import tempfile
 from typing import Generator
 import uuid
@@ -207,7 +208,12 @@ def _score_submission(submission):
     return submission
 
 
-@shared_task(soft_time_limit=60 * 20, time_limit=60 * 21)
+@shared_task(
+    soft_time_limit=60 * 20,
+    time_limit=60 * 21,
+    autoretry_for=(SMTPServerDisconnected,),
+    retry_backoff=True,
+)
 def score_submission(submission_id, dry_run=False, notify=False):
     submission = Submission.objects.get(pk=submission_id)
     if not dry_run:
