@@ -9,21 +9,22 @@ logger = get_task_logger(__name__)
 
 @shared_task(time_limit=10)
 def add_mailchimp_subscriber(email):
-    r = requests.post(
+    resp = requests.post(
         f'{settings.MAILCHIMP_API_URL}/3.0/lists/{settings.MAILCHIMP_LIST_ID}/members',
         auth=('', settings.MAILCHIMP_API_KEY),
         headers={'Content-Type': 'application/json'},
         json={'email_address': email, 'status': 'subscribed', 'tags': ['stade']},
     )
+    resp_json = resp.json()
 
     # MailChimp API doesn't return special status codes for members already existing, or fake
     # emails So ignore them (since there's nothing we can really do) and only raise in the case of
     # a different, more legitimate error.
     if (
-        not r.ok
-        and r.json()['title'] != 'Member Exists'
-        and 'looks fake or invalid' not in r.json()['detail']
-        and 'signed up to a lot of lists very recently' not in r.json()['detail']
+        not resp.ok
+        and resp_json['title'] != 'Member Exists'
+        and 'looks fake or invalid' not in resp_json['detail']
+        and 'signed up to a lot of lists very recently' not in resp_json['detail']
     ):
-        logger.info(r.text)
-        r.raise_for_status()
+        logger.info(resp.text)
+        resp.raise_for_status()
