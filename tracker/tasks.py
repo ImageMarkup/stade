@@ -23,6 +23,7 @@ def add_mailchimp_subscriber(email):
         not r.ok
         and r.json()['title'] != 'Member Exists'
         and 'looks fake or invalid' not in r.json()['detail']
+        and 'signed up to a lot of lists very recently' not in r.json()['detail']
     ):
-        logger.error(r.text)
+        logger.info(r.text)
         r.raise_for_status()
