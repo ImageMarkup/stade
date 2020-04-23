@@ -269,13 +269,14 @@ def dashboard(request):
     context = {'num_users': User.objects.count(), 'challenges': []}
 
     if not settings.DEBUG:
-        r = requests.get(
+        resp = requests.get(
             f'{settings.MAILCHIMP_API_URL}/3.0/lists/{settings.MAILCHIMP_LIST_ID}',
             auth=('', settings.MAILCHIMP_API_KEY),
             headers={'Content-Type': 'application/json'},
         )
-        r.raise_for_status()
-        context['num_mailchimp_subscribers'] = r.json()['stats']['member_count']
+        resp.raise_for_status()
+        resp_json = resp.json()
+        context['num_mailchimp_subscribers'] = resp_json['stats']['member_count']
     else:
         context['num_mailchimp_subscribers'] = 5000
 
