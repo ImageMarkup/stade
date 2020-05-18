@@ -245,7 +245,7 @@ def send_team_invitation(invite_id):
             render_to_string('email/team_invite_existing_user.txt', context),
             settings.DEFAULT_FROM_EMAIL,
             [invite.recipient],
-            html_message=render_to_string(f'email/team_invite_existing_user.html', context),
+            html_message=render_to_string('email/team_invite_existing_user.html', context),
         )
     else:
         send_mail(
@@ -253,5 +253,5 @@ def send_team_invitation(invite_id):
             render_to_string('email/team_invite_new_user.txt', context),
             settings.DEFAULT_FROM_EMAIL,
             [invite.recipient],
-            html_message=render_to_string(f'email/team_invite_new_user.html', context),
+            html_message=render_to_string('email/team_invite_new_user.html', context),
         )

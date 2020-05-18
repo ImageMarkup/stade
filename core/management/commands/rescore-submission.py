@@ -37,7 +37,7 @@ class Command(BaseCommand):
                 self.stderr.write(f'failed to score submission: {new_submission.fail_reason}')
                 return
             elif new_submission.status == Submission.Status.INTERNAL_FAILURE:
-                self.stderr.write(f'failed to score submission: internal failure')
+                self.stderr.write('failed to score submission: internal failure')
                 return
 
             old_submission = Submission.objects.get(pk=submission.id)
