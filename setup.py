@@ -6,6 +6,7 @@ setup(
     python_requires='>=3.7.0',
     install_requires=[
         'boto3',
+        'cachier',
         'celery',
         'dictdiffer',
         'django',
@@ -19,6 +20,7 @@ setup(
         'djangorestframework',
         'isic-challenge-scoring',
         'psycopg2',
+        'python-magic',
         'requests',
         'rules',
         'uritemplate',
