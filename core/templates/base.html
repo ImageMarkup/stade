@@ -42,6 +42,19 @@
         <div class="logo">
           <h1><a href="{% url 'index' %}"><img src="{% static 'img/isic_logo.svg' %}" alt="ISIC Challenge"></a></h1>
         </div>
+        <div class="navbar-menu ml-3">
+            <div class="navbar-start">
+              <a class="navbar-item" href="{% url 'data' %}">
+                Data
+              </a>
+              <a class="navbar-item" href="{% url 'challenges' %}">
+                Challenges
+              </a>
+              <a class="navbar-item" href="{% url 'challenge-landing' 'live' %}">
+                ISIC Live
+              </a>
+            </div>
+        </div>
         <div class="navigation">
           <ul class="navbar">
             {% if user.is_authenticated %}

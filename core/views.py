@@ -124,8 +124,7 @@ def challenge_landing(request, challenge_nicename):
         {'challenge': challenge, 'challenge_nicename': challenge_nicename},
     )
 
-
-def index(request):
+def challenges(request):
     challenges = Challenge.objects.prefetch_related('tasks')
 
     # for users, only show challenges with > 0 non-hidden tasks
@@ -134,7 +133,7 @@ def index(request):
         visible_tasks = pure_tasks.filter(challenge=OuterRef('pk'), hidden=False)
         challenges = challenges.filter(Exists(visible_tasks))
 
-    return render(request, 'index.html', {'challenges': challenges})
+    return render(request, 'challenges.html', {'challenges': challenges})
 
 
 @user_passes_test(lambda u: u.is_staff)
