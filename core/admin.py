@@ -9,6 +9,7 @@ from django_admin_display import admin_display
 
 from core.models import Approach, Team, TeamInvitation
 from core.tasks import score_submission
+
 from .models import Challenge, Submission, Task
 
 
