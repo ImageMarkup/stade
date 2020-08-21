@@ -22,9 +22,8 @@ from django.core.mail import send_mail
 from django.db import connection, transaction
 from django.db.models.fields.files import FieldFile
 from django.template.loader import render_to_string
-from storages.backends.s3boto3 import S3Boto3StorageFile
-
 from isic_challenge_scoring import ClassificationScore, ScoreException, SegmentationScore
+from storages.backends.s3boto3 import S3Boto3StorageFile
 
 from core.models import Approach, Submission, Task, TeamInvitation
 

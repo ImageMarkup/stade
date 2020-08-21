@@ -31,7 +31,6 @@ from core.serializers import ChallengeSerializer, LeaderboardEntrySerializer
 from core.tasks import generate_submission_bundle, score_submission, send_team_invitation
 from core.utils import safe_redirect
 
-
 logger = logging.getLogger(__name__)
 
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-from typing import cast, Optional
+from typing import Optional, cast
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
