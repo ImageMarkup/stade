@@ -5,7 +5,6 @@ from typing import Optional, cast
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields.jsonb import JSONField
 from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
 from django.db.models import Exists, OuterRef, QuerySet
@@ -217,7 +216,7 @@ class Submission(models.Model):
     accepted_terms = models.BooleanField(default=False)
     test_prediction_file = S3FileField()
     status = models.CharField(max_length=20, default=Status.QUEUED, choices=Status.choices)
-    score = JSONField(blank=True, null=True)
+    score = models.JSONField(blank=True, null=True)
     overall_score = models.FloatField(blank=True, null=True)
     validation_score = models.FloatField(blank=True, null=True)
     fail_reason = models.TextField(blank=True)
