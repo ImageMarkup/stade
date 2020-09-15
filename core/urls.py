@@ -59,7 +59,7 @@ urlpatterns = [
     ),
     path('data', TemplateView.as_view(template_name='data.html'), name='data'),
     path('challenges', views.challenges, name='challenges'),
-    path('leaderboards', TemplateView.as_view(template_name='leaderboards.html'), name='leaderboards'),
+    path('leaderboards/<challenge_nicename>', views.leaderboard_page, name='leaderboards'),
     path('landing/<challenge_nicename>', views.challenge_landing, name='challenge-landing'),
     path('landing/<challenge_nicename>/<int:task_id>', views.task_landing, name='task-landing'),
     path(

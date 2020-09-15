@@ -8,9 +8,8 @@
 
 {% block content %}
   <section class="section container">
-    https://www.isic-archive.com/leaderboard/
-    <div id="app" data-challenge-id="39"></div>
-    <!- "data-by-team-default" and "data-default-task" may also be set as attributes --->
+
+    <div id="app" data-challenge-id="{{ challenge.id }}" data-by-team-default="false" data-default-task="{{ default_task_id }}"></div>
     <script type="text/javascript" src="https://www.isic-archive.com/leaderboard/js/chunk-vendors.aa478d4a.js"></script>
     <script type="text/javascript" src="https://www.isic-archive.com/leaderboard/js/app.2b976bb8.js"></script>
 

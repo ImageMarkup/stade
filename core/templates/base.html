@@ -50,9 +50,20 @@
               <a class="navbar-item" href="{% url 'challenges' %}">
                 Challenges
               </a>
-              <a class="navbar-item" href="{% url 'leaderboards' %}">
-                Leaderboards
-              </a>
+
+              <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">Leaderboards</a>
+
+                <div class="navbar-dropdown">
+                  <a class="navbar-item" href="{% url 'leaderboards' '2016' %}">2016</a>
+                  <a class="navbar-item" href="{% url 'leaderboards' '2017' %}">2017</a>
+                  <a class="navbar-item" href="{% url 'leaderboards' '2018' %}">2018</a>
+                  <a class="navbar-item" href="{% url 'leaderboards' '2019' %}">2019</a>
+                  <a class="navbar-item" href="#">2020 (Coming Soon)</a>
+                  <a class="navbar-item" href="{% url 'leaderboards' 'live' %}">Live</a>
+                </div>
+              </div>
+
               <a class="navbar-item" href="{% url 'challenge-landing' 'live' %}">
                 ISIC Live
               </a>
