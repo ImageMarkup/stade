@@ -1,36 +1,18 @@
 {% extends "base.html" %}
 
-{% block content %}
-<section class="section container">
+{% block extra_head %}
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://www.isic-archive.com/leaderboard/css/chunk-vendors.74f65fce.css" rel="stylesheet">
+  <link href="https://www.isic-archive.com/leaderboard/css/app.a03bfa91.css" rel="stylesheet">
+{% endblock %}
 
-  <div class="tabs is-toggle">
-    <ul>
-      <li class="is-active">
-        <a>
-          <span>2020</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <span>2019</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <span>2018</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <span>2017</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <span>2016</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-</section>
+{% block content %}
+  <section class="section container">
+    https://www.isic-archive.com/leaderboard/
+    <div id="app" data-challenge-id="39"></div>
+    <!- "data-by-team-default" and "data-default-task" may also be set as attributes --->
+    <script type="text/javascript" src="https://www.isic-archive.com/leaderboard/js/chunk-vendors.aa478d4a.js"></script>
+    <script type="text/javascript" src="https://www.isic-archive.com/leaderboard/js/app.2b976bb8.js"></script>
+
+  </section>
 {% endblock %}
