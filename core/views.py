@@ -100,10 +100,12 @@ def leaderboard_page(request, challenge_nicename):
         Challenge.objects.prefetch_related(Prefetch('tasks')),
         pk=challenge_ids[challenge_nicename],
     )
+    # Default to grouping by team for all Challenges except 'live'
+    by_team_default = challenge_nicename != 'live'
     return render(
         request,
         'leaderboards.html',
-        {'challenge': challenge, 'default_task_id': challenge.tasks.first().id},
+        {'challenge': challenge, 'by_team_default': by_team_default},
     )
 
 
