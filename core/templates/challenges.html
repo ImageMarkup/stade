@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="section container">
+    <div class="section-header">
+      <h1>Challenges</h1>
+    </div>
+    <div class="section-content">
+      {% for challenge in challenges %}
+        <div class="tasks-list columns is-multiline is-vcentered">
+          <h3 class="mb-0">{{ challenge.slug|title }}</h3>
+          <ul class="landing-tasks pt-0 mt-0" style="width:100%">
+            {% for task in challenge.tasks.all %}
+              <li>
+                <a href="{% url 'task-detail' task.id %}"><i class="material-icons">{% if challenge.locked or task.locked %}lock{% else %}timelapse{% endif %}</i><p>{{task.name}}</p></a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

@@ -1,32 +1,144 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% for challenge in challenges %}
   <section class="section container">
-      <div class="section-header">
-        <h1>{{ challenge.name }}</h1>
-      </div>
-      <div class="section-content">
-        <div class="tasks-list columns is-multiline is-vcentered">
-          {% for task in challenge.tasks.all %}
-            <div class="task column is-one-third{% if task.locked %} inactive{% endif %}">
-              <a href="{{ task.get_absolute_url }}" alt="{{ task.name }}">
-                <span class="task-name"><i class="material-icons">assignment</i> {{ task.name }}</span>
-                {% if task.short_description %}
-                <span class="task-desc">
-                  {{ task.short_description | truncatechars:170 }}
-                </span>
-                {% endif %}
-              </a>
-              {% if task.hidden %}
-              <span class="badge">
-                <i class="material-icons">visibility_off</i>
-              </span>
-              {% endif %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
+    <div class="section-header">
+      <h1>Welcome to the ISIC Challenge</h1>
+    </div>
+
+    <div class="section-content">
+
+
+<p>For the past two years, we have organized the “ISIC: Skin Lesion Analysis
+   Towards Melanoma Detection“ grand challenges, presenting problems in lesion
+   segmentation, detection of clinical diagnostic patterns, and lesion
+   classification, along with a high-quality human-validated training and test set
+   of thousands of CC-0-licensed images and metadata.
+   These challenges have attracted global participation, with hundreds of
+   registrations dozens of finalized submissions (including a four page manuscript
+   with each final submission), making them the largest standardized and
+   comparative study in this field to date.
+   These challenges have yielded novel findings and numerous publications, and have
+   been accepted as a de-facto reference standard in efforts by other research
+   groups.
+</p>
+<h3 id="about-the-isic-archive">About the ISIC Archive</h3>
+<p>
+   The
+   <a href="https://isdis.org/isic-project/" target="_blank"
+      rel="noopener noreferrer">
+      International Skin Imaging Collaboration (ISIC)
+      <svg
+         xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0
+         0 100 100" width="15" height="15" class="icon outbound">
+         <path
+            fill="currentColor"
+            d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path>
+         <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2
+            85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon>
+      </svg>
+   </a>
+   is an
+   international effort to improve melanoma diagnosis, sponsored by the
+   International Society for Digital Imaging of the Skin (ISDIS).
+   <a
+      href="https://www.isic-archive.com/" target="_blank" rel="noopener
+      noreferrer">
+      The ISIC Archive
+      <svg xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"
+         class="icon outbound">
+         <path fill="currentColor"
+            d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path>
+         <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2
+            85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon>
+      </svg>
+   </a>
+   contains
+   the largest publicly available collection of quality controlled dermoscopic
+   images of skin lesions.
+</p>
+<p>Presently, the ISIC Archive contains over 13,000
+   dermoscopic images, which were collected from leading clinical centers
+   internationally and acquired from a variety of devices within each center. Broad
+   and international participation in image contribution is designed to insure a
+   representative clinically relevant sample.
+</p>
+<p>All incoming images to the
+   ISIC Archive are screened for both privacy and quality assurance. Most images
+   have associated clinical metadata, which has been vetted by recognized melanoma
+   experts. A subset of the images have undergone annotation and markup by
+   recognized skin cancer experts. These markups include dermoscopic features
+   (i.e., global and focal morphologic elements in the image known to discriminate
+   between types of skin lesions).
+</p>
+<p>
+   The software infrastructure of the ISIC
+   Archive is built using the open-source
+   <a href="https://girder.readthedocs.org/"
+      target="_blank" rel="noopener noreferrer">
+      Girder platform
+      <svg
+         xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0
+         0 100 100" width="15" height="15" class="icon outbound">
+         <path
+            fill="currentColor"
+            d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path>
+         <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2
+            85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon>
+      </svg>
+   </a>
+   , and the
+   source code for the Archive itself is
+   <a
+      href="https://github.com/ImageMarkup/isic-archive" target="_blank" rel="noopener
+      noreferrer">
+      freely available on GitHub
+      <svg xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"
+         class="icon outbound">
+         <path fill="currentColor"
+            d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path>
+         <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2
+            85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon>
+      </svg>
+   </a>
+   .
+</p>
+<h3
+   id="about-melanoma">About
+   Melanoma
+</h3>
+<p>Skin cancer is a major public health problem, with over
+   5,000,000 newly diagnosed cases in the United States every year. Melanoma is the
+   deadliest form of skin cancer, responsible for an overwhelming majority of skin
+   cancer deaths. In 2015, the global incidence of melanoma was estimated to be
+   over 350,000 cases, with almost 60,000 deaths. Although the mortality is
+   significant, when detected early, melanoma survival exceeds 95%.
+</p>
+<h3
+   id="about-dermoscopy">About Dermoscopy
+</h3>
+<p>As pigmented lesions occurring on the surface of the
+   skin, melanoma is amenable to early detection by expert visual inspection. It is
+   also amenable to automated detection with image analysis. Given the widespread
+   availability of high-resolution cameras, algorithms that can improve our ability
+   to screen and detect troublesome lesions can be of great value. As a result,
+   many centers have begun their own research efforts on automated analysis.
+   However, a centralized, coordinated, and comparative effort across institutions
+   has yet to be implemented.
+</p>
+<p>Dermoscopy is an imaging technique that
+   eliminates the surface reflection of skin. By removing surface reflection,
+   visualization of deeper levels of skin is enhanced. Prior research has shown
+   that when used by expert dermatologists, dermoscopy provides improved diagnostic
+   accuracy, in comparison to standard photography. As inexpensive consumer
+   dermatoscope attachments for smart phones are beginning to reach the market, the
+   opportunity for automated dermoscopic assessment algorithms to positively
+   influence patient care increases.
+</p>
+
+
+    </div>
   </section>
-  {% endfor %}
 {% endblock %}

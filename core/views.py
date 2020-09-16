@@ -91,6 +91,24 @@ def submission_scores(request, submission_id):
     return JsonResponse(submission.score)
 
 
+def leaderboard_page(request, challenge_nicename):
+    challenge_ids = {'sandbox': 37, '2018': 36, '2017': 35, '2016': 34, 'live': 38, '2019': 39}
+    if challenge_nicename not in challenge_ids:
+        raise Http404('Challenge not found.')
+
+    challenge = get_object_or_404(
+        Challenge.objects.prefetch_related(Prefetch('tasks')),
+        pk=challenge_ids[challenge_nicename],
+    )
+    # Default to grouping by team for all Challenges except 'live'
+    by_team_default = challenge_nicename != 'live'
+    return render(
+        request,
+        'leaderboards.html',
+        {'challenge': challenge, 'by_team_default': by_team_default},
+    )
+
+
 def task_landing(request, challenge_nicename, task_id):
     challenge_ids = {'sandbox': 37, '2018': 36, '2017': 35, '2016': 34, 'live': 38, '2019': 39}
 
@@ -125,7 +143,7 @@ def challenge_landing(request, challenge_nicename):
     )
 
 
-def index(request):
+def challenges(request):
     challenges = Challenge.objects.prefetch_related('tasks')
 
     # for users, only show challenges with > 0 non-hidden tasks
@@ -134,7 +152,7 @@ def index(request):
         visible_tasks = pure_tasks.filter(challenge=OuterRef('pk'), hidden=False)
         challenges = challenges.filter(Exists(visible_tasks))
 
-    return render(request, 'index.html', {'challenges': challenges})
+    return render(request, 'challenges.html', {'challenges': challenges})
 
 
 @user_passes_test(lambda u: u.is_staff)

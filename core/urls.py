@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),
     path('task/<int:task_id>', views.task_detail, name='task-detail'),
     path('submission/<int:submission_id>', views.submission_detail, name='submission-detail'),
     path('submissions/<int:task_id>/<int:team_id>', views.submission_list, name='submission-list'),
@@ -58,6 +58,8 @@ urlpatterns = [
         name='submission-scores',
     ),
     path('data', TemplateView.as_view(template_name='data.html'), name='data'),
+    path('challenges', views.challenges, name='challenges'),
+    path('leaderboards/<challenge_nicename>', views.leaderboard_page, name='leaderboards'),
     path('landing/<challenge_nicename>', views.challenge_landing, name='challenge-landing'),
     path('landing/<challenge_nicename>/<int:task_id>', views.task_landing, name='task-landing'),
     path(
