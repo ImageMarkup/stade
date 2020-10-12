@@ -88,6 +88,10 @@ def submission_scores(request, submission_id):
             pk=submission_id,
         )
 
+    if isinstance(submission.score, list):
+        logger.warning('Unable to serialize submission score')
+        return JsonResponse({})
+
     return JsonResponse(submission.score)
 
 
