@@ -1,7 +1,23 @@
-from django.urls import path
+from django.shortcuts import get_object_or_404
+from django.urls import path, register_converter
 from django.views.generic import TemplateView
 
 from . import views
+from .models import Challenge
+
+
+class ChallengeFromSlugConverter:
+    regex = '[0-9a-z-]+'
+
+    def to_python(self, value: str) -> Challenge:
+        return get_object_or_404(Challenge, slug=value)
+
+    def to_url(self, value: str) -> str:
+        return value
+
+
+register_converter(ChallengeFromSlugConverter, 'challenge_slug')
+
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
@@ -59,9 +75,11 @@ urlpatterns = [
     ),
     path('data', TemplateView.as_view(template_name='data.html'), name='data'),
     path('challenges', views.challenges, name='challenges'),
-    path('leaderboards/<challenge_nicename>', views.leaderboard_page, name='leaderboards'),
-    path('landing/<challenge_nicename>', views.challenge_landing, name='challenge-landing'),
-    path('landing/<challenge_nicename>/<int:task_id>', views.task_landing, name='task-landing'),
+    path('leaderboards/<challenge_slug:challenge>', views.leaderboard_page, name='leaderboards'),
+    path('landing/<challenge_slug:challenge>', views.challenge_landing, name='challenge-landing'),
+    path(
+        'landing/<challenge_slug:challenge>/<int:task_id>', views.task_landing, name='task-landing'
+    ),
     path(
         'terms-of-use', TemplateView.as_view(template_name='terms-of-use.html'), name='terms-of-use'
     ),

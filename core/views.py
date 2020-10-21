@@ -95,17 +95,9 @@ def submission_scores(request, submission_id):
     return JsonResponse(submission.score)
 
 
-def leaderboard_page(request, challenge_nicename):
-    challenge_ids = {'sandbox': 37, '2018': 36, '2017': 35, '2016': 34, 'live': 38, '2019': 39}
-    if challenge_nicename not in challenge_ids:
-        raise Http404('Challenge not found.')
-
-    challenge = get_object_or_404(
-        Challenge.objects.prefetch_related(Prefetch('tasks')),
-        pk=challenge_ids[challenge_nicename],
-    )
+def leaderboard_page(request, challenge):
     # Default to grouping by team for all Challenges except 'live'
-    by_team_default = challenge_nicename != 'live'
+    by_team_default = challenge.slug != 'live'
     return render(
         request,
         'leaderboards.html',
@@ -113,37 +105,27 @@ def leaderboard_page(request, challenge_nicename):
     )
 
 
-def task_landing(request, challenge_nicename, task_id):
-    challenge_ids = {'sandbox': 37, '2018': 36, '2017': 35, '2016': 34, 'live': 38, '2019': 39}
-
-    if challenge_nicename not in challenge_ids:
-        raise Http404('Challenge not found.')
-
-    challenge = get_object_or_404(Challenge, pk=challenge_ids[challenge_nicename])
+def task_landing(request, challenge, task_id):
     task = get_object_or_404(Task.objects.filter(challenge=challenge), pk=task_id)
 
     return render(
         request,
-        f'landing/{challenge_nicename}/{task_id}.html',
+        f'landing/{challenge.slug}/{task_id}.html',
         {'challenge': challenge, 'task': task},
     )
 
 
-def challenge_landing(request, challenge_nicename):
-    challenge_ids = {'sandbox': 37, '2018': 36, '2017': 35, '2016': 34, 'live': 38, '2019': 39}
-    if challenge_nicename not in challenge_ids:
-        raise Http404('Challenge not found.')
-
+def challenge_landing(request, challenge):
     challenge = get_object_or_404(
         Challenge.objects.prefetch_related(
             Prefetch('tasks', queryset=Task.objects.order_by('name'))
         ),
-        pk=challenge_ids[challenge_nicename],
+        pk=challenge.id,
     )
     return render(
         request,
-        f'landing/{challenge_nicename}/index.html',
-        {'challenge': challenge, 'challenge_nicename': challenge_nicename},
+        f'landing/{challenge.slug}/index.html',
+        {'challenge': challenge, 'challenge_nicename': challenge.slug},
     )
 
 
