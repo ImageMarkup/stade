@@ -1,3 +1,3 @@
 release: ./manage.py migrate
-web: gunicorn --bind 0.0.0.0:$PORT --max-requests 100 stade.wsgi
-worker: celery worker --app stade.celery --loglevel info --without-heartbeat
+web: gunicorn --bind 0.0.0.0:$PORT stade.wsgi
+worker: REMAP_SIGTERM=SIGQUIT celery --app stade.celery worker --loglevel INFO --without-heartbeat
