@@ -36,8 +36,6 @@ class StadeConfig(ConfigMixin):
             'stade.tracker.apps.TrackerConfig',
         ]
 
-        print(configuration.INSTALLED_APPS)
-
         configuration.AUTHENTICATION_BACKENDS.insert(0, 'rules.permissions.ObjectPermissionBackend')
 
     # Celery
