@@ -17,8 +17,11 @@ indent_size = 2
 [*.css]
 indent_size = 2
 
-[*.sh]
+[{*.yml,*.yaml}]
+indent_size = 2
+
+[*.ini]
 indent_size = 4
 
-[{*.yml,*.yaml}]
+[*.sh]
 indent_size = 2
