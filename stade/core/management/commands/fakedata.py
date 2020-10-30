@@ -1,3 +1,5 @@
+import pathlib
+
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.management.base import BaseCommand
@@ -32,7 +34,9 @@ class Command(BaseCommand):
                 )
             )
         localdev = Challenge.objects.create(name='local dev', position=1, locked=False)
-        with open('/code/etc/data/example_groundtruth.csv', 'rb') as test_ground_truth_file:
+        with (pathlib.Path(__file__).parent / 'data' / 'example_groundtruth.csv').open(
+            'rb'
+        ) as test_ground_truth_file:
             Task.objects.create(
                 challenge=localdev,
                 name='Local development',
