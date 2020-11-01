@@ -1,32 +1,30 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
-from django.views.generic import TemplateView
-from rest_framework.schemas import get_schema_view
-import uritemplate  # noqa: F401
+from drf_yasg2 import openapi
+from drf_yasg2.views import get_schema_view
+from rest_framework import permissions
 
-# the 'uritemplate' package is required for 'get_schema_view' to render, so ensure it's available
+# OpenAPI generation
+schema_view = get_schema_view(
+    openapi.Info(
+        title='ISIC Challenge',
+        default_version='v1',
+        description='REST API for ISIC Challenge submission platform.',
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 urlpatterns = [
-    path('', include('core.urls')),
-    path('api/tracker/', include('tracker.urls')),
-    path(
-        'api/docs/schema/',
-        get_schema_view(
-            title='ISIC Challenge',
-            description='REST API for ISIC Challenge submission platform.',
-            version='1.0.0',
-        ),
-        name='api-schema',
-    ),
-    path(
-        'api/docs/',
-        TemplateView.as_view(template_name='api.html', extra_context={'schema_url': 'api-schema'}),
-        name='api-docs',
-    ),
     path('accounts/', include('allauth.urls')),
     path('admin/', admin.site.urls),
     path('api/s3-upload/', include('s3_file_field.urls')),
+    # path('api/v1/', include(router.urls)),
+    path('api/docs/redoc', schema_view.with_ui('redoc'), name='docs-redoc'),
+    path('api/docs/swagger', schema_view.with_ui('swagger'), name='docs-swagger'),
+    path('api/tracker/', include('stade.tracker.urls')),
+    path('', include('stade.core.urls')),
 ]
 
 if settings.DEBUG:

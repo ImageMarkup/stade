@@ -1,0 +1,566 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/stade/data.css' %}"/>
+{% endblock %}
+
+{% block content %}
+  <section class="section container">
+    <div class="section-header">
+      <h1>ISIC Challenge Datasets</h1>
+    </div>
+    <div class="section-content">
+      <a href="#2016">
+        <h1 id="2016">2016</h1>
+      </a>
+      <table class="table is-hoverable is-bordered">
+        <thead>
+        <tr>
+          <th><abbr title="Task">Task</abbr></th>
+          <th><abbr title="Training Data">Training Data</abbr></th>
+          <th><abbr title="Training Ground Truth Data">Training Ground
+            Truth</abbr></th>
+          <th><abbr title="Test Data">Test Data</abbr></th>
+          <th><abbr title="Test Ground Truth Data">Test Ground
+            Truth</abbr></th>
+          <th><abbr title="License">License</abbr></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th>1</th>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part1_Training_Data.zip">
+              Download (602MB)</a><br>
+            900 dermoscopic lesion images in
+            JPEG format, with EXIF data stripped.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part1_Training_GroundTruth.zip">
+              Download (6MB)</a><br>
+            900 binary mask images in PNG format.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part1_Test_Data.zip">
+              Download (232MB)</a><br>
+            379 images of the exact same format as
+            the Training Data.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part1_Test_GroundTruth.zip">
+              Download (2MB)</a><br>
+          </td>
+          <td rowspan="5">
+            <a target="_blank" rel="noopener" href=
+                "https://creativecommons.org/share-your-work/public-domain/cc0/">
+              CC-0</a>
+          </td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part2_Training_Data.zip">
+              Download (671MB)</a><br>
+            807 lesion images in JPEG format
+            and 807 corresponding superpixel masks in PNG format,
+            with EXIF data stripped.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part2_Training_GroundTruth.zip">
+              Download (5MB)</a><br>
+            807 dermoscopic feature files in
+            JSON format.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part2_Test_Data.zip">
+              Download (257MB)</a><br>
+            335 lesion images and 335 corresponding
+            superpixel masks of the exact same formats as the
+            Training Data.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part2_Test_GroundTruth.zip">
+              Download (2MB)</a><br>
+          </td>
+        </tr>
+        <tr>
+          <th>2B</th>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part2B_Training_Data.zip">
+              Download (565MB)</a><br>
+            807 lesion images in JPEG
+            format, with EXIF data stripped.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part2B_Training_GroundTruth.zip">
+              Download (5MB)</a><br>
+            1614 binary mask images in PNG format.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part2B_Test_Data.zip">
+              Download (216MB)</a><br>
+            335 lesion images of the exact same
+            formats as the Training Data.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part2B_Test_GroundTruth.zip">
+              Download (2MB)</a><br>
+          </td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part3_Training_Data.zip">
+              Download (602MB)</a><br>
+            900 dermoscopic lesion images in JPEG format.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part3_Training_GroundTruth.csv">
+              Download (19KB)</a><br>
+            900 entries of gold standard malignant status.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part3_Test_Data.zip">
+              Download (232MB)</a><br>
+            379 images of the exact same format as
+            the Training Data.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part3_Test_GroundTruth.csv">
+              Download (7KB)</a><br>
+          </td>
+        </tr>
+        <tr>
+          <th>3B</th>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part3B_Training_Data.zip">
+              Download (608MB)</a><br>
+            900 dermoscopic lesion images in
+            JPEG format and 900 associated segmentation binary
+            masks in PNG format.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part3B_Training_GroundTruth.csv">
+              Download (19KB)</a><br>
+            900 entries of gold standard malignant status.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part3B_Test_Data.zip">
+              Download (234MB)</a><br>
+            379 images and 379 associated
+            segmentation masks, of the exact same format as the
+            Training Data.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part3B_Test_GroundTruth.csv">
+              Download (7KB)</a><br>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <h3>Citing 2016 datasets:</h3>
+      <blockquote>
+        Gutman, David; Codella, Noel C. F.; Celebi, Emre; Helba,
+        Brian; Marchetti, Michael; Mishra, Nabin; Halpern, Allan.
+        "Skin Lesion Analysis toward Melanoma Detection: A Challenge
+        at the International Symposium on Biomedical Imaging (ISBI)
+        2016, hosted by the International Skin Imaging Collaboration
+        (ISIC)". eprint arXiv:1605.01397. 2016.
+      </blockquote>
+      <div class="is-divider"></div>
+      <a href="#2017">
+        <h1 id="2017">2017</h1>
+      </a>
+      <table class="table is-hoverable is-bordered">
+        <thead>
+        <tr>
+          <th><abbr title="Task">Task</abbr></th>
+          <th><abbr title="Training Data">Training Data</abbr></th>
+          <th><abbr title="Training Ground Truth Data">Training Ground
+            Truth</abbr></th>
+          <th><abbr title="Test Data">Test Data</abbr></th>
+          <th><abbr title="Test Ground Truth Data">Test Ground
+            Truth</abbr></th>
+          <th><abbr title="License">License</abbr></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th>1</th>
+          <td rowspan="3">
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2017/ISIC-2017_Training_Data.zip">
+              Download (5.8GB)</a><br>
+            2000 lesion images in JPEG
+            format and 2000 corresponding superpixel masks in PNG
+            format, with EXIF data stripped.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2017/ISIC-2017_Training_Part1_GroundTruth.zip">
+              Download (9MB)</a><br>
+            2000 binary mask images in PNG
+            format.
+          </td>
+          <td rowspan="3">
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2017/ISIC-2017_Test_v2_Data.zip">
+              Download (5.4GB)</a>
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2017/ISIC-2017_Test_v2_Part1_GroundTruth.zip">
+              Download (18MB)</a>
+          </td>
+          <td rowspan="3">
+            <a target="_blank" rel="noopener" href=
+                "https://creativecommons.org/share-your-work/public-domain/cc0/">
+              CC-0</a>
+          </td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2017/ISIC-2017_Training_Part2_GroundTruth.zip">
+              Download (710KB)</a><br>
+            2000 dermoscopic feature files in JSON format.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2017/ISIC-2017_Test_v2_Part2_GroundTruth.zip">
+              Download (210KB)</a><br>
+          </td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2017/ISIC-2017_Training_Part3_GroundTruth.csv">
+              Download (43KB)</a><br>
+            2000 entries of gold standard lesion diagnoses.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2017/ISIC-2017_Test_v2_Part3_GroundTruth.csv">
+              Download (13KB)</a><br>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <h3>Citing 2017 datasets:</h3>
+      <blockquote>
+        Codella N, Gutman D, Celebi ME, Helba B, Marchetti MA, Dusza
+        S, Kalloo A, Liopyris K, Mishra N, Kittler H, Halpern A.
+        "Skin Lesion Analysis Toward Melanoma Detection: A Challenge
+        at the 2017 International Symposium on Biomedical Imaging
+        (ISBI), Hosted by the International Skin Imaging
+        Collaboration (ISIC)". arXiv: 1710.05006 [cs.CV]
+      </blockquote>
+      <div class="is-divider"></div>
+      <a href="#2018">
+        <h1 id="2018">2018</h1>
+      </a>
+      <table class="table is-hoverable is-bordered">
+        <thead>
+        <tr>
+          <th><abbr title="Task">Task</abbr></th>
+          <th><abbr title="Training Data">Training Data</abbr></th>
+          <th><abbr title="Training Ground Truth Data">Training Ground
+            Truth</abbr></th>
+          <th><abbr title="Test Data">Test Data</abbr></th>
+          <th><abbr title="Test Ground Truth Data">Test Ground
+            Truth</abbr></th>
+          <th><abbr title="License">License</abbr></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th>1</th>
+          <td rowspan="2">
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2018/ISIC2018_Task1-2_Training_Input.zip">
+              Download (10.4GB)</a><br>
+            2594 images and 12970 corresponding ground truth response masks (5 for each image).
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2018/ISIC2018_Task1_Training_GroundTruth.zip">
+              Download (26MB)</a><br>
+          </td>
+          <td rowspan="2">
+            <a class="track-outbound"
+               href="https://isic-challenge-data.s3.amazonaws.com/2018/ISIC2018_Task1-2_Test_Input.zip">Download
+              (2.2GB)</a><br/>
+            1000 images.
+          </td>
+          <td>Not Available</td>
+          <td rowspan="2">
+            <a target="_blank" rel="noopener" href=
+                "https://creativecommons.org/share-your-work/public-domain/cc0/">
+              CC-0</a>
+          </td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>
+            <a class="track-outbound"
+               href="https://isic-challenge-data.s3.amazonaws.com/2018/ISIC2018_Task2_Training_GroundTruth_v3.zip">Download
+              (33MB)</a><br>
+          </td>
+          <td>Not Available</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>
+            <a class="track-outbound"
+               href="https://isic-challenge-data.s3.amazonaws.com/2018/ISIC2018_Task3_Training_Input.zip">Download
+              (2.6GB)</a><br>
+            10015 images and 1 ground truth response CSV file (containing 1 header row and 10015
+            corresponding response rows).
+          </td>
+          <td>
+            <a class="track-outbound"
+               href="https://isic-challenge-data.s3.amazonaws.com/2018/ISIC2018_Task3_Training_GroundTruth.zip">Download
+              (36KB)</a><br>
+          </td>
+          <td>
+            <a class="track-outbound"
+               href="https://isic-challenge-data.s3.amazonaws.com/2018/ISIC2018_Task3_Test_Input.zip">Download
+              (401MB)</a><br>
+            1512 images.
+          </td>
+          <td>Not Available</td>
+          <td>
+            <a target="_blank" rel="noopener" href=
+                "https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <h3>Citing 2018 datasets:</h3>
+      <blockquote>
+        <p>[1] Noel Codella, Veronica Rotemberg, Philipp Tschandl, M.
+          Emre Celebi, Stephen Dusza, David Gutman, Brian Helba, Aadi
+          Kalloo, Konstantinos Liopyris, Michael Marchetti, Harald Kittler,
+          Allan Halpern: “Skin Lesion Analysis Toward Melanoma Detection
+          2018: A Challenge Hosted by the International Skin Imaging
+          Collaboration (ISIC)”, 2018; https://arxiv.org/abs/1902.03368</p>
+        <p>[2] Tschandl, P., Rosendahl, C. & Kittler, H. The HAM10000
+          dataset, a large collection of multi-source dermatoscopic images
+          of common pigmented skin lesions. Sci. Data 5, 180161
+          doi:10.1038/sdata.2018.161 (2018).</p>
+      </blockquote>
+      <div class="is-divider"></div>
+      <a href="#2019">
+        <h1 id="2019">2019</h1>
+      </a>
+      <table class="table is-hoverable is-bordered">
+        <thead>
+        <tr>
+          <th><abbr title="Task">Task</abbr></th>
+          <th><abbr title="Training Data">Training Data</abbr></th>
+          <th><abbr title="Training Ground Truth Data">Training Ground
+            Truth</abbr></th>
+          <th><abbr title="Test Data">Test Data</abbr></th>
+          <th><abbr title="Test Ground Truth Data">Test Ground
+            Truth</abbr></th>
+          <th><abbr title="License">License</abbr></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th>1</th>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2019/ISIC_2019_Training_Input.zip">
+              Download (9.1GB)</a><br>
+            25,331 JPEG images of skin lesions.
+          </td>
+          <td rowspan="2">
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2019/ISIC_2019_Training_GroundTruth.csv">
+              Download (1MB)</a><br>
+            25,331 entries of gold standard lesion diagnoses.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2019/ISIC_2019_Test_Input.zip">
+              Download (3.6GB)</a><br>
+            8,238 JPEG images of skin lesions.
+          </td>
+          <td>Not Available</td>
+          <td rowspan="2">
+            <a target="_blank" rel="noopener" href=
+                "https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a>
+          </td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2019/ISIC_2019_Training_Metadata.csv">
+              Download (1MB)</a><br>
+            25,331 metadata entries of age, sex, general anatomic site, and common lesion
+            identifier.
+          </td>
+          <td>
+            <a class="track-outbound" href=
+                "https://isic-challenge-data.s3.amazonaws.com/2019/ISIC_2019_Test_Metadata.csv">
+              Download (287KB)</a><br>
+            8,238 metadata entries of age, sex, and general anatomic site.
+          </td>
+          <td>Not Available</td>
+        </tr>
+        </tbody>
+      </table>
+      <h3>Citing 2019 datasets:</h3>
+      To comply with the attribution
+      requirements of the <a target="_blank" rel="noopener"
+                             href="https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC
+      license</a>, the aggregate "ISIC 2019:
+      Training" data must be cited as:
+      <blockquote>
+        <p>BCN_20000 Dataset: (c) Department of Dermatology, Hospital
+          Clínic de Barcelona</p>
+        <p>HAM10000 Dataset: (c) by ViDIR Group, Department of
+          Dermatology, Medical University of Vienna;
+          https://doi.org/10.1038/sdata.2018.161</p>
+        <p>MSK Dataset: (c) Anonymous; https://arxiv.org/abs/1710.05006 ;
+          https://arxiv.org/abs/1902.03368</p>
+      </blockquote>
+      When referencing this dataset in your own manuscripts
+      and publications, please use the following full citations:
+      <blockquote>
+        <p>[1] Tschandl P., Rosendahl C. & Kittler H. The HAM10000
+          dataset, a large collection of multi-source dermatoscopic images
+          of common pigmented skin lesions. Sci. Data 5, 180161
+          doi.10.1038/sdata.2018.161 (2018)</p>
+        <p>[2] Noel C. F. Codella, David Gutman, M. Emre Celebi, Brian
+          Helba, Michael A. Marchetti, Stephen W. Dusza, Aadi Kalloo,
+          Konstantinos Liopyris, Nabin Mishra, Harald Kittler, Allan
+          Halpern: “Skin Lesion Analysis Toward Melanoma Detection: A
+          Challenge at the 2017 International Symposium on Biomedical
+          Imaging (ISBI), Hosted by the International Skin Imaging
+          Collaboration (ISIC)”, 2017; arXiv:1710.05006.</p>
+        <p>[3] Marc Combalia, Noel C. F. Codella, Veronica Rotemberg,
+          Brian Helba, Veronica Vilaplana, Ofer Reiter, Allan C. Halpern,
+          Susana Puig, Josep Malvehy: “BCN20000: Dermoscopic Lesions in the
+          Wild”, 2019; arXiv:1908.02288.</p>
+      </blockquote>
+      <div class="is-divider"></div>
+      <a href="#2020">
+        <h1 id="2020">2020</h1></a>
+      <table class="table is-hoverable is-bordered">
+        <thead>
+        <tr>
+          <th><abbr title="Training Data">Training Data</abbr></th>
+          <th><abbr title="Training Ground Truth Data">Training Ground
+            Truth</abbr></th>
+          <th><abbr title="Test Data">Test Data</abbr></th>
+          <th><abbr title="Test Ground Truth Data">Test Ground
+            Truth</abbr></th>
+          <th><abbr title="License">License</abbr></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <a class="track-outbound" href="https://isic-challenge-data.s3.amazonaws.com/2020/ISIC_2020_Training_Dicom.zip">Download DICOM (48.9GB)</a>
+            <br>
+            33,126 DICOM images with embedded metadata.
+            <br>
+            <hr>
+            <a class="track-outbound" href="https://isic-challenge-data.s3.amazonaws.com/2020/ISIC_2020_Training_JPEG.zip">Download JPEG (23GB)</a>
+            <br>
+            33,126 JPEG images.
+            <br>
+            <a class="track-outbound" href="https://isic-challenge-data.s3.amazonaws.com/2020/ISIC_2020_Training_GroundTruth.csv">Download metadata (2MB)</a>
+            <br>
+            33,126 metadata entries of patient ID, sex, age, and general anatomic site.
+            <br />
+            <a class="track-outbound" href="https://isic-challenge-data.s3.amazonaws.com/2020/ISIC_2020_Training_GroundTruth_v2.csv">Download metadata v2 (2MB)</a>
+            <br>
+            33,126 metadata entries of patient ID, lesion ID, sex, age, and general anatomic site.
+            <br />
+            <a class="track-outbound" href="https://isic-challenge-data.s3.amazonaws.com/2020/ISIC_2020_Training_Duplicates.csv">Download duplicate image list (2MB)</a>
+            <br>
+            List of 425 duplicate images.
+          </td>
+          <td><a class="track-outbound" href=
+              "https://isic-challenge-data.s3.amazonaws.com/2020/ISIC_2020_Training_GroundTruth.csv">
+            Download (2MB)</a><br>
+            33,126 entries of gold standard lesion diagnoses.
+          </td>
+          <td colspan="2">
+            Join the <a href="https://www.kaggle.com/c/siim-isic-melanoma-classification/overview">competition
+            on Kaggle</a>.
+          </td>
+          <td>
+            <a target="_blank" rel="noopener" href=
+                "https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <h3>Citing 2020 datasets:</h3>
+      To comply with the attribution
+      requirements of the <a target="_blank" rel="noopener"
+                             href="https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC
+      license</a>, the aggregate "ISIC 2020" data must be cited as:
+      <blockquote>
+        <p>The ISIC 2020 Challenge Dataset <a href="https://doi.org/10.34970/2020-ds01"
+                                              rel="noopener" target="_blank">https://doi.org/10.34970/2020-ds01</a>
+          (c) by ISDIS, 2020</p>
+
+        <p>Creative Commons Attribution-Non Commercial 4.0 International License.</p>
+
+        <p>The dataset was generated by the International Skin Imaging Collaboration (ISIC)
+          and images are from the following sources: Hospital Clínic de Barcelona,
+          Medical University of Vienna, Memorial Sloan Kettering Cancer Center,
+          Melanoma Institute Australia, The University of Queensland, and the
+          University of Athens Medical School.</p>
+
+        <p>You should have received a copy of the license along with this work.</p>
+
+        <p>If not, see <a href="https://creativecommons.org/licenses/by-nc/4.0/legalcode.txt"
+                          rel="noopener" target="_blank">https://creativecommons.org/licenses/by-nc/4.0/legalcode.txt</a>.
+        </p>
+      </blockquote>
+      When referencing this dataset in your own manuscripts and publications, please use the
+      following full citation. Please note this is a preprint and has not undergone peer review.
+      It is being prepared for submission and if accepted to a peer reviewed journal the below
+      will be updated accordingly:
+      <blockquote>
+        <p>[1] Veronica Rotemberg, Nicholas Kurtansky, Brigid Betz-Stablein,
+          Liam Caffery, Emmanouil Chousakos, Noel Codella, Marc Combalia, Stephen Dusza,
+          Pascale Guitera, David Gutman, Allan Halpern, Harald Kittler, Kivanc Kose, Steve
+          Langer, Konstantinos Lioprys, Josep Malvehy, Shenara Musthaq, Jabpani Nanda,
+          Ofer Reiter, George Shih, Alexander Stratigos, Philipp Tschandl, Jochen Weber,
+          H. Peter Soyer: "A Patient-Centric Dataset of Images and Metadata for
+          Identifying Melanomas Using Clinical Context", 2020; arXiv:2008.07360</p>
+      </blockquote>
+    </div>
+  </section>
+{% endblock %}
