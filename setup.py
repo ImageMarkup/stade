@@ -68,5 +68,5 @@ setup(
         'django-debug-toolbar',
         'django-minio-storage',
     ],
-    extras_require={'dev': ['ipython', 'tox']},
+    extras_require={'dev': ['django-click', 'ipython', 'tox']},
 )
