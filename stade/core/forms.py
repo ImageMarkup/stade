@@ -7,6 +7,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
+import requests
 
 from stade.core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from stade.tracker.tasks import add_mailchimp_subscriber
@@ -20,6 +21,21 @@ class CustomSignupForm(SignupForm):
         self.fields['first_name'] = forms.CharField()
         self.fields['last_name'] = forms.CharField()
         self.fields['subscribe'] = forms.BooleanField(required=False)
+
+    def clean_email(self):
+        super().clean_email()
+        domain = self.cleaned_data['email'].split('@')[-1]
+
+        try:
+            r = requests.get(f'https://open.kickbox.com/v1/disposable/{domain}', timeout=(2, 2))
+        except ConnectionError:
+            # Ignore the intermittent failure and let them register (this should be rare)
+            return
+
+        if r.ok and r.json()['disposable']:
+            raise ValidationError('This looks like a fake email address.')
+        elif not r.ok:
+            logger.warning(f'Failed to check email address authenticity ({r.status_code}).')
 
     def save(self, request):
         user = super().save(request)
