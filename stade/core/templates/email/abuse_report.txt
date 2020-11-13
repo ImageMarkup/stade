@@ -1,0 +1,12 @@
+{{ user.email }} is a member of a lot of teams.
+
+Team, Creator, Created, Members (invites)
+
+{% for team in teams.all %}
+   Team:              {{ team.name }} ({{ url }}{% url 'admin:core_team_change' team.id %})
+   Creator:           {{ team.creator.email }}
+   Created:           {{ team.created }}
+   Members (invites): {{ team.num_users }} ({{team.num_invites}})
+{% endfor %}
+
+View this user: {{ url }}{% url 'admin:auth_user_change' user.id %}
