@@ -7,6 +7,7 @@ from .team import TeamInline
 
 class UserAdmin(BaseUserAdmin):
     inlines = [TeamInline]
+    list_display = ['date_joined'] + list(BaseUserAdmin.list_display)
 
 
 # Re-register UserAdmin
