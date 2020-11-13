@@ -1,5 +1,3 @@
-{% load humanize %}
-
 <html>
   <body style="max-width: 500px; color: #525151; background-color: #f9f5f5; font-family: helvetica; margin: 0 auto; text-align: center;">
     <img src="{{ url }}/static/img/isic_logo.png" style="display: block; margin: 0 auto 10px; width: 250px;"/>
@@ -23,7 +21,7 @@
               <td class="value" style="font-weight: bold;">{{ team.creator.email }}</td>
             </tr>
             <tr>
-              <td class="value" style="font-weight: bold;">{{ team.created|naturaltime }}</td>
+              <td class="value" style="font-weight: bold;">{{ team.created }}</td>
             </tr>
             <tr>
               <td class="value" style="font-weight: bold;">{{ team.num_users }} ({{team.num_invites}})</td>
