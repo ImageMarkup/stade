@@ -26,9 +26,14 @@ class Team(models.Model):
     # todo, this doesn't work at all
     @transaction.atomic
     def save(self, *args, **kwargs):
+        from stade.core.tasks import send_possible_abuse_report
+
         if self.pk is None:
             # do in a transaction
             super().save(*args, **kwargs)
             self.users.add(self.creator)
         else:
             super().save(*args, **kwargs)
+
+        if self.creator.teams.count() > 5:
+            send_possible_abuse_report.delay(self.creator.id)

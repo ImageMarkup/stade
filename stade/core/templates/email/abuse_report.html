@@ -1,0 +1,44 @@
+{% load humanize %}
+
+<html>
+  <body style="max-width: 500px; color: #525151; background-color: #f9f5f5; font-family: helvetica; margin: 0 auto; text-align: center;">
+    <img src="{{ url }}/static/img/isic_logo.png" style="display: block; margin: 0 auto 10px; width: 250px;"/>
+    <center style="background: #fff; border-radius: 5px; box-shadow: 0 4px 20px #ddd; padding: 25px;">
+      <p class="failure" style="background-color: #e72929d1; color: #fff; padding: 20px; border-radius: 3px; margin: 0 0 30px;">{{ user.email }} is a member of a lot of teams.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Team</th>
+            <th>Creator</th>
+            <th>Created</th>
+            <th>Members (invites)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for team in teams.all %}
+            <tr>
+              <td class="value" style="font-weight: bold;"><a href="{{ url }}{% url 'admin:core_team_change' team.id %}">{{ team.name }}</a></td>
+            </tr>
+            <tr>
+              <td class="value" style="font-weight: bold;">{{ team.creator.email }}</td>
+            </tr>
+            <tr>
+              <td class="value" style="font-weight: bold;">{{ team.created|naturaltime }}</td>
+            </tr>
+            <tr>
+              <td class="value" style="font-weight: bold;">{{ team.num_users }} ({{team.num_invites}})</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div>
+        <p class="explanation" style="margin-top: 30px; padding-top: 30px; border-top: 1px solid #eeeeee;">
+          <a href="{{ url }}{% url 'admin:auth_user_change' user.id %}">View this user</a>.
+        </p>
+      </div>
+    </center>
+
+  </body>
+
+</html>

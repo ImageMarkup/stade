@@ -15,6 +15,7 @@ from django.contrib.sites.models import Site
 from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 from django.db import connection, transaction
+from django.db.models import Count
 from django.db.models.fields.files import FieldFile
 from django.template.loader import render_to_string
 from girder_utils.files import field_file_to_local_path
@@ -222,3 +223,25 @@ def send_team_invitation(invite_id):
             [invite.recipient],
             html_message=render_to_string('email/team_invite_new_user.html', context),
         )
+
+
+@shared_task(
+    soft_time_limit=20, time_limit=30, autoretry_for=(SMTPServerDisconnected,), retry_backoff=True
+)
+def send_possible_abuse_report(user_id):
+    user = User.objects.prefetch_related('teams').get(pk=user_id)
+    teams = (
+        user.teams.select_related('creator')
+        .annotate(num_users=Count('users', distinct=True))
+        .annotate(num_invites=Count('teaminvitation'))
+        .order_by('-created')
+    )
+    send_mail(
+        'Possible abuse detected',
+        render_to_string(
+            'email/abuse_report.html',
+            {'user': user, 'teams': teams, 'url': f'https://{Site.objects.get_current().domain}'},
+        ),
+        settings.DEFAULT_FROM_EMAIL,
+        [u.email for u in User.objects.filter(is_superuser=True)],
+    )
