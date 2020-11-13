@@ -16,14 +16,8 @@
           {% for team in teams.all %}
             <tr>
               <td class="value" style="font-weight: bold;"><a href="{{ url }}{% url 'admin:core_team_change' team.id %}">{{ team.name }}</a></td>
-            </tr>
-            <tr>
               <td class="value" style="font-weight: bold;">{{ team.creator.email }}</td>
-            </tr>
-            <tr>
               <td class="value" style="font-weight: bold;">{{ team.created }}</td>
-            </tr>
-            <tr>
               <td class="value" style="font-weight: bold;">{{ team.num_users }} ({{team.num_invites}})</td>
             </tr>
           {% endfor %}
