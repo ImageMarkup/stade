@@ -38,6 +38,8 @@ class StadeConfig(ConfigMixin):
 
         configuration.AUTHENTICATION_BACKENDS.insert(0, 'rules.permissions.ObjectPermissionBackend')
 
+    SHELL_PLUS_IMPORTS = ['from stade.core.tasks import *']
+
     # Celery
     # TODO: concurrency could be increased for non-memory intensive tasks
     CELERY_WORKER_CONCURRENCY = 1
