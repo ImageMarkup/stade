@@ -12,7 +12,15 @@ from stade.core.tasks import score_submission
 
 class SubmissionInline(ReadonlyTabularInline):
     model = Submission
-    fields = ['id', 'created', 'test_prediction_file', 'status', 'overall_score']
+    fields = ['id', 'created', 'test_prediction_file', 'status', 'overall_score', 'team_name']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.select_related('approach__team')
+        return qs
+
+    def team_name(self, obj):
+        return obj.approach.team.name
 
 
 class TaskListFilter(admin.SimpleListFilter):
