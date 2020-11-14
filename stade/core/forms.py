@@ -30,12 +30,14 @@ class CustomSignupForm(SignupForm):
             r = requests.get(f'https://open.kickbox.com/v1/disposable/{domain}', timeout=(2, 2))
         except ConnectionError:
             # Ignore the intermittent failure and let them register (this should be rare)
-            return
+            return self.cleaned_data['email']
 
         if r.ok and r.json()['disposable']:
             raise ValidationError('This looks like a fake email address.')
         elif not r.ok:
             logger.warning(f'Failed to check email address authenticity ({r.status_code}).')
+
+        return self.cleaned_data['email']
 
     def save(self, request):
         user = super().save(request)
