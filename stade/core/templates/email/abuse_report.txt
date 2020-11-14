@@ -1,4 +1,4 @@
-{{ user.email }} is a member of a lot of teams.
+{{ user.email }} is a member of a lot ({{ teams.count }}) of teams.
 
 Team, Creator, Created, Members (invites)
 

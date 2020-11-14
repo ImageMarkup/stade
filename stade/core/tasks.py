@@ -238,7 +238,7 @@ def send_possible_abuse_report(user_id):
     )
     context = {'user': user, 'teams': teams, 'url': f'https://{Site.objects.get_current().domain}'}
     send_mail(
-        'Possible abuse detected',
+        '[ISIC Challenge] Possible abuse detected',
         render_to_string('email/abuse_report.txt', context),
         settings.DEFAULT_FROM_EMAIL,
         [u.email for u in User.objects.filter(is_superuser=True)],
