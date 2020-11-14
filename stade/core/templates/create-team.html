@@ -6,6 +6,12 @@
     <h1>Create Team</h1>
   </div>
   <div class="section-content">
+    {% if request.user.teams.count >= 1 %}
+      <div class="notification is-danger">
+        Note that creating teams to circumvent the maximum submissions per week threshold will result in an automatic ban.
+      </div>
+    {% endif %}
+
     {% include "partial-team.html" %}
   </div>
 </section>
