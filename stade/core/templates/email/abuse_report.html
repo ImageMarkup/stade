@@ -2,7 +2,7 @@
   <body style="max-width: 500px; color: #525151; background-color: #f9f5f5; font-family: helvetica; margin: 0 auto; text-align: center;">
     <img src="{{ url }}/static/img/isic_logo.png" style="display: block; margin: 0 auto 10px; width: 250px;"/>
     <center style="background: #fff; border-radius: 5px; box-shadow: 0 4px 20px #ddd; padding: 25px;">
-      <p class="failure" style="background-color: #e72929d1; color: #fff; padding: 20px; border-radius: 3px; margin: 0 0 30px;">{{ user.email }} is a member of a lot of teams.</p>
+      <p class="failure" style="background-color: #e72929d1; color: #fff; padding: 20px; border-radius: 3px; margin: 0 0 30px;">{{ user.email }} is a member of a lot ({{ teams.count }}) of teams.</p>
       <table>
         <thead>
           <tr>
