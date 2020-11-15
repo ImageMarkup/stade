@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="section container wizard">
+    <div class="section-header">
+      <h1>Submitting too frequently</h1>
+    </div>
+    <div class="section-content">
+      <div>
+        It appears that you're creating submissions too frequently.
+
+        This task only allows <strong>{{ task.max_submissions_per_week }}</strong> submissions per week.
+
+        Creation of additional accounts in an attempt to circumvent this limit will result in an automatic ban.
+      </div>
+    </div>
+  </section>
+{% endblock %}

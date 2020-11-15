@@ -1,3 +1,4 @@
+from datetime import timedelta
 import logging
 
 from django.conf import settings
@@ -9,6 +10,7 @@ from django.db.models import Exists, OuterRef, Prefetch
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 import requests
 from rules.contrib.views import objectgetter, permission_required
@@ -485,6 +487,17 @@ def create_submission(request, approach_id):
     if approach.team_id not in request.user.teams.only('id').values_list(flat=True):
         raise Http404()
 
+    # Add per user submission throttling, per team rate limiting is handled via permissions
+    if approach.task.max_submissions_per_week != 0:
+        if (
+            approach.task.pending_or_succeeded_submissions(request.user)
+            .filter(created__gte=timezone.now() - timedelta(weeks=1))
+            .count()
+            >= approach.task.max_submissions_per_week
+        ):
+            return render(request, 'submitting-too-frequently.html', {'task': approach.task})
+
+    return render(request, 'submitting-too-frequently.html', {'task': approach.task})
     if request.method == 'POST':
         form = CreateSubmissionForm(
             request.POST, request.FILES, approach_id=approach_id, request=request

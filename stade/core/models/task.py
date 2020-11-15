@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Optional, cast
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
@@ -11,6 +12,7 @@ from s3_file_field import S3FileField
 
 from .challenge import Challenge
 from .submission import Submission
+from .team import Team
 
 
 class Task(models.Model):
@@ -72,16 +74,22 @@ class Task(models.Model):
     def get_absolute_url(self):
         return reverse('task-detail', args=[self.id])
 
-    def pending_or_succeeded_submissions(self, team) -> QuerySet[Submission]:
-        return Submission.objects.filter(
-            status__in=[
+    def pending_or_succeeded_submissions(self, team_or_user) -> QuerySet[Submission]:
+        filters = {
+            'status__in': [
                 Submission.Status.QUEUED,
                 Submission.Status.SCORING,
                 Submission.Status.SUCCEEDED,
             ],
-            approach__task=self,
-            approach__team=team,
-        )
+            'approach__task': self,
+        }
+
+        if isinstance(team_or_user, Team):
+            filters['approach__team'] = team_or_user
+        elif isinstance(team_or_user, User):
+            filters['creator'] = team_or_user
+
+        return Submission.objects.filter(**filters)
 
     def next_available_submission(self, team) -> Optional[datetime]:
         """
