@@ -497,7 +497,6 @@ def create_submission(request, approach_id):
         ):
             return render(request, 'submitting-too-frequently.html', {'task': approach.task})
 
-    return render(request, 'submitting-too-frequently.html', {'task': approach.task})
     if request.method == 'POST':
         form = CreateSubmissionForm(
             request.POST, request.FILES, approach_id=approach_id, request=request
