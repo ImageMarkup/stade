@@ -48,9 +48,21 @@
               <a class="navbar-item" href="{% url 'data' %}">
                 Data
               </a>
-              <a class="navbar-item" href="{% url 'challenges' %}">
-                Challenges
-              </a>
+              <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">Challenges</a>
+
+                <div class="navbar-dropdown">
+                  <a class="navbar-item" href="{% url 'challenge-landing' '2016' %}">2016</a>
+                  <a class="navbar-item" href="{% url 'challenge-landing' '2017' %}">2017</a>
+                  <a class="navbar-item" href="{% url 'challenge-landing' '2018' %}">2018</a>
+                  <a class="navbar-item" href="{% url 'challenge-landing' '2019' %}">2019</a>
+                  <a class="navbar-item" href="#">2020 (Coming Soon)</a>
+                  <a class="navbar-item" href="{% url 'challenge-landing' 'live' %}">Live</a>
+
+                  <hr class="navbar-divider">
+                  <a class="navbar-item" href="{% url 'challenges' %}">View all</a>
+                </div>
+              </div>
 
               <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">Leaderboards</a>
