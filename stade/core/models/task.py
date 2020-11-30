@@ -23,7 +23,17 @@ class Task(models.Model):
         SEGMENTATION = 'segmentation', _('Segmentation')
         CLASSIFICATION = 'classification', _('Classification')
 
+    class MetricField(models.TextChoices):
+        BALANCED_ACCURACY = 'balanced_accuracy', _('Balanced Accuracy')
+        AVERAGE_PRECISION = 'ap', _('Average Precision')
+        AUC = 'auc', _('AUC')
+
     type = models.CharField(max_length=20, choices=Type.choices)
+    metric_field = models.CharField(
+        max_length=100,
+        choices=MetricField.choices,
+        help_text='Which metric to use for the overall score',
+    )
     created = models.DateTimeField(default=timezone.now)
     challenge = models.ForeignKey(Challenge, on_delete=models.DO_NOTHING, related_name='tasks')
     name = models.CharField(max_length=100)

@@ -20,7 +20,12 @@ from django.db.models.fields.files import FieldFile
 from django.template.loader import render_to_string
 from girder_utils.files import field_file_to_local_path
 from girder_utils.storages import expiring_url
-from isic_challenge_scoring import ClassificationScore, ScoreException, SegmentationScore
+from isic_challenge_scoring import (
+    ClassificationScore,
+    ScoreException,
+    SegmentationScore,
+    ValidationMetric,
+)
 
 from stade.core.models import Approach, Submission, Task, TeamInvitation
 
@@ -144,7 +149,11 @@ def _score_submission(submission):
             with field_file_to_local_path(truth_file) as truth_file_path, field_file_to_local_path(
                 prediction_file
             ) as prediction_file_path:
-                score = SegmentationScore.from_zip_file(truth_file_path, prediction_file_path)
+                score = SegmentationScore.from_zip_file(
+                    truth_file_path,
+                    prediction_file_path,
+                    ValidationMetric(submission.approach.task.metric_field),
+                )
 
         elif submission.approach.task.type == Task.Type.CLASSIFICATION:
             # If the S3Boto3Storage backend is used, then the FieldFile contains a
@@ -157,10 +166,22 @@ def _score_submission(submission):
                 # Calling .file to get the File object isn't strictly necessary, as the FieldFile
                 # will proxy operations to it, but it will make the type checker happy
                 score = ClassificationScore.from_stream(
-                    io.TextIOWrapper(truth_file.file), io.TextIOWrapper(prediction_file.file)
+                    io.TextIOWrapper(truth_file.file),
+                    io.TextIOWrapper(prediction_file.file),
+                    ValidationMetric(submission.approach.task.metric_field),
                 )
+        else:
+            raise Exception('Unknown task type')
 
-        submission.overall_score = score.overall
+        if submission.approach.task.metric_field == Task.MetricField.AVERAGE_PRECISION:
+            submission.overall_score = score.macro_average['ap']
+        elif submission.approach.task.metric_field == Task.MetricField.AUC:
+            submission.overall_score = score.macro_average['auc']
+        elif submission.approach.task.metric_field == Task.MetricField.BALANCED_ACCURACY:
+            submission.overall_score = score.aggregate['balanced_accuracy']
+        else:
+            raise Exception('Unknown task metric field')
+
         submission.validation_score = score.validation
         submission.score = score.to_dict()
         submission.status = Submission.Status.SUCCEEDED
