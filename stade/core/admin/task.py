@@ -12,4 +12,6 @@ class TaskInline(ReadonlyTabularInline):
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ['challenge', 'name', 'locked']
-    list_filter = ['locked']
+    list_display_links = ['name']
+    list_filter = ['locked', 'type', 'metric_field']
+    search_fields = ['name']
