@@ -44,7 +44,15 @@ class TaskListFilter(admin.SimpleListFilter):
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ['task', 'approach', 'id', 'created', 'creator', 'status']
+    list_display = [
+        'task',
+        'approach',
+        'id',
+        'created',
+        'creator',
+        'creator_fingerprint_id',
+        'status',
+    ]
     list_display_links = ['id']
     list_filter = ['status', TaskListFilter]
 

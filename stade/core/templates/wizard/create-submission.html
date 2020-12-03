@@ -1,5 +1,23 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+  <script>
+    function initFingerprintJS() {
+      FingerprintJS.load().then(fp => {
+        fp.get().then(result => {
+          $('#{{ form.creator_fingerprint.auto_id }}').val(JSON.stringify(result));
+          $('#{{ form.creator_fingerprint_id.auto_id }}').val(result.visitorId);
+        });
+      });
+    }
+  </script>
+  <script
+    async
+    src="//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"
+    onload="initFingerprintJS()"
+  ></script>
+{% endblock %}
+
 {% block content %}
 <section class="section container wizard">
   <div class="section-header">
@@ -64,6 +82,8 @@ ISIC_0001102,0.54389,0.64057,0.61898,0.554,0.2462,0.0586,0.4182,0.124,0.6313</pr
         {% endif %}
 
         <div class="fields">
+            {{ form.creator_fingerprint }}
+            {{ form.creator_fingerprint_id }}
 
           <div class="field file-upload">
             <div class="file has-name is-medium is-fullwidth is-right{% if form.test_prediction_file.errors %} is-danger{% endif %}">
