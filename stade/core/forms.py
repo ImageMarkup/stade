@@ -187,7 +187,16 @@ class TeamForm(forms.ModelForm):
 class CreateSubmissionForm(forms.ModelForm):
     class Meta:
         model = Submission
-        fields = ['accepted_terms', 'test_prediction_file']
+        fields = [
+            'accepted_terms',
+            'test_prediction_file',
+            'creator_fingerprint',
+            'creator_fingerprint_id',
+        ]
+        widgets = {
+            'creator_fingerprint': forms.HiddenInput(),
+            'creator_fingerprint_id': forms.HiddenInput(),
+        }
 
         error_messages = {
             'test_prediction_file': {'required': _('You must provide a prediction file.')}

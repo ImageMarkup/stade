@@ -28,6 +28,8 @@ class Submission(models.Model):
 
     created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    creator_fingerprint = models.JSONField(blank=True, null=True)
+    creator_fingerprint_id = models.CharField(max_length=32, null=True, blank=True)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
     accepted_terms = models.BooleanField(default=False)
     test_prediction_file = S3FileField()
@@ -37,7 +39,7 @@ class Submission(models.Model):
     validation_score = models.FloatField(blank=True, null=True)
     fail_reason = models.TextField(blank=True)
 
-    objects = DeferredFieldsManager('score')
+    objects = DeferredFieldsManager('score', 'creator_fingerprint')
 
     def __str__(self):
         return f'{self.id}'
