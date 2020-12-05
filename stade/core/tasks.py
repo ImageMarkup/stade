@@ -152,7 +152,6 @@ def _score_submission(submission):
                 score = SegmentationScore.from_zip_file(
                     truth_file_path,
                     prediction_file_path,
-                    ValidationMetric(submission.approach.task.metric_field),
                 )
 
         elif submission.approach.task.type == Task.Type.CLASSIFICATION:
