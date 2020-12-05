@@ -69,7 +69,48 @@ ISIC_0001107,0.5061,0.23904,0.02974,0.8791,0.757,0.15820,0.7691,0.3817,0.6782
 ISIC_0001102,0.54389,0.64057,0.61898,0.554,0.2462,0.0586,0.4182,0.124,0.6313</pre>
 
     <p>For more information on submitting, please see the <a target="_blank" href="https://challenge2019.isic-archive.com/submit.html">submission documentation</a>.</p>
-    {% endif %}
+        {% elif approach.task.id == 56 %}
+          <article class="message is-info">
+            <div class="message-header">
+              <p>Sample Submission CSV</p>
+            </div>
+            <div class="message-body">
+
+              <table class="table is-bordered">
+                <thead>
+                  <tr>
+                    <th>image</th>
+                    <th>malignant</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>ISIC_12345</td>
+                    <td>0.57291</td>
+                  </tr>
+                  <tr>
+                    <td>ISIC_12346</td>
+                    <td>0.77182</td>
+                  </tr>
+                  <tr>
+                    <td>ISIC_12347</td>
+                    <td>0.0</td>
+                  </tr>
+                  <tr>
+                    <td>ISIC_12348</td>
+                    <td>0.11423</td>
+                  </tr>
+                  <tr>
+                    <td>ISIC_12349</td>
+                    <td>0.97322</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <hr />
+        {% endif %}
 
       <form action="" class="create-submission" method="post" enctype="multipart/form-data">
         {% csrf_token %}
