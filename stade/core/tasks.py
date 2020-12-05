@@ -172,14 +172,17 @@ def _score_submission(submission):
         else:
             raise Exception('Unknown task type')
 
-        if submission.approach.task.metric_field == Task.MetricField.AVERAGE_PRECISION:
-            submission.overall_score = score.macro_average['ap']
-        elif submission.approach.task.metric_field == Task.MetricField.AUC:
-            submission.overall_score = score.macro_average['auc']
-        elif submission.approach.task.metric_field == Task.MetricField.BALANCED_ACCURACY:
-            submission.overall_score = score.aggregate['balanced_accuracy']
-        else:
-            raise Exception('Unknown task metric field')
+        if submission.approach.task.type == Task.Type.SEGMENTATION:
+            submission.overall_score = score.overall
+        elif submission.approach.task.type == Task.Type.CLASSIFICATION:
+            if submission.approach.task.metric_field == Task.MetricField.AVERAGE_PRECISION:
+                submission.overall_score = score.macro_average['ap']
+            elif submission.approach.task.metric_field == Task.MetricField.AUC:
+                submission.overall_score = score.macro_average['auc']
+            elif submission.approach.task.metric_field == Task.MetricField.BALANCED_ACCURACY:
+                submission.overall_score = score.aggregate['balanced_accuracy']
+            else:
+                raise Exception('Unknown task metric field')
 
         submission.validation_score = score.validation
         submission.score = score.to_dict()
