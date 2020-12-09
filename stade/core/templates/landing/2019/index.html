@@ -2,49 +2,68 @@
 {% block content %}
   <section class="section container">
     <div class="section-header">
-      <h1>{{ challenge.name }} Challenge {% if challenge.locked%}[Closed]{% endif %}</h1>
+      <h1>{{ challenge.name }} Challenge {% if challenge.locked %}[Closed]{% endif %}</h1>
     </div>
 
     <div class="section-content">
       <h2>Task</h2>
-      <p>The goal for ISIC 2019 is classify dermoscopic images among nine different diagnostic categories:</p>
+      <p>The goal for ISIC 2019 is classify dermoscopic images among nine different diagnostic
+        categories:</p>
       <ol>
         <li>Melanoma</li>
         <li>Melanocytic nevus</li>
         <li>Basal cell carcinoma</li>
         <li>Actinic keratosis</li>
-        <li>Benign keratosis (solar lentigo / seborrheic keratosis / lichen planus-like keratosis)</li>
+        <li>Benign keratosis (solar lentigo / seborrheic keratosis / lichen planus-like keratosis)
+        </li>
         <li>Dermatofibroma</li>
         <li>Vascular lesion</li>
         <li>Squamous cell carcinoma</li>
         <li>None of the others</li>
       </ol>
-      <p>25,331 images are available for training across 8 different categories. Additionally, the test<br>
-        dataset (planned release August 2nd) will contain an additional outlier class not represented in<br>
+      <p>25,331 images are available for training across 8 different categories. Additionally, the
+        test<br>
+        dataset (planned release August 2nd) will contain an additional outlier class not
+        represented in<br>
         the training data, which developed systems must be able to identify.</p>
-      <p>Two tasks will be available for participation: 1) classify dermoscopic images without meta-data,<br>
-        and 2) classify images with additional available meta-data. Task 1’s deadline will be August 16th.<br>
-        Task 2 will be August 23th, after release of test meta-data on August 16th. Participants of Task 2<br>
+      <p>Two tasks will be available for participation: 1) classify dermoscopic images without
+        meta-data,<br>
+        and 2) classify images with additional available meta-data. Task 1’s deadline will be August
+        16th.<br>
+        Task 2 will be August 23th, after release of test meta-data on August 16th. Participants of
+        Task 2<br>
         must submit to Task 1 as well, though participants can submit to Task 1 alone.</p>
-      <p>In addition to submitting predictions, each competitor is required to submit a link to a manuscript<br>
+      <p>In addition to submitting predictions, each competitor is required to submit a link to a
+        manuscript<br>
         describing the methods used to generate predictions.</p>
-      <h2 class="code-line" data-line-start=34 data-line-end=35><a id="Submission_34"></a>Submission</h2>
+      <h2 class="code-line" data-line-start=34 data-line-end=35><a id="Submission_34"></a>Submission
+      </h2>
       <p>Submissions are made to the<br>
-        <a href="https://challenge.isic-archive.com/">ISIC Challenge submission system</a>, which provides automated<br>
+        <a href="https://challenge.isic-archive.com/">ISIC Challenge submission system</a>, which
+        provides automated<br>
         format validation, pre-scoring, metadata editing capabilties.</p>
-      <h2 class="code-line" data-line-start=41 data-line-end=42><a id="Evaluation_41"></a>Evaluation</h2>
-      <p>Evaluation of algorithms is entirely automated, and rankings are determined by balanced multi-class<br>
-        accuracy. At the conclusion of the ISIC Challenge, all scores are posted to a public leaderboard,<br>
+      <h2 class="code-line" data-line-start=41 data-line-end=42><a id="Evaluation_41"></a>Evaluation
+      </h2>
+      <p>Evaluation of algorithms is entirely automated, and rankings are determined by balanced
+        multi-class<br>
+        accuracy. At the conclusion of the ISIC Challenge, all scores are posted to a public
+        leaderboard,<br>
         providing official rankings and more detailed metrics for every submission.</p>
       <h2 class="code-line" data-line-start=48 data-line-end=49><a id="Awards_48"></a>Awards</h2>
-      <p>Cash prizes of $4,000, $2,000, and $1,000 will be awarded to the first, second, and third place<br>
-        participants of image-only and meta-data tasks. USD will be awarded to winners of each of the<br>
+      <p>Cash prizes of $4,000, $2,000, and $1,000 will be awarded to the first, second, and third
+        place<br>
+        participants of image-only and meta-data tasks. USD will be awarded to winners of each of
+        the<br>
         tasks. The monetary prizes for the winners of the challenge will be awarded after the MICCAI<br>
-        Workshop in Shenzhen, China, in October 2019. The prizes are being provided by Canfield Scientific,<br>
-        Inc., a US company, and are subject to any restrictions incumbent on the sponsor. Winners will be<br>
-        asked to identify a recipient individual or entity who will be required to provide tax documentation<br>
+        Workshop in Shenzhen, China, in October 2019. The prizes are being provided by Canfield
+        Scientific,<br>
+        Inc., a US company, and are subject to any restrictions incumbent on the sponsor. Winners
+        will be<br>
+        asked to identify a recipient individual or entity who will be required to provide tax
+        documentation<br>
         (U.S. citizens- IRS form W-9, non-U.S. citizens Form W-8 BEN).</p>
-      <h2 class="code-line" data-line-start=57 data-line-end=58><a id="Sponsors_57"></a>Sponsors</h2>
+      <h2 class="code-line" data-line-start=57 data-line-end=58><a id="Sponsors_57"></a>Sponsors
+      </h2>
       <div class="columns">
         <div class="column">
           <ul>
@@ -52,14 +71,16 @@
             <li><strong>IBM</strong></li>
             <li><strong>MetaOptima</strong></li>
           </ul>
-          <h4 class="code-line" data-line-start=62 data-line-end=63><a id="Clinical_Chairs_62"></a>Clinical Chairs</h4>
+          <h4 class="code-line" data-line-start=62 data-line-end=63><a id="Clinical_Chairs_62"></a>Clinical
+            Chairs</h4>
           <ul>
             <li><strong>Josep Malvehy, M.D.</strong> ;<br>
               <em>University Hospital Clinic of Barcelona, Barcelona, Spain</em></li>
             <li><strong>Allan Halpern, M.D.</strong> ;<br>
               <em>Memorial Sloan Kettering Cancer Center, New York City, NY, USA</em></li>
           </ul>
-          <h4 class="code-line" data-line-start=68 data-line-end=69><a id="Computer_Vision_Chairs_68"></a>Computer Vision Chairs</h4>
+          <h4 class="code-line" data-line-start=68 data-line-end=69><a
+              id="Computer_Vision_Chairs_68"></a>Computer Vision Chairs</h4>
           <ul>
             <li><strong>Noel C. F. Codella, Ph.D.</strong> ;<br>
               <em>IBM Research, Yorktown Heights, NY, USA</em></li>
@@ -67,7 +88,8 @@
         </div>
 
         <div class="column">
-          <h4 class="code-line" data-line-start=72 data-line-end=73><a id="Challenge_CoChairs_72"></a>Challenge Co-Chairs</h4>
+          <h4 class="code-line" data-line-start=72 data-line-end=73><a
+              id="Challenge_CoChairs_72"></a>Challenge Co-Chairs</h4>
           <ul>
             <li><strong>M. Emre Celebi, Ph.D.</strong> ;<br>
               <em>University of Central Arkansas, Conway, AR, USA</em></li>
@@ -86,13 +108,15 @@
           </ul>
         </div>
       </div>
-      Note: Any organizations/companies affiliated with members of the organizing committee are not excluded from participation in the Challenge, but must assure that their submissions are completely independent of the members of the organizing committee.
+      Note: Any organizations/companies affiliated with members of the organizing committee are not
+      excluded from participation in the Challenge, but must assure that their submissions are
+      completely independent of the members of the organizing committee.
 
       <ul class="landing-tasks">
         {% for task in challenge.tasks.all %}
           <li>
             <a href="{% url 'task-detail' task.id %}"><i class="material-icons">timelapse</i>
-              <p>{{task.name}}</p></a>
+              <p>{{ task.name }}</p></a>
           </li>{% endfor %}
       </ul>
     </div>

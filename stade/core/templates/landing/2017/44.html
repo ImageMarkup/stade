@@ -2,171 +2,196 @@
 
 {% load static %}
 {% block content %}
-<section class="section container">
-    <div class="section-header">
-        <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked %}[Closed]{% endif %}</h1>
-    </div>
-    <div class="section-content">
-        <div class="c-phase-instructions-container">
-            <p><img src=
-            "{% static 'img/landing/2017/44/overview.jpg' %}"></p>
-            <h2><strong>Goal</strong></h2>
-            <p>In this task, participants are asked to complete two
-            independent binary image classification tasks that involve
-            three unique diagnoses of skin lesions (melanoma, nevus,
-            and seborrheic keratosis). In the first binary
-            classification task, participants are asked to distinguish
-            between (a) melanoma and (b) nevus and seborrheic
-            keratosis. In the second binary classification task,
-            participants are asked to distinguish between (a)
-            seborrheic keratosis and (b) nevus and melanoma.</p>
-            <p><strong>Definitions:</strong></p>
-            <ul>
-                <li>Melanoma – malignant skin tumor, derived from
-                melanocytes (melanocytic)</li>
-                <li>Nevus – benign skin tumor, derived from melanocytes
-                (melanocytic)</li>
-                <li>Seborrheic keratosis – benign skin tumor, derived
-                from keratinocytes (non-melanocytic)</li>
-            </ul>
-            <h2><strong>Data</strong></h2>
-            <p>Lesion classification data includes the original image,
-            paired with a gold standard (definitive) diagnosis,
-            referred to as "Ground Truth".</p>
-            <p><strong>Training Image Data</strong></p>
-            <p>2000 images are provided as training data, including 374
-            "melanoma", 254 "seborrheic keratosis", and the remainder
-            as benign nevi (1372). The training data is provided as a
-            ZIP file, containing dermoscopic lesion images in JPEG
-            format and a CSV file with some clinical metadata for each
-            image.</p>
-            <p>All images are named using the scheme
-            <code>ISIC_&lt;image_id&gt;.jpg</code>, where
-            <code>&lt;image_id&gt;</code> is a 7-digit unique
-            identifier. EXIF tags in the images have been removed; any
-            remaining EXIF tags should not be relied upon to provide
-            accurate metadata.</p>
-            <p>The CSV file contains three columns:</p>
-            <ul>
-                <li><code>image_id</code>, identifying the image that
-                the row corresponds to</li>
-                <li><code>age_approximate</code>, containing the age of
-                the lesion patient, rounded to 5 year intervals, or
-                <code>"unknown"</code></li>
-                <li><code>sex</code>, containing the sex of the lesion
-                patient, or <code>"unknown"</code></li>
-            </ul>
-            <p><strong>Ground Truth Data</strong></p>
-            <p>The Training Ground Truth file is a single CSV (<a href=
-            "https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated
-            value</a>) file, containing 3 columns:</p>
-            <ul>
-                <li>The first column of each row contains a string of
-                the form <code>ISIC_&lt;image_id&gt;</code>, where
-                <code>&lt;image_id&gt;</code> matches the corresponding
-                Training Data image.</li>
-                <li>The second column of each row pertains to the first
-                binary classification task (melanoma vs. nevus and
-                seborrheic keratosis) and contains the value 0 or 1.
-                    <ul>
-                        <li>The number 1 = lesion is melanoma</li>
-                        <li>The number 0 = lesion is nevus or
-                        seborrheic keratosis</li>
-                    </ul>
-                </li>
-                <li>The third column of each row pertains to the second
-                classification task (seborrheic keratosis vs. melanoma
-                and nevus) and contains the value 0 or 1.
-                    <ul>
-                        <li>The number 1 = lesion is seborrheic
-                        keratosis</li>
-                        <li>The number 0 = lesion is melanoma or
-                        nevus</li>
-                    </ul>
-                </li>
-            </ul>
-            <p>Malignancy diagnosis data were obtained from expert
-            consensus and pathology report information. Participants
-            are not strictly required to limit development to the
-            training data, and are free to train their algorithm using
-            external data sources. However, any other sources of data
-            in system development must be properly cited in the
-            abstract.</p>
+  <section class="section container">
+  <div class="section-header">
+    <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked %}
+      [Closed]{% endif %}</h1>
+  </div>
+  <div class="section-content">
+    <div class="c-phase-instructions-container">
+      <p><img src=
+                  "{% static 'img/landing/2017/44/overview.jpg' %}"></p>
+      <h2><strong>Goal</strong></h2>
+      <p>In this task, participants are asked to complete two
+        independent binary image classification tasks that involve
+        three unique diagnoses of skin lesions (melanoma, nevus,
+        and seborrheic keratosis). In the first binary
+        classification task, participants are asked to distinguish
+        between (a) melanoma and (b) nevus and seborrheic
+        keratosis. In the second binary classification task,
+        participants are asked to distinguish between (a)
+        seborrheic keratosis and (b) nevus and melanoma.</p>
+      <p><strong>Definitions:</strong></p>
+      <ul>
+        <li>Melanoma – malignant skin tumor, derived from
+          melanocytes (melanocytic)
+        </li>
+        <li>Nevus – benign skin tumor, derived from melanocytes
+          (melanocytic)
+        </li>
+        <li>Seborrheic keratosis – benign skin tumor, derived
+          from keratinocytes (non-melanocytic)
+        </li>
+      </ul>
+      <h2><strong>Data</strong></h2>
+      <p>Lesion classification data includes the original image,
+        paired with a gold standard (definitive) diagnosis,
+        referred to as "Ground Truth".</p>
+      <p><strong>Training Image Data</strong></p>
+      <p>2000 images are provided as training data, including 374
+        "melanoma", 254 "seborrheic keratosis", and the remainder
+        as benign nevi (1372). The training data is provided as a
+        ZIP file, containing dermoscopic lesion images in JPEG
+        format and a CSV file with some clinical metadata for each
+        image.</p>
+      <p>All images are named using the scheme
+        <code>ISIC_&lt;image_id&gt;.jpg</code>, where
+        <code>&lt;image_id&gt;</code> is a 7-digit unique
+        identifier. EXIF tags in the images have been removed; any
+        remaining EXIF tags should not be relied upon to provide
+        accurate metadata.</p>
+      <p>The CSV file contains three columns:</p>
+      <ul>
+        <li><code>image_id</code>, identifying the image that
+          the row corresponds to
+        </li>
+        <li><code>age_approximate</code>, containing the age of
+          the lesion patient, rounded to 5 year intervals, or
+          <code>"unknown"</code></li>
+        <li><code>sex</code>, containing the sex of the lesion
+          patient, or <code>"unknown"</code></li>
+      </ul>
+      <p><strong>Ground Truth Data</strong></p>
+      <p>The Training Ground Truth file is a single CSV (<a href=
+                                                                "https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated
+        value</a>) file, containing 3 columns:</p>
+      <ul>
+        <li>The first column of each row contains a string of
+          the form <code>ISIC_&lt;image_id&gt;</code>, where
+          <code>&lt;image_id&gt;</code> matches the corresponding
+          Training Data image.
+        </li>
+        <li>The second column of each row pertains to the first
+          binary classification task (melanoma vs. nevus and
+          seborrheic keratosis) and contains the value 0 or 1.
+          <ul>
+            <li>The number 1 = lesion is melanoma</li>
+            <li>The number 0 = lesion is nevus or
+              seborrheic keratosis
+            </li>
+          </ul>
+        </li>
+        <li>The third column of each row pertains to the second
+          classification task (seborrheic keratosis vs. melanoma
+          and nevus) and contains the value 0 or 1.
+          <ul>
+            <li>The number 1 = lesion is seborrheic
+              keratosis
+            </li>
+            <li>The number 0 = lesion is melanoma or
+              nevus
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <p>Malignancy diagnosis data were obtained from expert
+        consensus and pathology report information. Participants
+        are not strictly required to limit development to the
+        training data, and are free to train their algorithm using
+        external data sources. However, any other sources of data
+        in system development must be properly cited in the
+        abstract.</p>
 
-            <h2><strong>Submission Instructions</strong></h2>
-<p>The <strong>Test Data</strong> files are in a ZIP container, and are the exact same format as the <strong>Training Data</strong>. The <strong>Test Data</strong> files should be downloaded via the "Download test dataset" button below. <em>Note: you must be signed-in and registered to participate in this phase of the challenge in order for this link to be visible.</em></p>
-<p>The submitted <strong>Test Results</strong> file should use the same format as the <strong>Training Ground Truth</strong> file. The first column of each row should contain a string of the form <code>ISIC_&lt;image_id&gt;</code>, where <code>&lt;image_id&gt;</code> matches a corresponding <strong>Test Data</strong> image. The second and third column of each row should contain a floating-point value in the closed interval <code>[0.0, 1.0]</code>, where 0.5 is used as the binary classification threshold.</p>
-<p>The second column of each row should pertain to the first binary classification task (melanoma vs. nevus and seborrheic keratosis). The third column of each row should pertain to the second binary classification task (seborrheic keratosis vs. melanoma and nevus).</p>
-<p>Note that arbitrary score ranges and thresholds can be converted to the range of 0.0 to 1.0, with a threshold of 0.5, trivially using the following sigmoid conversion:</p>
-<pre><code>1 / (1 + e^(-(a(x - b))))
+      <h2><strong>Submission Instructions</strong></h2>
+      <p>The <strong>Test Data</strong> files are in a ZIP container, and are the exact same format
+        as the <strong>Training Data</strong>. The <strong>Test Data</strong> files should be
+        downloaded via the "Download test dataset" button below. <em>Note: you must be signed-in and
+          registered to participate in this phase of the challenge in order for this link to be
+          visible.</em></p>
+      <p>The submitted <strong>Test Results</strong> file should use the same format as the <strong>Training
+        Ground Truth</strong> file. The first column of each row should contain a string of the form
+        <code>ISIC_&lt;image_id&gt;</code>, where <code>&lt;image_id&gt;</code> matches a
+        corresponding <strong>Test Data</strong> image. The second and third column of each row
+        should contain a floating-point value in the closed interval <code>[0.0, 1.0]</code>, where
+        0.5 is used as the binary classification threshold.</p>
+      <p>The second column of each row should pertain to the first binary classification task
+        (melanoma vs. nevus and seborrheic keratosis). The third column of each row should pertain
+        to the second binary classification task (seborrheic keratosis vs. melanoma and nevus).</p>
+      <p>Note that arbitrary score ranges and thresholds can be converted to the range of 0.0 to
+        1.0, with a threshold of 0.5, trivially using the following sigmoid conversion:</p>
+      <pre><code>1 / (1 + e^(-(a(x - b))))
 </code></pre>
-<p>where <code>x</code> is the original score, <code>b</code> is the binary threshold, and <code>a</code> is a scaling parameter (i.e. the inverse measured standard deviation on a held-out dataset). Participants are asked to set their binary threshold 'b' to a value where the classification system is expected to achieve 89% sensitivity, although this is not required.</p>
+      <p>where <code>x</code> is the original score, <code>b</code> is the binary threshold, and
+        <code>a</code> is a scaling parameter (i.e. the inverse measured standard deviation on a
+        held-out dataset). Participants are asked to set their binary threshold 'b' to a value where
+        the classification system is expected to achieve 89% sensitivity, although this is not
+        required.</p>
 
-
-            <h2><strong>Evaluation</strong></h2>
-            <p>Participants will be ranked according to each category
-            individually, as well as the average performance across
-            both categories (giving rise to the possibility of 3
-            distinct "winners"). Ranks and awards will be assigned
-            based only on area under the receiver operating
-            characteristic curve (AUC). However, submissions will also
-            be evaluated using using a variety of common binary
-            classification metrics, reported for scientific
-            completeness, including:</p>
-            <ul>
-                <li>
-                    <a href=
-                    "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity">
-                    sensitivity at 0.5 confidence threshold</a>
-                </li>
-                <li>
-                    <a href=
-                    "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity">
-                    specificity at 0.5 confidence threshold</a>
-                </li>
-                <li>
-                    <a href=
-                    "https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification">
-                    accuracy at 0.5 confidence threshold</a>
-                </li>
-                <li>
-                    <a href=
-                    "https://en.wikipedia.org/wiki/Information_retrieval#Average_precision">
-                    average precision evaluated at sensitivity of
-                    100%</a>
-                </li>
-                <li>specificity evaluated at a sensitivity of 82%</li>
-                <li>specificity evaluated at a sensitivity of 89%</li>
-                <li>specificity evaluated at a sensitivity of 95%</li>
-                <li>area under the receiver operating characteristic
-                curve (AUC)</li>
-            </ul>
-            <p>Some useful resources for metrics computation
-            include:</p>
-            <ul>
-                <li>
-                    <a href=
-                    "https://en.wikipedia.org/wiki/Roc_curve">the ROC
-                    curve</a>
-                </li>
-                <li>
-                    <a href=
-                    "http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">
-                    sklearn library metric functions</a>
-                    <ul>
-                        <li>
-                            <a href=
-                            "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html">
-                            AUC</a>
-                        </li>
-                        <li>
-                            <a href=
-                            "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score">
-                            average precision</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+      <h2><strong>Evaluation</strong></h2>
+      <p>Participants will be ranked according to each category
+        individually, as well as the average performance across
+        both categories (giving rise to the possibility of 3
+        distinct "winners"). Ranks and awards will be assigned
+        based only on area under the receiver operating
+        characteristic curve (AUC). However, submissions will also
+        be evaluated using using a variety of common binary
+        classification metrics, reported for scientific
+        completeness, including:</p>
+      <ul>
+        <li>
+          <a href=
+                 "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity">
+            sensitivity at 0.5 confidence threshold</a>
+        </li>
+        <li>
+          <a href=
+                 "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity">
+            specificity at 0.5 confidence threshold</a>
+        </li>
+        <li>
+          <a href=
+                 "https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification">
+            accuracy at 0.5 confidence threshold</a>
+        </li>
+        <li>
+          <a href=
+                 "https://en.wikipedia.org/wiki/Information_retrieval#Average_precision">
+            average precision evaluated at sensitivity of
+            100%</a>
+        </li>
+        <li>specificity evaluated at a sensitivity of 82%</li>
+        <li>specificity evaluated at a sensitivity of 89%</li>
+        <li>specificity evaluated at a sensitivity of 95%</li>
+        <li>area under the receiver operating characteristic
+          curve (AUC)
+        </li>
+      </ul>
+      <p>Some useful resources for metrics computation
+        include:</p>
+      <ul>
+        <li>
+          <a href=
+                 "https://en.wikipedia.org/wiki/Roc_curve">the ROC
+            curve</a>
+        </li>
+        <li>
+          <a href=
+                 "http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">
+            sklearn library metric functions</a>
+          <ul>
+            <li>
+              <a href=
+                     "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html">
+                AUC</a>
+            </li>
+            <li>
+              <a href=
+                     "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score">
+                average precision</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
+  </div>
 {% endblock %}
