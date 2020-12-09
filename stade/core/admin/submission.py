@@ -2,6 +2,8 @@ from typing import List, Optional, Tuple
 
 from django.contrib import admin
 from django.db.models.query import QuerySet
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django_admin_display import admin_display
 from girder_utils.admin import ReadonlyTabularInline
@@ -45,12 +47,11 @@ class TaskListFilter(admin.SimpleListFilter):
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = [
-        'task',
-        'approach',
-        'id',
         'created',
-        'creator',
-        'creator_fingerprint_id',
+        'id',
+        'task',
+        '_creator',
+        '_creator_fingerprint_id',
         'status',
     ]
     list_display_links = ['id']
@@ -62,6 +63,30 @@ class SubmissionAdmin(admin.ModelAdmin):
     exclude = ['score']
 
     actions = ['rescore_submission_with_notification', 'rescore_submission_without_notifying']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.select_related('creator', 'approach', 'approach__task', 'approach__task__challenge')
+        return qs
+
+    @mark_safe
+    def _creator(self, obj):
+        if not obj.creator.is_active:
+            user = f'<strike>{obj.creator.email}</strike>'
+        else:
+            user = obj.creator.email
+
+        return f'<a href="%s">View</a>: {user} ' % (
+            reverse('admin:auth_user_change', args=(obj.creator.id,)),
+        )
+
+    _creator.short_description = 'Creator'
+    _creator.allow_tags = True
+
+    def _creator_fingerprint_id(self, obj):
+        return obj.creator_fingerprint_id
+
+    _creator_fingerprint_id.short_description = 'Fingerprint'
 
     @admin_display(admin_order_field='approach__task')
     def task(self, obj: Submission):
