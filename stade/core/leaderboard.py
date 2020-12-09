@@ -28,9 +28,13 @@ FROM
                INNER JOIN
                   core_submission
                   ON core_submission.approach_id = core_approach.id
+               INNER JOIN
+                  auth_user
+                  ON core_submission.creator_id = auth_user.id
             WHERE
                core_approach.review_state != 'rejected' AND
-               core_submission.status = 'succeeded'
+               core_submission.status = 'succeeded' AND
+               auth_user.is_active = true
          )
          t
       WHERE
@@ -66,9 +70,13 @@ FROM
          INNER JOIN
             core_submission
             ON core_submission.approach_id = core_approach.id
+         INNER JOIN
+            auth_user
+            ON core_submission.creator_id = auth_user.id
       WHERE
          core_approach.review_state != 'rejected' AND
-         core_submission.status = 'succeeded'
+         core_submission.status = 'succeeded' AND
+         auth_user.is_active = true
    )
    t
 WHERE
