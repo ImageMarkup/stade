@@ -505,6 +505,10 @@ def create_submission(request, approach_id):
         form.instance.approach = approach
         form.instance.creator = request.user
 
+        ip = request.headers.get('x-forwarded-for', '').split(',')[0]
+        if ip:
+            form.instance.creator_ip = ip
+
         if form.is_valid():
             form.save()
             score_submission.delay(form.instance.id, notify=True)

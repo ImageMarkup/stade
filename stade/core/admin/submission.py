@@ -52,6 +52,7 @@ class SubmissionAdmin(admin.ModelAdmin):
         'task',
         '_creator',
         '_creator_fingerprint_id',
+        '_creator_ip',
         'status',
     ]
     list_display_links = ['id']
@@ -87,6 +88,11 @@ class SubmissionAdmin(admin.ModelAdmin):
         return obj.creator_fingerprint_id
 
     _creator_fingerprint_id.short_description = 'Fingerprint'
+
+    def _creator_ip(self, obj):
+        return obj.creator_ip
+
+    _creator_ip.short_description = 'IP'
 
     @admin_display(admin_order_field='approach__task')
     def task(self, obj: Submission):
