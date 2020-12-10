@@ -30,6 +30,7 @@ class Submission(models.Model):
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     creator_fingerprint = models.JSONField(blank=True, null=True)
     creator_fingerprint_id = models.CharField(max_length=32, null=True, blank=True)
+    creator_ip = models.GenericIPAddressField(null=True, blank=True)
     approach = models.ForeignKey('Approach', on_delete=models.CASCADE)
     accepted_terms = models.BooleanField(default=False)
     test_prediction_file = S3FileField()
