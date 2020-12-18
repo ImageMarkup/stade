@@ -22,6 +22,7 @@ class StadeConfig(ConfigMixin):
     @staticmethod
     def before_binding(configuration: ComposedConfiguration) -> None:
         # Insert before other apps with allauth templates
+        # TODO: remove
         auth_app_index = configuration.INSTALLED_APPS.index(
             'composed_configuration.authentication.apps.AuthenticationConfig'
         )
