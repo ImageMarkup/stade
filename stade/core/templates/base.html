@@ -1,150 +1,161 @@
 {% load static %}
 <html>
-  <title>ISIC Challenge</title>
-  <head>
-      <script
-        src="https://js.sentry-cdn.com/aa507c274b254fae8fb1bd28183acf6d.min.js"
-        crossorigin="anonymous"
-      ></script>
-     <!-- Global site tag (gtag.js) - Google Analytics -->
-     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-68986534-5"></script>
-     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-68986534-5');
-    </script>
+<title>ISIC Challenge</title>
+<head>
+  <script
+      src="https://js.sentry-cdn.com/aa507c274b254fae8fb1bd28183acf6d.min.js"
+      crossorigin="anonymous"
+  ></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-68986534-5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
 
-    <script>
+    gtag('js', new Date());
+    gtag('config', 'UA-68986534-5');
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+          crossorigin="anonymous"></script>
+
+  <script>
     // See https://support.google.com/analytics/answer/7478520?hl=en
-    var getOutboundLink = function(url) {
+    var getOutboundLink = function (url) {
       gtag('event', 'click', {
         'event_category': 'outbound',
         'event_label': url,
         'transport_type': 'beacon',
-        'event_callback': function(){document.location = url;}
+        'event_callback': function () {
+          document.location = url;
+        }
       });
     }
 
-    $(function() {
-      $('a.track-outbound').attr('onclick', function() {
+    $(function () {
+      $('a.track-outbound').attr('onclick', function () {
         return 'getOutboundLink("' + $(this).attr('href') + '"); return false;';
       });
     });
-    </script>
+  </script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" integrity="sha256-aPeK/N8IHpHsvPBCf49iVKMdusfobKo2oxF8lRruWJg=" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"
+        integrity="sha256-aPeK/N8IHpHsvPBCf49iVKMdusfobKo2oxF8lRruWJg=" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 
-    {% block extra_head %}{% endblock %}
+  {% block extra_head %}{% endblock %}
 
-  </head>
-  <body class="content">
-    <header class="main-header">
-      <div class="container">
-        <div class="logo">
-          <h1><a href="{% url 'index' %}"><img src="{% static 'img/isic_logo.svg' %}" alt="ISIC Challenge"></a></h1>
-        </div>
-        <div class="navbar-menu ml-3">
-            <div class="navbar-start">
-              <a class="navbar-item" href="{% url 'data' %}">
-                Data
-              </a>
-              <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">Challenges</a>
-
-                <div class="navbar-dropdown">
-                  <a class="navbar-item" href="{% url 'challenge-landing' '2016' %}">2016</a>
-                  <a class="navbar-item" href="{% url 'challenge-landing' '2017' %}">2017</a>
-                  <a class="navbar-item" href="{% url 'challenge-landing' '2018' %}">2018</a>
-                  <a class="navbar-item" href="{% url 'challenge-landing' '2019' %}">2019</a>
-                  <a class="navbar-item" href="{% url 'challenge-landing' 'live' %}">Live</a>
-
-                  <hr class="navbar-divider">
-                  <a class="navbar-item" href="{% url 'challenges' %}">View all</a>
-                </div>
-              </div>
-
-              <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">Leaderboards</a>
-
-                <div class="navbar-dropdown">
-                  <a class="navbar-item" href="{% url 'leaderboards' '2016' %}">2016</a>
-                  <a class="navbar-item" href="{% url 'leaderboards' '2017' %}">2017</a>
-                  <a class="navbar-item" href="{% url 'leaderboards' '2018' %}">2018</a>
-                  <a class="navbar-item" href="{% url 'leaderboards' '2019' %}">2019</a>
-                  <a class="navbar-item" href="#">2020 (Coming Soon)</a>
-                  <a class="navbar-item" href="{% url 'leaderboards' 'live' %}">Live</a>
-                </div>
-              </div>
-
-              <a class="navbar-item" href="{% url 'challenge-landing' 'live' %}">
-                ISIC Live
-              </a>
-            </div>
-        </div>
-        <div class="navigation">
-          <ul class="navbar">
-            {% if user.is_authenticated %}
-              <strong>{{ request.user.email }}</strong>
-              {% if user.is_superuser %}
-              <li class="admin">
-                  <a href="{% url 'admin:index' %}" class="button is-small">Admin</a>
-              </li>
-              {% endif %}
-              {% if user.is_staff %}
-              <li class="admin">
-                  <a href="{% url 'staff-dashboard' %}" class="button is-small">Dashboard</a>
-              </li>
-              {% endif %}
-              <li class="logout">
-                  <a href="{% url 'account_logout' %}" class="button btn-blue is-small">Logout</a>
-              </li>
-            {% else %}
-              <li id="login-button" class="login"><a href="{% url 'account_login' %}" class="button btn-blue">Login</a></li>
-              <li class="signup"><a href="{% url 'account_signup' %}" class="button">Sign up</a></li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </header>
-
-    {% load invites %}
-
-    {% show_pending_invites request %}
-    <div class="main-content">
-      {% if messages %}
-        <div class="container notification-wrapper">
-        {% for message in messages %}
-          {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-            <div class="notification is-success">
-              {{ message }}
-            </div>
-          {% endif %}
-
-          {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-            <div class="notification is-danger">
-              {{ message }}
-            </div>
-          {% endif %}
-        {% endfor %}
-        </div>
-      {% endif %}
-
-      {% block content %}{% endblock %}
-
+</head>
+<body class="content">
+<header class="main-header">
+  <div class="container">
+    <div class="logo">
+      <h1><a href="{% url 'index' %}"><img src="{% static 'img/isic_logo.svg' %}"
+                                           alt="ISIC Challenge"></a></h1>
     </div>
+    <div class="navbar-menu ml-3">
+      <div class="navbar-start">
+        <a class="navbar-item" href="{% url 'data' %}">Data</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">Challenges</a>
 
-    <footer class="footer">
-      <div class="content has-text-centered">
-        <span class="px-1"><a href="{% url 'terms-of-use' %}">Terms of Use</a></span>|<span class="px-1"><a href="mailto:support@isic-archive.com">Contact</a></span>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="{% url 'challenge-landing' '2016' %}">2016</a>
+            <a class="navbar-item" href="{% url 'challenge-landing' '2017' %}">2017</a>
+            <a class="navbar-item" href="{% url 'challenge-landing' '2018' %}">2018</a>
+            <a class="navbar-item" href="{% url 'challenge-landing' '2019' %}">2019</a>
+            <a class="navbar-item" href="{% url 'challenge-landing' 'live' %}">Live</a>
+
+            <hr class="navbar-divider">
+            <a class="navbar-item" href="{% url 'challenges' %}">View all</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">Leaderboards</a>
+
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="{% url 'leaderboards' '2016' %}">2016</a>
+            <a class="navbar-item" href="{% url 'leaderboards' '2017' %}">2017</a>
+            <a class="navbar-item" href="{% url 'leaderboards' '2018' %}">2018</a>
+            <a class="navbar-item" href="{% url 'leaderboards' '2019' %}">2019</a>
+            <a class="navbar-item" href="#">2020 (Coming Soon)</a>
+            <a class="navbar-item" href="{% url 'leaderboards' 'live' %}">Live</a>
+          </div>
+        </div>
+
+        <a class="navbar-item" href="{% url 'challenge-landing' 'live' %}">
+          ISIC Live
+        </a>
       </div>
-    </footer>
-
-    <div class="help-container">
-      <a class="help-button button is-medium is-warning" href="mailto:support@isic-archive.com" target="_blank">Report an Issue</a>
     </div>
-  </body>
+    <div class="navigation">
+      <ul class="navbar">
+        {% if user.is_authenticated %}
+          <strong>{{ request.user.email }}</strong>
+          {% if user.is_superuser %}
+            <li class="admin">
+              <a href="{% url 'admin:index' %}" class="button is-small">Admin</a>
+            </li>
+          {% endif %}
+          {% if user.is_staff %}
+            <li class="admin">
+              <a href="{% url 'staff-dashboard' %}" class="button is-small">Dashboard</a>
+            </li>
+          {% endif %}
+          <li class="logout">
+            <a href="{% url 'account_logout' %}" class="button btn-blue is-small">Logout</a>
+          </li>
+        {% else %}
+          <li id="login-button" class="login"><a href="{% url 'account_login' %}"
+                                                 class="button btn-blue">Login</a></li>
+          <li class="signup"><a href="{% url 'account_signup' %}" class="button">Sign up</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</header>
+
+{% load invites %}
+
+{% show_pending_invites request %}
+<div class="main-content">
+  {% if messages %}
+    <div class="container notification-wrapper">
+      {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+          <div class="notification is-success">
+            {{ message }}
+          </div>
+        {% endif %}
+
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+          <div class="notification is-danger">
+            {{ message }}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+
+</div>
+
+<footer class="footer">
+  <div class="content has-text-centered">
+    <span class="px-1"><a href="{% url 'terms-of-use' %}">Terms of Use</a></span>|<span
+      class="px-1"><a href="mailto:support@isic-archive.com">Contact</a></span>
+  </div>
+</footer>
+
+<div class="help-container">
+  <a class="help-button button is-medium is-warning" href="mailto:support@isic-archive.com"
+     target="_blank">Report an Issue</a>
+</div>
+</body>
 </html>

@@ -1,60 +1,100 @@
 {% extends "base.html" %} {% block content %}
-<section class="section container">
-        <div class="section-header">
-                <h1>{{ challenge.name }} Challenge {% if challenge.locked%}[Closed]{% endif %}</h1>
-        </div>
-        <div class="section-content">
+  <section class="section container">
+    <div class="section-header">
+      <h1>{{ challenge.name }} Challenge {% if challenge.locked %}[Closed]{% endif %}</h1>
+    </div>
+    <div class="section-content">
 
-<h2><strong>Summary</strong></h2>
-<p>The goal of the challenge is to help participants develop image analysis tools to enable the automated diagnosis of melanoma from dermoscopic images.  Image analysis of skin lesions is composed of 3 parts:</p>
-<ul>
-<li>Part 1: Lesion Segmentation</li>
-<li>Part 2: Detection and Localization of Visual Dermoscopic Features/Patterns</li>
-<li>Part 3: Disease Classification</li>
-</ul>
-<p><strong>Please note: Competitors may choose to participate in any of the three parts. Participation in all three is not mandatory</strong></p>
-<p>This challenge provides training data (~2000 images) for participants to engage in all 3 components of lesion image analysis. A separate public validation dataset (~150 images) and blind held-out test dataset (~600 images) will be provided for participants to generate and submit automated results.</p>
-<p>This year, participants are required to write-up a 4 page abstract describing the methods used to generate their submissions, post these abstracts to <a href="http://arxiv.org">arXiv</a>, and submit a link to the document with their results. Participants are also asked, but not required, to make source code freely available online (i.e. via <a href="http://github.org">GitHub</a>).</p>
-<p>All participants are also invited to expand upon their 4 page abstract and submit a full-length manuscript to a special issue of the IEEE Journal of Biomedical and Health Informatics (JBHI) dedicated to the challenge and skin lesion analysis. More details will be coming shortly.</p>
+      <h2><strong>Summary</strong></h2>
+      <p>The goal of the challenge is to help participants develop image analysis tools to enable
+        the automated diagnosis of melanoma from dermoscopic images. Image analysis of skin lesions
+        is composed of 3 parts:</p>
+      <ul>
+        <li>Part 1: Lesion Segmentation</li>
+        <li>Part 2: Detection and Localization of Visual Dermoscopic Features/Patterns</li>
+        <li>Part 3: Disease Classification</li>
+      </ul>
+      <p><strong>Please note: Competitors may choose to participate in any of the three parts.
+        Participation in all three is not mandatory</strong></p>
+      <p>This challenge provides training data (~2000 images) for participants to engage in all 3
+        components of lesion image analysis. A separate public validation dataset (~150 images) and
+        blind held-out test dataset (~600 images) will be provided for participants to generate and
+        submit automated results.</p>
+      <p>This year, participants are required to write-up a 4 page abstract describing the methods
+        used to generate their submissions, post these abstracts to <a
+            href="http://arxiv.org">arXiv</a>, and submit a link to the document with their results.
+        Participants are also asked, but not required, to make source code freely available online
+        (i.e. via <a href="http://github.org">GitHub</a>).</p>
+      <p>All participants are also invited to expand upon their 4 page abstract and submit a
+        full-length manuscript to a special issue of the IEEE Journal of Biomedical and Health
+        Informatics (JBHI) dedicated to the challenge and skin lesion analysis. More details will be
+        coming shortly.</p>
 
-<h2><strong>Important Dates</strong> (subject to change)</h2>
-<ul>
-<li>December 9th, 2016: Release training data (images + ground truth)</li>
-<li>January 7th, 2017: Release validation and test datasets (images only)</li>
-<li>March 1st, 2017: Submission Deadline</li>
-<li>March 2nd, 2017: Winners announced, and speaker invitations sent.</li>
-<li>April 18-21st, 2017: Conference</li>
-</ul>
-<h2><strong>Publication Mechanisms</strong></h2>
-<p>This year, there will be three primary mechanisms participants will have to publish their work:</p>
-<ol>
-<li><p><strong>All participants will be required to write a 4 page abstract</strong> describing the methods used in their submission. Participants must post these abstracts to <a href="http://arxiv.org">arXiv</a>, and provide links to these documents with their submissions. These documents will be curated and linked to from the challenge website. Any submissions without this link will not be accepted. Only one abstract is needed to cover submissions to all parts that a participant wishes to submit to. Participants are encouraged, though not required, to provide source code links in their abstracts (i.e. <a href="http://github.org">GitHub</a>).</p></li>
-<li><p>Participants will be invited to expand their abstract into a full-length journal manuscript for submission to an IEEE  Journal of Biomedical and Health Informatics (JBHI) Special Issue on Skin Lesion Analysis. Details to follow.</p></li>
-<li><p>Participants are permitted to publish their work to alternative journals of their choosing. However, these must be submitted after the IEEE Special Issue has been published.</p></li>
-</ol>
-<p><strong>The organizing committee has published a preprint manuscript summarizing the challenge methods and the overall findings:</strong></p>
-<p><strong>Codella N, Gutman D, Celebi ME, Helba B, Marchetti MA, Dusza S, Kalloo A, Liopyris K, Mishra N, Kittler H, Halpern A. "Skin Lesion Analysis Toward Melanoma Detection: A Challenge at the 2017 International Symposium on Biomedical Imaging (ISBI), Hosted by the International Skin Imaging Collaboration (ISIC)". arXiv: 1710.05006 [<a href="http://cs.CV]">cs.CV]</a> Available: <a href="https://arxiv.org/abs/1710.05006">https://arxiv.org/abs/1710.05006</a></strong></p>
-<p>When using this dataset for research publications, please use the above citation.</p>
+      <h2><strong>Important Dates</strong> (subject to change)</h2>
+      <ul>
+        <li>December 9th, 2016: Release training data (images + ground truth)</li>
+        <li>January 7th, 2017: Release validation and test datasets (images only)</li>
+        <li>March 1st, 2017: Submission Deadline</li>
+        <li>March 2nd, 2017: Winners announced, and speaker invitations sent.</li>
+        <li>April 18-21st, 2017: Conference</li>
+      </ul>
+      <h2><strong>Publication Mechanisms</strong></h2>
+      <p>This year, there will be three primary mechanisms participants will have to publish their
+        work:</p>
+      <ol>
+        <li><p><strong>All participants will be required to write a 4 page abstract</strong>
+          describing the methods used in their submission. Participants must post these abstracts to
+          <a href="http://arxiv.org">arXiv</a>, and provide links to these documents with their
+          submissions. These documents will be curated and linked to from the challenge website. Any
+          submissions without this link will not be accepted. Only one abstract is needed to cover
+          submissions to all parts that a participant wishes to submit to. Participants are
+          encouraged, though not required, to provide source code links in their abstracts (i.e. <a
+              href="http://github.org">GitHub</a>).</p></li>
+        <li><p>Participants will be invited to expand their abstract into a full-length journal
+          manuscript for submission to an IEEE Journal of Biomedical and Health Informatics (JBHI)
+          Special Issue on Skin Lesion Analysis. Details to follow.</p></li>
+        <li><p>Participants are permitted to publish their work to alternative journals of their
+          choosing. However, these must be submitted after the IEEE Special Issue has been
+          published.</p></li>
+      </ol>
+      <p><strong>The organizing committee has published a preprint manuscript summarizing the
+        challenge methods and the overall findings:</strong></p>
+      <p><strong>Codella N, Gutman D, Celebi ME, Helba B, Marchetti MA, Dusza S, Kalloo A, Liopyris
+        K, Mishra N, Kittler H, Halpern A. "Skin Lesion Analysis Toward Melanoma Detection: A
+        Challenge at the 2017 International Symposium on Biomedical Imaging (ISBI), Hosted by the
+        International Skin Imaging Collaboration (ISIC)". arXiv: 1710.05006 [<a
+            href="http://cs.CV]">cs.CV]</a> Available: <a href="https://arxiv.org/abs/1710.05006">https://arxiv.org/abs/1710.05006</a></strong>
+      </p>
+      <p>When using this dataset for research publications, please use the above citation.</p>
 
-<h2><strong>Organizers</strong></h2>
-<ul>
-<li><a href="http://isdis.net/isic-project/working-group-members/"><strong>Members of the International Skin Imaging Collaboration</strong></a></li>
-<li><strong>Allan Halpern</strong> (Clinical Leader) (Memorial Sloan Kettering Cancer Center, New York, USA)</li>
-<li><strong>Brian Helba</strong> (Technical Leader) (Kitware, New York, USA)</li>
-<li><strong>David Gutman</strong> (Technical Leader) (Emory University, Atlanta, USA)</li>
-<li><strong>Noel Codella</strong> (Computer Vision Expert) (IBM, New York, USA)</li>
-<li><strong>M. Emre Celebi</strong> (Computer Vision Expert) (University of Central Arkansas, Conway, Arkansas)</li>
-</ul>
+      <h2><strong>Organizers</strong></h2>
+      <ul>
+        <li>
+          <a href="https://www.isic-archive.com/#!/topWithHeader/tightContentTop/about/workingGroups">
+            <strong>
+              Members of the International Skin Imaging Collaboration
+            </strong>
+          </a>
+        </li>
+        <li><strong>Allan Halpern</strong> (Clinical Leader) (Memorial Sloan Kettering Cancer
+          Center, New York, USA)
+        </li>
+        <li><strong>Brian Helba</strong> (Technical Leader) (Kitware, New York, USA)</li>
+        <li><strong>David Gutman</strong> (Technical Leader) (Emory University, Atlanta, USA)</li>
+        <li><strong>Noel Codella</strong> (Computer Vision Expert) (IBM, New York, USA)</li>
+        <li><strong>M. Emre Celebi</strong> (Computer Vision Expert) (University of Central
+          Arkansas, Conway, Arkansas)
+        </li>
+      </ul>
 
-                <ul class="landing-tasks">
-                        {% for task in challenge.tasks.all %}
-                        <li>
-                                <a href="{% url 'task-landing' challenge_nicename task.id %}"><i class=
-                                "material-icons">timelapse</i>
-                                <p>{{task.name}}</p></a>
-                        </li>{% endfor %}
-                </ul>
-        </div>
-</section>
-
+      <ul class="landing-tasks">
+        {% for task in challenge.tasks.all %}
+          <li>
+            <a href="{% url 'task-landing' challenge_nicename task.id %}"><i class=
+                                                                                 "material-icons">timelapse</i>
+              <p>{{ task.name }}</p></a>
+          </li>{% endfor %}
+      </ul>
+    </div>
+  </section>
 {% endblock %}

@@ -1,152 +1,161 @@
 {% extends "base.html" %} {% block content %}
-{% load static %}
+  {% load static %}
 
-<section class="section container">
-        <div class="section-header">
-                <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked%}[Closed]{% endif %}</h1>
-        </div>
-        <div class="section-content">
-          <img src="{% static 'img/landing/2016/37/segmentation.jpg' %}" alt="" />
-          <h2>Goal</h2>
-<p>Participants are asked to submit automated predictions of lesion
-segmentation boundaries from dermoscopic images.</p>
-<h2>Data</h2>
-<p>Lesion segmentation data includes the original image, paired
-with the expert manual tracing of the lesion boundaries in the form
-of a binary mask.</p>
-<h4>Training Data</h4>
-<p><strong><a href=
-"https://isic-challenge-stade.s3.amazonaws.com/ISBI2016_ISIC_Part1_Training_Data.zip">
-Download Training Data</a></strong></p>
-<p>The <strong>Training Data</strong> file is a ZIP file,
-containing 900 dermoscopic lesion images in JPEG format. All images
-are named using the scheme <code>ISIC_&lt;image_id&gt;.jpg</code>,
-where <code>&lt;image_id&gt;</code> is a 7-digit unique identifier.
-EXIF tags in the images have been removed; any remaining EXIF tags
-should not be relied upon to provide accurate metadata.</p>
-<h4>Training Ground Truth</h4>
-<p><strong><a href=
-"https://isic-challenge-stade.s3.amazonaws.com/ISBI2016_ISIC_Part1_Training_GroundTruth.zip">
-Download Training Ground Truth</a></strong></p>
-<p>The <strong>Training Ground Truth</strong> file is a ZIP file,
-containing 900 binary mask images in PNG format. All masks are
-named using the scheme
-<code>ISIC_&lt;image_id&gt;_Segmentation.png</code>, where
-<code>&lt;image_id&gt;</code> matches the corresponding Training
-Data image for the mask. All mask images will have the exact same
-dimensions as their corresponding lesion image. Mask images are
-encoded as single-channel (grayscale) 8-bit PNGs (to provide
-lossless compression), where each pixel is either:</p>
-<ul>
-    <li><code>0</code>: representing the background of the image,
-    or areas outside the lesion</li>
-    <li><code>255</code>: representing the foreground of the image,
-    or areas inside the lesion</li>
-</ul>
-<h4>Notes</h4>
-<p>Masks were created by an expert clinician, using either a
-semi-automated process (using a user-provided seed point, a
-user-tuned flood-fill algorithm, and morphological filtering) or a
-manual process (from a series of user-provided polyline
-points).</p>
-<p>Participants are not strictly required to utilize the training
-data in the development of their lesion segmentation algorithm and
-are free to train their algorithm using external data sources.</p>
-<h2>Submission Format</h2>
-<h4>Test Data</h4>
-<p>Given the <strong>Test Data</strong> file, a ZIP file of 379
-images of the exact same format as the Training Data, participants
-are expected to generate and submit a file of <strong>Test
-Results</strong>.</p>
-<p>The Test Data file should be downloaded via the "Download test
-dataset" button below, which becomes available once a participant
-is signed-in and opts to participate in this phase of the
-challenge.</p>
-<h4>Test Results</h4>
-<p>The submitted <strong>Test Results</strong> file should be in
-the exact same format as the Training Ground Truth file.
-Specifically, the Test Results file should be a ZIP file of 379
-binary mask images in PNG format. Each mask should contain the
-participant's best attempt at a fully automated lesion segmentation
-of the corresponding image in the Test Data. Each mask should be
-named and encoded according to the conventions of the Training
-Ground Truth.</p>
-<h4>Submission Process</h4>
-<p>Shortly after being submitted, participants will receive a
-confirmation email to their registered email address to confirm
-that their submission was parsed and scored, or to provide a
-notification that parsing of their submission failed (with a link
-to details as to the cause of the failure). <strong>Participants
-should not consider their submission complete until receiving a
-confirmation email.</strong></p>
-<p>Multiple submissions may be made with absolutely no penalty.
-<strong>Only the most recent submission will be used to determine a
-participant's final score.</strong> Indeed, participants are
-encouraged to provide trial submissions early to ensure that the
-format of their submission is parsed and evaluated successfully,
-even if final results are not yet ready for submission.</p>
-<h2>Evaluation</h2>
-<p>Submitted Test Results segmentations will be compared to private
-(until after the challenge ends) <strong>Test Ground
-Truth</strong>. The Test Ground Truth was produced from the exact
-same source and methodology as the Training Ground Truth (both sets
-were randomly sub-sampled from a larger data pool).</p>
-<p>Submitted segmentations will be compared using a variety of
-metrics, all computed at the level of single pixels, including:</p>
-<ul>
-    <li>
-        <a href=
-        "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity">
-        sensitivity</a>
-    </li>
-    <li>
-        <a href=
-        "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity">
-        specificity</a>
-    </li>
-    <li>
-        <a href=
-        "https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification">
-        accuracy</a>
-    </li>
-    <li>
-        <a href=
-        "https://en.wikipedia.org/wiki/Jaccard_index">Jaccard
-        index</a>
-    </li>
-    <li>
-        <a href=
-        "https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient">
-        Dice coefficient</a>
-    </li>
-</ul>
-<p><strong>However, participants will be ranked and awards granted
-based only on the Jaccard index.</strong></p>
-<p>Some useful resources for metrics computation include:</p>
-<ul>
-    <li>
-        <a href="https://en.wikipedia.org/wiki/Roc_curve">the ROC
-        curve</a>
-    </li>
-    <li>
-        <a href=
-        "http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">
-        sklearn library metric functions</a>
-        <ul>
+  <section class="section container">
+    <div class="section-header">
+      <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked %}
+        [Closed]{% endif %}</h1>
+    </div>
+    <div class="section-content">
+      <img src="{% static 'img/landing/2016/37/segmentation.jpg' %}" alt=""/>
+      <h2>Goal</h2>
+      <p>Participants are asked to submit automated predictions of lesion
+        segmentation boundaries from dermoscopic images.</p>
+      <h2>Data</h2>
+      <p>Lesion segmentation data includes the original image, paired
+        with the expert manual tracing of the lesion boundaries in the form
+        of a binary mask.</p>
+      <h4>Training Data</h4>
+      <p>
+        <strong>
+          <a href="https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part1_Training_Data.zip">
+            Download Training Data
+          </a>
+        </strong>
+      </p>
+      <p>The <strong>Training Data</strong> file is a ZIP file,
+        containing 900 dermoscopic lesion images in JPEG format. All images
+        are named using the scheme <code>ISIC_&lt;image_id&gt;.jpg</code>,
+        where <code>&lt;image_id&gt;</code> is a 7-digit unique identifier.
+        EXIF tags in the images have been removed; any remaining EXIF tags
+        should not be relied upon to provide accurate metadata.</p>
+      <h4>Training Ground Truth</h4>
+      <p>
+        <strong>
+          <a href="https://isic-challenge-data.s3.amazonaws.com/2016/ISBI2016_ISIC_Part1_Training_GroundTruth.zip">
+            Download Training Ground Truth
+          </a>
+        </strong>
+      </p>
+      <p>The <strong>Training Ground Truth</strong> file is a ZIP file,
+        containing 900 binary mask images in PNG format. All masks are
+        named using the scheme
+        <code>ISIC_&lt;image_id&gt;_Segmentation.png</code>, where
+        <code>&lt;image_id&gt;</code> matches the corresponding Training
+        Data image for the mask. All mask images will have the exact same
+        dimensions as their corresponding lesion image. Mask images are
+        encoded as single-channel (grayscale) 8-bit PNGs (to provide
+        lossless compression), where each pixel is either:</p>
+      <ul>
+        <li><code>0</code>: representing the background of the image,
+          or areas outside the lesion
+        </li>
+        <li><code>255</code>: representing the foreground of the image,
+          or areas inside the lesion
+        </li>
+      </ul>
+      <h4>Notes</h4>
+      <p>Masks were created by an expert clinician, using either a
+        semi-automated process (using a user-provided seed point, a
+        user-tuned flood-fill algorithm, and morphological filtering) or a
+        manual process (from a series of user-provided polyline
+        points).</p>
+      <p>Participants are not strictly required to utilize the training
+        data in the development of their lesion segmentation algorithm and
+        are free to train their algorithm using external data sources.</p>
+      <h2>Submission Format</h2>
+      <h4>Test Data</h4>
+      <p>Given the <strong>Test Data</strong> file, a ZIP file of 379
+        images of the exact same format as the Training Data, participants
+        are expected to generate and submit a file of <strong>Test
+          Results</strong>.</p>
+      <p>The Test Data file should be downloaded via the "Download test
+        dataset" button below, which becomes available once a participant
+        is signed-in and opts to participate in this phase of the
+        challenge.</p>
+      <h4>Test Results</h4>
+      <p>The submitted <strong>Test Results</strong> file should be in
+        the exact same format as the Training Ground Truth file.
+        Specifically, the Test Results file should be a ZIP file of 379
+        binary mask images in PNG format. Each mask should contain the
+        participant's best attempt at a fully automated lesion segmentation
+        of the corresponding image in the Test Data. Each mask should be
+        named and encoded according to the conventions of the Training
+        Ground Truth.</p>
+      <h4>Submission Process</h4>
+      <p>Shortly after being submitted, participants will receive a
+        confirmation email to their registered email address to confirm
+        that their submission was parsed and scored, or to provide a
+        notification that parsing of their submission failed (with a link
+        to details as to the cause of the failure). <strong>Participants
+          should not consider their submission complete until receiving a
+          confirmation email.</strong></p>
+      <p>Multiple submissions may be made with absolutely no penalty.
+        <strong>Only the most recent submission will be used to determine a
+          participant's final score.</strong> Indeed, participants are
+        encouraged to provide trial submissions early to ensure that the
+        format of their submission is parsed and evaluated successfully,
+        even if final results are not yet ready for submission.</p>
+      <h2>Evaluation</h2>
+      <p>Submitted Test Results segmentations will be compared to private
+        (until after the challenge ends) <strong>Test Ground
+          Truth</strong>. The Test Ground Truth was produced from the exact
+        same source and methodology as the Training Ground Truth (both sets
+        were randomly sub-sampled from a larger data pool).</p>
+      <p>Submitted segmentations will be compared using a variety of
+        metrics, all computed at the level of single pixels, including:</p>
+      <ul>
+        <li>
+          <a href=
+                 "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity">
+            sensitivity</a>
+        </li>
+        <li>
+          <a href=
+                 "https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity">
+            specificity</a>
+        </li>
+        <li>
+          <a href=
+                 "https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification">
+            accuracy</a>
+        </li>
+        <li>
+          <a href=
+                 "https://en.wikipedia.org/wiki/Jaccard_index">Jaccard
+            index</a>
+        </li>
+        <li>
+          <a href=
+                 "https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient">
+            Dice coefficient</a>
+        </li>
+      </ul>
+      <p><strong>However, participants will be ranked and awards granted
+        based only on the Jaccard index.</strong></p>
+      <p>Some useful resources for metrics computation include:</p>
+      <ul>
+        <li>
+          <a href="https://en.wikipedia.org/wiki/Roc_curve">the ROC
+            curve</a>
+        </li>
+        <li>
+          <a href=
+                 "http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">
+            sklearn library metric functions</a>
+          <ul>
             <li>
-                <a href=
-                "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.jaccard_similarity_score.html#sklearn.metrics.jaccard_similarity_score">
+              <a href=
+                     "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.jaccard_similarity_score.html#sklearn.metrics.jaccard_similarity_score">
                 jaccard</a>
             </li>
             <li>
-                <a href=
-                "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score">
+              <a href=
+                     "http://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score">
                 average precision</a>
             </li>
-        </ul>
-    </li>
-</ul>
-
-
-</section>
+          </ul>
+        </li>
+      </ul>
+  </section>
 {% endblock %}
