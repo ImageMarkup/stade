@@ -21,6 +21,7 @@ def task_with_submissions(db, approach_factory, submission_factory, task_factory
         team_factory(challenge=task.challenge),
         team_factory(challenge=task.challenge),
         team_factory(challenge=task.challenge),
+        team_factory(challenge=task.challenge, creator__is_active=False),
     ]
 
     t0_a0 = approach_factory(task=task, team=teams[0], name='approach_0')
@@ -50,6 +51,16 @@ def task_with_submissions(db, approach_factory, submission_factory, task_factory
     )
     submission_factory(approach=t3_a1, status=Submission.Status.SUCCEEDED, overall_score=0.60)
 
+    # test that inactive (banned) user submissions aren't included in the leaderboard
+    t4_a0 = approach_factory(
+        task=task, team=teams[4], name='approach_0', review_state=Approach.ReviewState.ACCEPTED
+    )
+    submission_factory(
+        approach=t4_a0,
+        status=Submission.Status.SUCCEEDED,
+        overall_score=1.0,
+        creator=teams[4].creator,
+    )
     return task
 
 
@@ -90,12 +101,12 @@ def test_leaderboard_by_team(task_with_submissions, client):
     # team7 | approach1 | .60
     first, second, third = resp.json()['results']
 
-    assert first['team_name'] == 'team_4'
+    assert first['team_name'] == 'team_5'
     assert first['approach_name'] == 'approach_0'
     assert first['overall_score'] == 0.95
-    assert second['team_name'] == 'team_5'
+    assert second['team_name'] == 'team_6'
     assert second['approach_name'] == 'approach_0'
     assert second['overall_score'] == 0.78
-    assert third['team_name'] == 'team_7'
+    assert third['team_name'] == 'team_8'
     assert third['approach_name'] == 'approach_1'
     assert third['overall_score'] == 0.60
