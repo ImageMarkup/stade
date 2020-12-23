@@ -21,10 +21,10 @@ from django.template.loader import render_to_string
 from girder_utils.files import field_file_to_local_path
 from girder_utils.storages import expiring_url
 from isic_challenge_scoring import (
+    ClassificationMetric,
     ClassificationScore,
     ScoreException,
     SegmentationScore,
-    ValidationMetric,
 )
 
 from stade.core.models import Approach, Submission, Task, TeamInvitation
@@ -167,23 +167,12 @@ def _score_submission(submission):
                 score = ClassificationScore.from_stream(
                     io.TextIOWrapper(truth_file.file),
                     io.TextIOWrapper(prediction_file.file),
-                    ValidationMetric(submission.approach.task.metric_field),
+                    ClassificationMetric(submission.approach.task.metric_field),
                 )
         else:
             raise Exception('Unknown task type')
 
-        if submission.approach.task.type == Task.Type.SEGMENTATION:
-            submission.overall_score = score.overall
-        elif submission.approach.task.type == Task.Type.CLASSIFICATION:
-            if submission.approach.task.metric_field == Task.MetricField.AVERAGE_PRECISION:
-                submission.overall_score = score.macro_average['ap']
-            elif submission.approach.task.metric_field == Task.MetricField.AUC:
-                submission.overall_score = score.macro_average['auc']
-            elif submission.approach.task.metric_field == Task.MetricField.BALANCED_ACCURACY:
-                submission.overall_score = score.aggregate['balanced_accuracy']
-            else:
-                raise Exception('Unknown task metric field')
-
+        submission.overall_score = score.overall
         submission.validation_score = score.validation
         submission.score = score.to_dict()
         submission.status = Submission.Status.SUCCEEDED
