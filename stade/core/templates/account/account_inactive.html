@@ -1,0 +1,17 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Account Inactive" %}{% endblock %}
+
+{% block content %}
+<section class="section container">
+  <div class="section-header">
+    <h1>{% trans "Account Inactive" %}</h1>
+  </div>
+  <div class="section-content">
+    Your account has been banned for submitting too frequently. Do not attempt to
+    make any additional accounts or you will be in further violation of the rules.
+  </div>
+</section>
+{% endblock %}
