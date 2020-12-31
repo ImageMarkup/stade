@@ -6,6 +6,19 @@
       src="https://js.sentry-cdn.com/aa507c274b254fae8fb1bd28183acf6d.min.js"
       crossorigin="anonymous"
   ></script>
+
+  {% if request.user.is_authenticated %}
+    <script>
+      Sentry.onLoad(function() {
+        Sentry.setUser({
+            'id': '{{ request.user.id }}',
+            'email': '{{ request.user.email }}',
+        });
+      });
+      Sentry.forceLoad();
+    </script>
+  {% endif %}
+
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-68986534-5"></script>
   <script>
