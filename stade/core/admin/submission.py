@@ -58,6 +58,7 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_display_links = ['id']
     list_filter = ['status', TaskListFilter]
 
+    search_fields = ['creator__email', 'creator_ip', 'creator_fingerprint']
     autocomplete_fields = ['creator', 'approach']
 
     # exclude detailed metrics from the form since they're big and impractical to edit
