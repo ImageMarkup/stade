@@ -7,8 +7,8 @@
   <div class="section-header">
     <h1><i class="material-icons">assignment</i> <a href="{{ task.get_absolute_url }}">{{ task.name }}</a></h1>
     <div class="create-submission">
-      {% if not task.locked %}
-      <a {% if request.user.is_authenticated %}href="{% url 'create-team' task.id %}" class="button is-medium"{% else %} class="button is-medium is-disabled"{% endif %}>new submission</a>
+      {% if not task.locked and not task.challenge.locked %}
+        <a {% if request.user.is_authenticated %}href="{% url 'create-team' task.id %}" class="button is-medium"{% else %} class="button is-medium is-disabled"{% endif %}>new submission</a>
       {% endif %}
     </div>
   </div>
