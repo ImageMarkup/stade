@@ -236,6 +236,21 @@ class CreateSubmissionForm(forms.ModelForm):
         ):
             raise ValidationError("You don't have permissions to do that.")
 
+        if self.cleaned_data['creator_fingerprint_id']:
+            banned_users_with_matching_fingerprint = Submission.objects.exclude(
+                creator=self.request.user
+            ).filter(
+                creator_fingerprint_id=self.cleaned_data['creator_fingerprint_id'],
+                creator__is_active=False,
+            )
+
+            if banned_users_with_matching_fingerprint.count():
+                ip = self.request.headers.get('x-forwarded-for', '').split(',')[0]
+                logger.info(
+                    f'Denied user uid={self.request.user.id} fp={self.cleaned_data["creator_fingerprint_id"]} ip={ip}'  # noqa: E501
+                )
+                raise ValidationError('Your account has been flagged for abuse.')
+
 
 class ApproachForm(forms.ModelForm):
     class Meta:
