@@ -38,6 +38,7 @@ class StadeConfig(ConfigMixin):
         ]
 
         configuration.AUTHENTICATION_BACKENDS.insert(0, 'rules.permissions.ObjectPermissionBackend')
+        configuration.MIDDLEWARE.append('stade.core.middleware.TimezoneMiddleware')
 
     SHELL_PLUS_IMPORTS = ['from stade.core.tasks import *']
 
