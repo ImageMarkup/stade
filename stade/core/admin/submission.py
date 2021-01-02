@@ -15,6 +15,7 @@ from stade.core.tasks import score_submission
 class SubmissionInline(ReadonlyTabularInline):
     model = Submission
     fields = ['id', 'created', 'test_prediction_file', 'status', 'overall_score', 'team_name']
+    ordering = ['-created']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
