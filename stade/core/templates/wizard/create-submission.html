@@ -12,64 +12,67 @@
     }
   </script>
   <script
-    async
-    src="//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"
-    onload="initFingerprintJS()"
+          async
+          src="//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"
+          onload="initFingerprintJS()"
   ></script>
 {% endblock %}
 
 {% block content %}
-<section class="section container wizard">
-  <div class="section-header">
-    <h1><i class="material-icons">assignment</i> <a href="{{ approach.task.get_absolute_url }}">{{ approach.task.name }}</a></h1>
-  </div>
-  <div class="stepper">
-    <progress class="progress is-primary" value="100" max="100"></progress>
-    <div class="steps">
-      <div class="step active">
-        <div class="step-num"><i class="material-icons">check</i></div>
-        <h3>Team</h3>
-        <p>
-          <a href="{% url 'create-team' approach.task.id %}" class="change is-trans-parent">
-            <span class="tooltip">change team</span>
-            {{ approach.team.name }}
-            <i class="material-icons is-trans-rotate is-180">cached</i>
-          </a>
-        </p>
-      </div>
-      <div class="step active">
-        <div class="step-num"><i class="material-icons">check</i></div>
-        <h3>Approach</h3>
-        <p>
-          <a href="{% url 'create-approach' approach.task.id approach.team.id %}" class="change is-trans-parent">
-            <span class="tooltip">change approach</span>
-            {{ approach.name }}
-            <i class="material-icons is-trans-rotate is-180">cached</i>
-          </a>
-        </p>
-      </div>
-      <div class="step active">
-        <div class="step-num">3</div>
-        <h3>Upload</h3>
+  <section class="section container wizard">
+    <div class="section-header">
+      <h1><i class="material-icons">assignment</i> <a
+              href="{{ approach.task.get_absolute_url }}">{{ approach.task.name }}</a></h1>
+    </div>
+    <div class="stepper">
+      <progress class="progress is-primary" value="100" max="100"></progress>
+      <div class="steps">
+        <div class="step active">
+          <div class="step-num"><i class="material-icons">check</i></div>
+          <h3>Team</h3>
+          <p>
+            <a href="{% url 'create-team' approach.task.id %}" class="change is-trans-parent">
+              <span class="tooltip">change team</span>
+              {{ approach.team.name }}
+              <i class="material-icons is-trans-rotate is-180">cached</i>
+            </a>
+          </p>
+        </div>
+        <div class="step active">
+          <div class="step-num"><i class="material-icons">check</i></div>
+          <h3>Approach</h3>
+          <p>
+            <a href="{% url 'create-approach' approach.task.id approach.team.id %}" class="change is-trans-parent">
+              <span class="tooltip">change approach</span>
+              {{ approach.name }}
+              <i class="material-icons is-trans-rotate is-180">cached</i>
+            </a>
+          </p>
+        </div>
+        <div class="step active">
+          <div class="step-num">3</div>
+          <h3>Upload</h3>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="section-content">
+    <div class="section-content">
 
-    <div class="new-submission">
-      <h2>Upload Submission Data</h2>
+      <div class="new-submission">
+        <h2>Upload Submission Data</h2>
 
-    {% if approach.task.challenge_id == 39 %}
-    <p>Your submission CSV should be formatted similarly to this example:</p>
-        <pre>image,MEL,NV,BCC,AK,BKL,DF,VASC,SCC,UNK
+        {% if approach.task.challenge_id == 39 %}
+          <p>Your submission CSV should be formatted similarly to this example:</p>
+          <pre>image,MEL,NV,BCC,AK,BKL,DF,VASC,SCC,UNK
 ISIC_0001112,0.5723,0.74638,0.807,0.9231,0.193,0.6482,0.1508,0.1182,0.042
 ISIC_0001145,0.9684,0.587292,0.91609,0.8093,0.239,0.05252,0.343,0.8350,0.66
 ISIC_0001107,0.5061,0.23904,0.02974,0.8791,0.757,0.15820,0.7691,0.3817,0.6782
 ISIC_0001102,0.54389,0.64057,0.61898,0.554,0.2462,0.0586,0.4182,0.124,0.6313</pre>
 
-    <p>For more information on submitting, please see the <a target="_blank" href="https://challenge2019.isic-archive.com/submit.html">submission documentation</a>.</p>
-        {# Task 56 is 2020 Live #}
+          <p>For more information on submitting, please see the <a target="_blank"
+                                                                   href="https://challenge2019.isic-archive.com/submit.html">submission
+            documentation</a>.</p>
+          {# Task 56 is 2020 Live #}
         {% elif approach.task.id == 56 %}
           <article class="message is-info">
             <div class="message-header">
@@ -79,59 +82,59 @@ ISIC_0001102,0.54389,0.64057,0.61898,0.554,0.2462,0.0586,0.4182,0.124,0.6313</pr
 
               <table class="table is-bordered">
                 <thead>
-                  <tr>
-                    <th>image</th>
-                    <th>malignant</th>
-                  </tr>
+                <tr>
+                  <th>image</th>
+                  <th>malignant</th>
+                </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>ISIC_12345</td>
-                    <td>0.57291</td>
-                  </tr>
-                  <tr>
-                    <td>ISIC_12346</td>
-                    <td>0.77182</td>
-                  </tr>
-                  <tr>
-                    <td>ISIC_12347</td>
-                    <td>0.0</td>
-                  </tr>
-                  <tr>
-                    <td>ISIC_12348</td>
-                    <td>0.11423</td>
-                  </tr>
-                  <tr>
-                    <td>ISIC_12349</td>
-                    <td>0.97322</td>
-                  </tr>
+                <tr>
+                  <td>ISIC_12345</td>
+                  <td>0.57291</td>
+                </tr>
+                <tr>
+                  <td>ISIC_12346</td>
+                  <td>0.77182</td>
+                </tr>
+                <tr>
+                  <td>ISIC_12347</td>
+                  <td>0.0</td>
+                </tr>
+                <tr>
+                  <td>ISIC_12348</td>
+                  <td>0.11423</td>
+                </tr>
+                <tr>
+                  <td>ISIC_12349</td>
+                  <td>0.97322</td>
+                </tr>
                 </tbody>
               </table>
             </div>
           </article>
 
-          <hr />
+          <hr/>
         {% endif %}
 
-      <form action="" class="create-submission" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+        <form action="" class="create-submission" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
 
-        {% if form.non_field_errors %}
-        <div class="help is-danger">
-          <i class="material-icons">error</i>
-          {{ form.non_field_errors }}
-        </div>
-        {% endif %}
+          {% if form.non_field_errors %}
+            <div class="help is-danger">
+              <i class="material-icons">error</i>
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
 
-        <div class="fields">
+          <div class="fields">
             {{ form.creator_fingerprint }}
             {{ form.creator_fingerprint_id }}
 
-          <div class="field file-upload">
-            <div class="file has-name is-medium is-fullwidth is-right{% if form.test_prediction_file.errors %} is-danger{% endif %}">
-              <label class="file-label">
-                {{ form.test_prediction_file }}
-                <span class="file-cta">
+            <div class="field file-upload">
+              <div class="file has-name is-medium is-fullwidth is-right{% if form.test_prediction_file.errors %} is-danger{% endif %}">
+                <label class="file-label">
+                  {{ form.test_prediction_file }}
+                  <span class="file-cta">
                   <span class="file-icon">
                     <i class="material-icons">file_copy</i>
                   </span>
@@ -139,39 +142,40 @@ ISIC_0001102,0.54389,0.64057,0.61898,0.554,0.2462,0.0586,0.4182,0.124,0.6313</pr
                     Choose a file (*.{{ approach.task.allowed_submission_extension }})
                   </span>
                 </span>
-                <span class="file-name" id="file-name">
+                  <span class="file-name" id="file-name">
                   No file chosen
                 </span>
-              </label>
-              {% if form.test_prediction_file.errors %}
-              <div class="help is-danger">
-                {{ form.test_prediction_file.errors }}
+                </label>
+                {% if form.test_prediction_file.errors %}
+                  <div class="help is-danger">
+                    {{ form.test_prediction_file.errors }}
+                  </div>
+                {% endif %}
               </div>
-              {% endif %}
             </div>
-          </div>
 
-          <div class="field accepted-terms">
-            <div class="control">
-              <label class="checkbox">
-                <input required id="id_accepted_terms" name="accepted_terms" type="checkbox">
-                <p><strong>Data sharing policy:</strong> We agree to allow this submission to be shared and used for additional research.</p>
-              </label>
-              {% if form.accepted_terms.errors %}
-              <div class="help is-danger">
-                {{ form.accepted_terms.errors }}
+            <div class="field accepted-terms">
+              <div class="control">
+                <label class="checkbox">
+                  <input required id="id_accepted_terms" name="accepted_terms" type="checkbox">
+                  <p><strong>Data sharing policy:</strong> We agree to allow this submission to be shared and used for
+                    additional research.</p>
+                </label>
+                {% if form.accepted_terms.errors %}
+                  <div class="help is-danger">
+                    {{ form.accepted_terms.errors }}
+                  </div>
+                {% endif %}
               </div>
-              {% endif %}
             </div>
+
           </div>
+          <input id="create-submission-submit" class="button" type="submit" value="Submit data"/>
 
-        </div>
-        <input id="create-submission-submit" class="button" type="submit" value="Submit data"/>
+          {{ form.media }}
+        </form>
+      </div>
 
-        {{ form.media }}
-      </form>
     </div>
-
-  </div>
-</section>
+  </section>
 {% endblock %}
