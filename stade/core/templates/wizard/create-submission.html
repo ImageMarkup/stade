@@ -61,13 +61,80 @@
       <div class="new-submission">
         <h2>Upload Submission Data</h2>
 
-        {% if approach.task.challenge_id == 39 %}
-          <p>Your submission CSV should be formatted similarly to this example:</p>
-          <pre>image,MEL,NV,BCC,AK,BKL,DF,VASC,SCC,UNK
-ISIC_0001112,0.5723,0.74638,0.807,0.9231,0.193,0.6482,0.1508,0.1182,0.042
-ISIC_0001145,0.9684,0.587292,0.91609,0.8093,0.239,0.05252,0.343,0.8350,0.66
-ISIC_0001107,0.5061,0.23904,0.02974,0.8791,0.757,0.15820,0.7691,0.3817,0.6782
-ISIC_0001102,0.54389,0.64057,0.61898,0.554,0.2462,0.0586,0.4182,0.124,0.6313</pre>
+        {% if approach.task_id == 55 %}
+          <article class="message is-info">
+            <div class="message-header">
+              <p>Sample Submission CSV</p>
+            </div>
+            <div class="message-body">
+
+              <table class="table is-bordered">
+                <thead>
+                <tr>
+                  <th>image</th>
+                  <th>MEL</th>
+                  <th>NV</th>
+                  <th>BCC</th>
+                  <th>AK</th>
+                  <th>BKL</th>
+                  <th>DF</th>
+                  <th>VASC</th>
+                  <th>SCC</th>
+                  <th>UNK</th>
+                </tr>
+                </thead>
+                <tr>
+                  <td>ISIC_0001112</td>
+                  <td>0.5723</td>
+                  <td>0.74638</td>
+                  <td>0.807</td>
+                  <td>0.9231</td>
+                  <td>0.193</td>
+                  <td>0.6482</td>
+                  <td>0.1508</td>
+                  <td>0.1182</td>
+                  <td>0.042</td>
+                </tr>
+                <tr>
+                  <td>ISIC_0001145</td>
+                  <td>0.9684</td>
+                  <td>0.587292</td>
+                  <td>0.91609</td>
+                  <td>0.8093</td>
+                  <td>0.239</td>
+                  <td>0.05252</td>
+                  <td>0.343</td>
+                  <td>0.8350</td>
+                  <td>0.66</td>
+                </tr>
+                <tr>
+                  <td>ISIC_0001107</td>
+                  <td>0.5061</td>
+                  <td>0.23904</td>
+                  <td>0.02974</td>
+                  <td>0.8791</td>
+                  <td>0.757</td>
+                  <td>0.15820</td>
+                  <td>0.7691</td>
+                  <td>0.3817</td>
+                  <td>0.6782</td>
+                </tr>
+                <tr>
+                  <td>ISIC_0001102</td>
+                  <td>0.54389</td>
+                  <td>0.64057</td>
+                  <td>0.61898</td>
+                  <td>0.554</td>
+                  <td>0.2462</td>
+                  <td>0.0586</td>
+                  <td>0.4182</td>
+                  <td>0.124</td>
+                  <td>0.6313</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
 
           <p>For more information on submitting, please see the <a target="_blank"
                                                                    href="https://challenge2019.isic-archive.com/submit.html">submission
