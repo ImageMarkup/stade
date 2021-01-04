@@ -26,6 +26,7 @@ class StadeConfig(ConfigMixin):
         auth_app_index = configuration.INSTALLED_APPS.index(
             'composed_configuration.authentication.apps.AuthenticationConfig'
         )
+        configuration.INSTALLED_APPS.insert(0, 'jazzmin')
         configuration.INSTALLED_APPS.insert(auth_app_index, 'stade.core.apps.CoreConfig')
 
         configuration.INSTALLED_APPS += [
@@ -39,6 +40,7 @@ class StadeConfig(ConfigMixin):
 
         configuration.AUTHENTICATION_BACKENDS.insert(0, 'rules.permissions.ObjectPermissionBackend')
 
+    JAZZMIN_SETTINGS = {'related_modal_active': True}
     SHELL_PLUS_IMPORTS = ['from stade.core.tasks import *']
 
     # Celery
