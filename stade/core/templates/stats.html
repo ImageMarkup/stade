@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+  <div>
+    <!--display live challenge with the same stats as the others, but as a more prominent challenge-->>
+    {{ live_challenge.name }}
+  </div>
+  <div class="dashboard-items container columns is-multiline">
+    {% for challenge in challenges %}
+      <section class="section column is-one-third">
+        <div class="section-header">
+          <h1>{{ challenge.name }}</h1>
+        </div>
+        <div class="section-content">
+          <ul>
+            <li><span class="dash-label">Teams:</span> <span class="dash-value">{{ challenge.num_teams|intcomma }}</span></li>
+            <li><span class="dash-label">Successful approaches:<p>approaches with at least 1 successful submission</p></span> <span class="dash-value">{{ challenge.stats.num_successful_approaches|intcomma  }}</span></li>
+            <li><span class="dash-label">Total submissions processed:</span> <span class="dash-value">{{ challenge.stats.num_total_submissions|intcomma  }}</span></li>
+          </ul>
+        </div>
+        <div class="section-footer">
+          <h4>Tasks</h4>
+          <ul>
+            {% for task in challenge.stats.tasks|dictsort:"name" %}
+              <form id="request-submission-bundle-{{ task.id }}" action="{% url 'request-submission-bundle' task.id %}?next={{ request.path|urlencode }}" method="POST">{% csrf_token %}</form>
+              <li>
+                <a href="#">
+                  <span>{{ task.name }}</span>
+                </a>
+
+                <ul>
+                  <li>{{ task.num_successful_approaches|intcomma  }}</li>
+                  <li>{{ task.num_total_submissions|intcomma  }}</li>
+                </ul>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+
+{% endblock %}
