@@ -44,6 +44,8 @@ class StadeConfig(ConfigMixin):
     JAZZMIN_SETTINGS = {'related_modal_active': True}
     SHELL_PLUS_IMPORTS = ['from stade.core.tasks import *']
 
+    TIME_ZONE = 'America/New_York'
+
     # Celery
     # TODO: concurrency could be increased for non-memory intensive tasks
     CELERY_WORKER_CONCURRENCY = 1
