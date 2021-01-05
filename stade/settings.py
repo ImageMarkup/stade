@@ -26,7 +26,8 @@ class StadeConfig(ConfigMixin):
         auth_app_index = configuration.INSTALLED_APPS.index(
             'composed_configuration.authentication.apps.AuthenticationConfig'
         )
-        configuration.INSTALLED_APPS.insert(0, 'jazzmin')
+        admin_index = configuration.INSTALLED_APPS.index('django.contrib.admin')
+        configuration.INSTALLED_APPS.insert(admin_index, 'jazzmin')
         configuration.INSTALLED_APPS.insert(auth_app_index, 'stade.core.apps.CoreConfig')
 
         configuration.INSTALLED_APPS += [
