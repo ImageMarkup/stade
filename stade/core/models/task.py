@@ -43,7 +43,9 @@ class Task(models.Model):
         default=True,
         help_text='Whether users are blocked from making and editing approaches and submissions.',
     )
-    hidden = models.BooleanField(default=True, help_text='Whether the task is invisible to users.')
+    hidden = models.BooleanField(
+        default=True, help_text='Whether the GUI exposes this task to users.'
+    )
     scores_published = models.BooleanField(
         default=False,
         help_text='Whether final scores are visible to submitters and the leaderboard is open.',
