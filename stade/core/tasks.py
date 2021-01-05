@@ -18,6 +18,7 @@ from django.db import connection, transaction
 from django.db.models import Count
 from django.db.models.fields.files import FieldFile
 from django.template.loader import render_to_string
+from django.utils import timezone
 from girder_utils.files import field_file_to_local_path
 from girder_utils.storages import expiring_url
 from isic_challenge_scoring import (
@@ -255,4 +256,11 @@ def send_possible_abuse_report(user_id):
         settings.DEFAULT_FROM_EMAIL,
         [u.email for u in User.objects.filter(is_superuser=True)],
         html_message=render_to_string('email/abuse_report.html', context),
+    )
+
+
+@shared_task(soft_time_limit=5, time_limit=10)
+def purge_fingerprint_data():
+    Submission.objects.filter(created__gte=timezone.now() - timedelta(days=14)).update(
+        creator_fingerprint=None
     )

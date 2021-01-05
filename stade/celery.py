@@ -14,3 +14,11 @@ app = Celery(config_source='django.conf:settings', namespace='CELERY')
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
+
+# Setup periodic tasks
+app.conf.beat_schedule = {
+    'purge-fingerprint-data-nightly': {
+        'task': 'stade.core.tasks.purge_fingerprint_data',
+        'schedule': 86400,
+    },
+}
