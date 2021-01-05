@@ -61,6 +61,11 @@ class StadeConfig(ConfigMixin):
 class DevelopmentConfiguration(StadeConfig, DevelopmentBaseConfiguration):
     # Not required
     STADE_MAILCHIMP_API_KEY = values.Value()
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
 
 
 class TestingConfiguration(StadeConfig, TestingBaseConfiguration):
@@ -71,6 +76,12 @@ class ProductionConfiguration(StadeConfig, ProductionBaseConfiguration):
     DEFAULT_FILE_STORAGE = 'stade.core.storage_backends.TimeoutS3Boto3Storage'
     # TODO: What about this?
     EMAIL_TIMEOUT = 10
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'cache',
+        }
+    }
 
 
 class HerokuProductionConfiguration(StadeConfig, HerokuProductionBaseConfiguration):
