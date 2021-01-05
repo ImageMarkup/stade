@@ -53,6 +53,7 @@ setup(
         'django-cors-headers',
         'django-extensions',
         'django-filter',
+        'django-jazzmin',
         'django-oauth-toolkit==1.3.2',
         'django-s3-file-field',
         'djangorestframework',
