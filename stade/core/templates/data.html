@@ -3,6 +3,7 @@
 {% block extra_head %}
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/stade/data.css' %}"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.2.0/dist/bulma-tooltip.min.css" integrity="sha256-OdzWB7wl1AMkFaqhYBnoQJGUJMDAexXa44rXs/d2n4A=" crossorigin="anonymous">
 {% endblock %}
 
 {% block content %}
@@ -315,7 +316,9 @@
               (2.2GB)</a><br/>
             1000 images.
           </td>
-          <td>Not Available</td>
+          <td>
+            {% include 'partials/not_available.html' %}
+          </td>
           <td rowspan="2">
             <a target="_blank" rel="noopener" href=
                 "https://creativecommons.org/share-your-work/public-domain/cc0/">
@@ -329,7 +332,9 @@
                href="https://isic-challenge-data.s3.amazonaws.com/2018/ISIC2018_Task2_Training_GroundTruth_v3.zip">Download
               (33MB)</a><br>
           </td>
-          <td>Not Available</td>
+          <td>
+            {% include 'partials/not_available.html' %}
+          </td>
         </tr>
         <tr>
           <th>3</th>
@@ -355,7 +360,9 @@
               (401MB)</a><br>
             1512 images.
           </td>
-          <td>Not Available</td>
+          <td>
+            {% include 'partials/not_available.html' %}
+          </td>
           <td>
             <a target="_blank" rel="noopener" href=
                 "https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a>
@@ -414,7 +421,9 @@
               Download (3.6GB)</a><br>
             8,238 JPEG images of skin lesions.
           </td>
-          <td>Not Available</td>
+          <td>
+            {% include 'partials/not_available.html' %}
+          </td>
           <td rowspan="2">
             <a target="_blank" rel="noopener" href=
                 "https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a>
@@ -435,7 +444,9 @@
               Download (287KB)</a><br>
             8,238 metadata entries of age, sex, and general anatomic site.
           </td>
-          <td>Not Available</td>
+          <td>
+            {% include 'partials/not_available.html' %}
+          </td>
         </tr>
         </tbody>
       </table>
@@ -531,7 +542,9 @@
             <br>
             10,982 metadata entries of patient ID, sex, age, and general anatomic site.
           </td>
-          <td>Not Available</td>
+          <td>
+            {% include 'partials/not_available.html' %}
+          </td>
           <td>
             <a target="_blank" rel="noopener" href=
                 "https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a>
