@@ -13,7 +13,7 @@ from composed_configuration import (
 from configurations import values
 
 
-class StadeConfig(ConfigMixin):
+class StadeMixin(ConfigMixin):
     WSGI_APPLICATION = 'stade.wsgi.application'
     ROOT_URLCONF = 'stade.urls'
 
@@ -63,22 +63,22 @@ class StadeConfig(ConfigMixin):
     }
 
 
-class DevelopmentConfiguration(StadeConfig, DevelopmentBaseConfiguration):
+class DevelopmentConfiguration(StadeMixin, DevelopmentBaseConfiguration):
     # Not required
     STADE_MAILCHIMP_API_KEY = values.Value()
 
 
-class TestingConfiguration(StadeConfig, TestingBaseConfiguration):
+class TestingConfiguration(StadeMixin, TestingBaseConfiguration):
     STADE_MAILCHIMP_API_KEY = None
 
 
-class ProductionConfiguration(StadeConfig, ProductionBaseConfiguration):
+class ProductionConfiguration(StadeMixin, ProductionBaseConfiguration):
     DEFAULT_FILE_STORAGE = 'stade.core.storage_backends.TimeoutS3Boto3Storage'
     # TODO: What about this?
     EMAIL_TIMEOUT = 10
 
 
-class HerokuProductionConfiguration(StadeConfig, HerokuProductionBaseConfiguration):
+class HerokuProductionConfiguration(StadeMixin, HerokuProductionBaseConfiguration):
     DEFAULT_FILE_STORAGE = 'stade.core.storage_backends.TimeoutS3Boto3Storage'
     # TODO: What about this?
     EMAIL_TIMEOUT = 10
