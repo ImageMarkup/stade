@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
-from drf_yasg2 import openapi
-from drf_yasg2.views import get_schema_view
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 # OpenAPI generation
@@ -22,8 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/s3-upload/', include('s3_file_field.urls')),
     # path('api/v1/', include(router.urls)),
-    path('api/docs/redoc', schema_view.with_ui('redoc'), name='docs-redoc'),
-    path('api/docs/swagger', schema_view.with_ui('swagger'), name='docs-swagger'),
+    path('api/docs/redoc/', schema_view.with_ui('redoc'), name='docs-redoc'),
+    path('api/docs/swagger/', schema_view.with_ui('swagger'), name='docs-swagger'),
     path('api/tracker/', include('stade.tracker.urls')),
     path('', include('stade.core.urls')),
 ]
