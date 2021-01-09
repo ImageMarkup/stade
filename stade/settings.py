@@ -22,13 +22,13 @@ class StadeMixin(ConfigMixin):
     @staticmethod
     def before_binding(configuration: ComposedConfiguration) -> None:
         # Insert before other apps with allauth templates
-        # TODO: remove
         auth_app_index = configuration.INSTALLED_APPS.index(
             'composed_configuration.authentication.apps.AuthenticationConfig'
         )
+        configuration.INSTALLED_APPS.insert(auth_app_index, 'stade.core.apps.CoreConfig')
+
         admin_index = configuration.INSTALLED_APPS.index('django.contrib.admin')
         configuration.INSTALLED_APPS.insert(admin_index, 'jazzmin')
-        configuration.INSTALLED_APPS.insert(auth_app_index, 'stade.core.apps.CoreConfig')
 
         configuration.INSTALLED_APPS += [
             'django.contrib.humanize',
