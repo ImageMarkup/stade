@@ -21,20 +21,21 @@ class StadeMixin(ConfigMixin):
 
     @staticmethod
     def before_binding(configuration: ComposedConfiguration) -> None:
-        # Insert before other apps with styled templates
-        style_app_index = configuration.INSTALLED_APPS.index('girder_style')
-        configuration.INSTALLED_APPS.insert(style_app_index, 'stade.core.apps.CoreConfig')
+        # Install local apps first, to ensure any overridden resources are found first
+        configuration.INSTALLED_APPS = [
+            'stade.core.apps.CoreConfig',
+            'stade.tracker.apps.TrackerConfig',
+            # jazzmin overrides django.contrib.admin templates
+            'jazzmin',
+        ] + configuration.INSTALLED_APPS
 
-        admin_index = configuration.INSTALLED_APPS.index('django.contrib.admin')
-        configuration.INSTALLED_APPS.insert(admin_index, 'jazzmin')
-
+        # Install additional apps
         configuration.INSTALLED_APPS += [
             'django.contrib.humanize',
             'import_export',
             'markdownify',
             'rules.apps.AutodiscoverRulesConfig',
             's3_file_field',
-            'stade.tracker.apps.TrackerConfig',
         ]
 
         configuration.AUTHENTICATION_BACKENDS.insert(0, 'rules.permissions.ObjectPermissionBackend')
