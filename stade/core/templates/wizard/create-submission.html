@@ -5,7 +5,6 @@
     function initFingerprintJS() {
       FingerprintJS.load().then(fp => {
         fp.get().then(result => {
-          $('#{{ form.creator_fingerprint.auto_id }}').val(JSON.stringify(result));
           $('#{{ form.creator_fingerprint_id.auto_id }}').val(result.visitorId);
         });
       });
@@ -194,7 +193,6 @@
           {% endif %}
 
           <div class="fields">
-            {{ form.creator_fingerprint }}
             {{ form.creator_fingerprint_id }}
 
             <div class="field file-upload">

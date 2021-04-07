@@ -190,11 +190,9 @@ class CreateSubmissionForm(forms.ModelForm):
         fields = [
             'accepted_terms',
             'test_prediction_file',
-            'creator_fingerprint',
             'creator_fingerprint_id',
         ]
         widgets = {
-            'creator_fingerprint': forms.HiddenInput(),
             'creator_fingerprint_id': forms.HiddenInput(),
         }
 
