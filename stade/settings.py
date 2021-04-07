@@ -26,7 +26,8 @@ class StadeMixin(ConfigMixin):
             'stade.core.apps.CoreConfig',
             'stade.tracker.apps.TrackerConfig',
             # jazzmin overrides django.contrib.admin templates
-            'jazzmin',
+            # jazzmin is broken as of Django 3.2, see https://github.com/farridav/django-jazzmin/issues/281  # noqa
+            # 'jazzmin',
         ] + configuration.INSTALLED_APPS
 
         # Install additional apps
