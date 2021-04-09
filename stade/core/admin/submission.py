@@ -5,7 +5,6 @@ from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from django_admin_display import admin_display
 from girder_utils.admin import ReadonlyTabularInline
 
 from stade.core.models import Submission, Task
@@ -96,16 +95,16 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     _creator_ip.short_description = 'IP'
 
-    @admin_display(admin_order_field='approach__task')
+    @admin.display(ordering='approach__task')
     def task(self, obj: Submission):
         return obj.approach.task
 
-    @admin_display(short_description='Rescore (without notifying)')
+    @admin.action(description='Rescore (without notifying)')
     def rescore_submission_without_notifying(self, request, queryset):
         for submission in queryset:
             score_submission.delay(submission.id, notify=False)
 
-    @admin_display(short_description='Rescore (with notification)')
+    @admin.action(description='Rescore (with notification)')
     def rescore_submission_with_notification(self, request, queryset):
         for submission in queryset:
             score_submission.delay(submission.id, notify=True)
