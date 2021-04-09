@@ -38,8 +38,7 @@ setup(
     install_requires=[
         'celery',
         'dictdiffer',
-        'django',
-        'django-admin-display',
+        'django>=3.2',
         'django-allauth',
         'django-configurations[database,email]',
         'django-extensions',
