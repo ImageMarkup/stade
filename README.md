@@ -1,6 +1,4 @@
 # Stade
-[![CircleCI](https://circleci.com/gh/ImageMarkup/stade.svg?style=svg)](https://circleci.com/gh/ImageMarkup/stade)
-
 ISIC Challenge submission platform.
 
 https://challenge.isic-archive.com
