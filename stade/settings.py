@@ -32,7 +32,6 @@ class StadeMixin(ConfigMixin):
 
         # Install additional apps
         configuration.INSTALLED_APPS += [
-            'django.contrib.humanize',
             'import_export',
             'markdownify',
             'rules.apps.AutodiscoverRulesConfig',
