@@ -88,6 +88,35 @@
     </div>
     <div class="navigation">
       <ul class="navbar">
+        {% if not user.is_authenticated %}
+          <li class="subscribe pr-4">
+            <a href="#" class="subscribe-btn button is-outlined is-small">
+              <span class="icon is-small ml-0 mr-2">
+                <i class="material-icons">mail_outline</i>
+              </span>
+              <span>
+                Subscribe
+              </span>
+            </a>
+
+            <div id="subscribe-container" class="subscribe-form">
+              <h4 class="title is-5 mb-3">Subscribe to ISIC Updates</h4>
+              <form id="subscribe" style="display:inline-block">
+                <div class="field">
+                  <div class="control has-icons-left has-icons-right is-pulled-left mr-2">
+                    <input id="subscribe-email" class="input" type="email" required
+                           placeholder="Enter your email address">
+                    <span class="icon is-small is-left">
+                          <i class="material-icons">mail_outline</i>
+                        </span>
+                  </div>
+                  <button type="submit" class="button is-link is-pulled-left">Submit</button>
+                </div>
+              </form>
+            </div>
+          </li>
+        {% endif %}
+
         {% if user.is_authenticated %}
           <strong>{{ request.user.email }}</strong>
           {% if user.is_superuser %}
@@ -125,26 +154,6 @@
 {% load invites %}
 
 {% show_pending_invites request %}
-
-{% if not user.is_authenticated %}
-  <div class="has-text-centered">
-    <div id="subscribe-container" class="container">
-      <h1 class="title is-5">Subscribe to ISIC Updates</h1>
-      <form id="subscribe" style="display:inline-block">
-        <div class="field">
-          <div class="control has-icons-left has-icons-right is-pulled-left mr-2">
-            <input id="subscribe-email" class="input" type="email" required
-                   placeholder="Enter your email address">
-            <span class="icon is-small is-left">
-                  <i class="material-icons">mail_outline</i>
-                </span>
-          </div>
-          <button type="submit" class="button is-link is-pulled-left">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-{% endif %}
 
 <div class="main-content">
   {% if messages %}
