@@ -24,7 +24,6 @@
           <h4>Tasks</h4>
           <ul>
             {% for task in challenge.stats.tasks|dictsort:"name" %}
-              <form id="request-submission-bundle-{{ task.id }}" action="{% url 'request-submission-bundle' task.id %}?next={{ request.path|urlencode }}" method="POST">{% csrf_token %}</form>
               <li>
                 <a href="#">
                   <span>{{ task.name }}</span>
