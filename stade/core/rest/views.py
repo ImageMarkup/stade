@@ -2,8 +2,7 @@ import logging
 
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
-from rest_framework.authentication import SessionAuthentication
-from rest_framework.decorators import api_view, authentication_classes
+from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 
@@ -22,7 +21,6 @@ def challenge_detail(request, challenge_id):
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication])
 def leaderboard(request, task_id, cluster):
     if request.user.is_staff:
         task = get_object_or_404(Task, pk=task_id)
@@ -52,7 +50,6 @@ def leaderboard(request, task_id, cluster):
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication])
 def submission_scores(request, submission_id):
     if request.user.is_staff:
         # Remove all deferred fields, since we want the score immediately

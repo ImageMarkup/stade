@@ -1,11 +1,9 @@
-from typing import List, Type
-
 from django.utils.encoding import force_str
 from rest_framework import serializers, status, viewsets
-from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import APIException
 from rest_framework.fields import EmailField
 from rest_framework.mixins import CreateModelMixin
+from rest_framework.permissions import AllowAny
 
 from stade.tracker.models import Email
 
@@ -38,7 +36,7 @@ class EmailSerializer(serializers.ModelSerializer):
 
 class EmailCreateViewSet(CreateModelMixin, viewsets.GenericViewSet):
     # no auth required for tracking emails
-    authentication_classes: List[Type[BaseAuthentication]] = []
+    permission_classes = [AllowAny]
 
     queryset = Email.objects.all()
     serializer_class = EmailSerializer
