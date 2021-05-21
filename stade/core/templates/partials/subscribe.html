@@ -1,4 +1,4 @@
-<li class="subscribe pr-4">
+<li id="subscribe-nav" class="subscribe pr-4">
   <a href="#" class="subscribe-btn button is-outlined is-small">
     <span class="icon is-small ml-0 mr-2">
       <i class="material-icons">mail_outline</i>
@@ -27,7 +27,7 @@
 
 <script type="text/javascript">
   if (localStorage.getItem('subscribed') === 'true') {
-    $('#subscribe-container').hide();
+    $('#subscribe-nav').hide();
   }
 
   $('.subscribe-btn').click(function(){
