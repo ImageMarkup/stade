@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+  <div class="container dashboard-items">
+    <section class="live-challenge p-5">
+      <div class="columns w-full">
+        <div class="column section-content is-half">
+          <div class="section-header">
+            <h1>{{ live_challenge.name }}</h1>
+          </div>
+          <ul>
+            <li><span class="dash-label">Teams:</span> <span class="dash-value">{{ live_challenge.num_teams|intcomma }}</span></li>
+            <li><span class="dash-label">Successful approaches:<p>approaches with at least 1 successful submission</p></span> <span class="dash-value">{{ live_challenge.stats.num_successful_approaches|intcomma  }}</span></li>
+            <li><span class="dash-label">Total submissions processed:</span> <span class="dash-value">{{ live_challenge.stats.num_total_submissions|intcomma  }}</span></li>
+          </ul>
+        </div>
+        <div class="column section-footer">
+          <div class="is-flex is-align-items-center is-justify-content-space-between">
+            <h4><strong>Tasks</strong></h4>
+            <h4>Success/Total</h4>
+          </div>
+          <ul>
+            {% for task in live_challenge.stats.tasks|dictsort:"name" %}
+              <li>
+                <a href="#">
+                  <span>{{ task.name }}</span>
+                </a>
+
+                <div class="is-flex is-align-items-center pr-4">
+                  <span>{{ task.num_successful_approaches|intcomma  }}</span>
+                  <span>/</span>
+                  <span>{{ task.num_total_submissions|intcomma  }}</span>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="dashboard-items container columns is-multiline">
+    {% for challenge in challenges %}
+      <section class="section column is-one-third">
+        <div class="dash-item-wrap">
+          <div class="section-header">
+            <h1>{{ challenge.name }}</h1>
+          </div>
+          <div class="section-content">
+            <ul>
+              <li><span class="dash-label">Teams:</span> <span class="dash-value">{{ challenge.num_teams|intcomma }}</span></li>
+              <li><span class="dash-label">Successful approaches:<p>approaches with at least 1 successful submission</p></span> <span class="dash-value">{{ challenge.stats.num_successful_approaches|intcomma  }}</span></li>
+              <li><span class="dash-label">Total submissions processed:</span> <span class="dash-value">{{ challenge.stats.num_total_submissions|intcomma  }}</span></li>
+            </ul>
+          </div>
+          <div class="section-footer">
+            <div class="is-flex is-align-items-center is-justify-content-space-between">
+              <h4><strong>Tasks</strong></h4>
+              <h4>Success/Total</h4>
+            </div>
+            <ul>
+              {% for task in challenge.stats.tasks|dictsort:"name" %}
+                <li>
+                  <a href="#">
+                    <span>{{ task.name }}</span>
+                  </a>
+
+                  <div class="is-flex is-align-items-center pr-4">
+                    <span>{{ task.num_successful_approaches|intcomma  }}</span>
+                    <span>/</span>
+                    <span>{{ task.num_total_submissions|intcomma  }}</span>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+
+{% endblock %}

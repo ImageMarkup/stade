@@ -6,11 +6,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.db import connection, transaction
-from django.db.models import Exists, OuterRef, Prefetch
+from django.db.models import Count, Exists, OuterRef, Prefetch
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
+from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_http_methods
 import requests
 from rules.contrib.views import objectgetter, permission_required
@@ -231,12 +232,27 @@ def dashboard(request):
                     task__challenge=challenge
                 ).count(),
                 'num_total_submissions': Submission.objects.filter(
-                    approach__task__challenge=challenge
+                    approach__task__challenge=challenge,
                 ).count(),
             }
         )
 
     return render(request, 'staff/dashboard.html', context)
+
+
+@cache_page(3600 * 6)
+def stats(request):
+    def with_num_teams(qs):
+        return qs.annotate(num_teams=Count('team', distinct=True))
+
+    context = {
+        'live_challenge': with_num_teams(Challenge.objects.filter(name='ISIC Live')).first(),
+        'challenges': with_num_teams(
+            Challenge.objects.exclude(name__in=['ISIC Sandbox', 'ISIC Live'])
+        ).order_by('-name'),
+    }
+
+    return render(request, 'stats.html', context)
 
 
 def task_detail(request, task_id):
