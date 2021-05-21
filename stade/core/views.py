@@ -249,7 +249,7 @@ def stats(request):
         'live_challenge': with_num_teams(Challenge.objects.filter(name='ISIC Live')).first(),
         'challenges': with_num_teams(
             Challenge.objects.exclude(name__in=['ISIC Sandbox', 'ISIC Live'])
-        ),
+        ).order_by('-name'),
     }
 
     return render(request, 'stats.html', context)
