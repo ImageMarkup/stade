@@ -125,6 +125,17 @@ h6 {
   background: #1F5673;
 }
 
+.button.is-outlined {
+  background: transparent;
+  border: 1px solid #00A9A5;
+  color: #00A9A5;
+}
+
+.button.is-outlined:hover {
+  background: rgba(0,169,165, .15);
+  color: #007B78;
+}
+
 .button.btn-nobg {
   background: none;
   color: #427AA1;
@@ -151,6 +162,10 @@ h6 {
 .button.btn-nobg:after,
 .button.btn-nobg:hover:after {
   display: none;
+}
+
+.button .icon.is-small i {
+  font-size: 18px;
 }
 
 .help-container {
@@ -347,6 +362,7 @@ h6 {
   display: flex;
   justify-content: space-between;
   padding:0 20px;
+  margin-bottom: 20px;
 }
 
 .main-header .container > * {
@@ -404,8 +420,34 @@ h6 {
   display: flex;
 }
 
+.main-header .navbar li.subscribe {
+  position: relative;
+}
+
+.main-header .subscribe-btn.toggled {
+  background: rgba(0,169,165, .15);
+  color: #007B78;
+}
+
+.main-header .subscribe-form {
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+  display: none;
+  padding: 10px 15px 5px;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  z-index: 100;
+  width: max-content;
+}
+
+.main-header .subscribe-form.toggled {
+  display: block;
+}
+
 .main-content {
-  padding:45px 0;
+  padding:25px 0;
 }
 
 .section.container {

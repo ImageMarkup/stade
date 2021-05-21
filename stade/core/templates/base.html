@@ -43,7 +43,7 @@
 </head>
 <body class="content">
 <header class="main-header">
-  <div class="container">
+  <div class="container mb-0">
     <div class="logo">
       <h1><a href="{% url 'index' %}"><img src="{% static 'img/isic_logo.svg' %}"
                                            alt="ISIC Challenge"></a></h1>
@@ -88,6 +88,10 @@
     </div>
     <div class="navigation">
       <ul class="navbar">
+        {% if not user.is_authenticated %}
+          {% include 'partials/subscribe.html' %}
+        {% endif %}
+
         {% if user.is_authenticated %}
           <strong>{{ request.user.email }}</strong>
           {% if user.is_superuser %}
@@ -125,6 +129,7 @@
 {% load invites %}
 
 {% show_pending_invites request %}
+
 <div class="main-content">
   {% if messages %}
     <div class="container notification-wrapper">
@@ -159,5 +164,6 @@
   <a class="help-button button is-medium is-warning" href="mailto:support@isic-archive.com"
      target="_blank">Report an Issue</a>
 </div>
+
 </body>
 </html>

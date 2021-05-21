@@ -1,0 +1,67 @@
+<li id="subscribe-nav" class="subscribe pr-4">
+  <a href="#" class="subscribe-btn button is-outlined is-small">
+    <span class="icon is-small ml-0 mr-2">
+      <i class="material-icons">mail_outline</i>
+    </span>
+    <span>
+      Subscribe
+    </span>
+  </a>
+
+  <div id="subscribe-container" class="subscribe-form">
+    <h4 class="title is-5 mb-3">Subscribe to ISIC Updates</h4>
+    <form id="subscribe" style="display:inline-block">
+      <div class="field">
+        <div class="control has-icons-left has-icons-right is-pulled-left mr-2">
+          <input id="subscribe-email" class="input" type="email" required
+            placeholder="Enter your email address">
+          <span class="icon is-small is-left">
+            <i class="material-icons">mail_outline</i>
+          </span>
+        </div>
+        <button type="submit" class="button is-link is-pulled-left">Submit</button>
+      </div>
+    </form>
+  </div>
+</li>
+
+<script type="text/javascript">
+  if (localStorage.getItem('subscribed') === 'true') {
+    $('#subscribe-nav').hide();
+  }
+
+  $('.subscribe-btn').click(function(){
+    $(this).toggleClass('toggled');
+    $('.subscribe-form').toggleClass('toggled');
+  });
+
+  $('form#subscribe').submit(async function (event) {
+    event.preventDefault();
+
+    let fetchResult;
+
+    try {
+      fetchResult = await fetch('{% url 'email-list' %}', {
+        method: 'POST',
+        body: JSON.stringify({
+          'email': $('#subscribe-email').val()
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    } catch (error) {
+      $('#subscribe-container').html('Something went wrong, try again later.');
+      return;
+    }
+    // Treat the 409 "email already exists" error message as a success
+    if (fetchResult.ok || fetchResult.status === 409) {
+      localStorage.setItem('subscribed', true);
+      $('#subscribe-container').html('Subscribed!');
+    } else {
+      $('#subscribe-container').html('Something went wrong, try again later.');
+    }
+
+    return;
+  });
+</script>
