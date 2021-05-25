@@ -1,8 +1,9 @@
 {% extends "base.html" %}
-
+{% load cache %}
 {% load humanize %}
 
 {% block content %}
+  {% cache 21600 stats_page request.user.is_staff %}
   <div class="container dashboard-items">
     <section class="live-challenge p-5">
       <div class="columns w-full">
@@ -79,5 +80,5 @@
       </section>
     {% endfor %}
   </div>
-
+  {% endcache %}
 {% endblock %}
