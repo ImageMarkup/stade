@@ -42,16 +42,6 @@ urlpatterns = [
     path('edit-approach/<int:approach_id>', views.edit_approach, name='edit-approach'),
     path('staff/dashboard', views.dashboard, name='staff-dashboard'),
     path(
-        'staff/review-approaches/<int:task_id>',
-        views.review_approaches,
-        name='staff-review-approaches',
-    ),
-    path(
-        'staff/review/<int:approach_id>',
-        views.submit_approach_review,
-        name='submit-approach-review',
-    ),
-    path(
         'staff/request-submission-bundle/<int:task_id>',
         views.request_submission_bundle,
         name='request-submission-bundle',
