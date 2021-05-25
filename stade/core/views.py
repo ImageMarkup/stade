@@ -10,7 +10,6 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
-from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_http_methods
 import requests
 from rules.contrib.views import objectgetter, permission_required
@@ -127,7 +126,6 @@ def dashboard(request):
     return render(request, 'staff/dashboard.html', context)
 
 
-@cache_page(3600 * 6)
 def stats(request):
     def with_num_teams(qs):
         return qs.annotate(num_teams=Count('team', distinct=True))
