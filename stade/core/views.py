@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
-from django.db import connection, transaction
 from django.db.models import Count, Exists, OuterRef, Prefetch
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -21,7 +20,6 @@ from stade.core.forms import (
     ApproachForm,
     CreateInvitationForm,
     CreateSubmissionForm,
-    ReviewApproachForm,
     TeamForm,
 )
 from stade.core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
@@ -79,117 +77,6 @@ def challenges(request):
         challenges = challenges.filter(Exists(visible_tasks))
 
     return render(request, 'challenges.html', {'challenges': challenges})
-
-
-@user_passes_test(lambda u: u.is_staff)
-def review_approaches(request, task_id):
-    task = get_object_or_404(Task.objects, pk=task_id)
-    mine = request.GET.get('mine')
-
-    with connection.cursor() as cursor:
-        # fmt: off
-        cursor.execute(
-            """
-    SELECT
-    t.id, t.submission_id
-    FROM
-    core_task,
-    (
-        SELECT
-            core_approach.id,
-                core_approach.task_id,
-            core_submission.id AS submission_id,
-            ROW_NUMBER() OVER (PARTITION BY core_approach.id
-            ORDER BY core_submission.created DESC) AS rn
-        FROM
-            core_approach
-            INNER JOIN
-                core_submission
-                ON core_submission.approach_id = core_approach.id
-        WHERE
-            core_submission.status = 'succeeded'
-    )
-    t
-    WHERE
-    core_task.id = t.task_id
-    AND t.task_id = %s
-    AND t.rn = 1
-                """,
-            [task.id],
-        )
-        # fmt: on
-        approaches_to_subs = dict(cursor.fetchall())
-    approaches = []
-    reviewed_approaches = []
-    num_assigned_to_user = 0
-
-    all_approaches = (
-        Approach.objects.filter(id__in=approaches_to_subs)
-        .select_related('team', 'review_assignee')
-        .order_by('name')
-    )
-
-    if mine:
-        all_approaches = all_approaches.filter(review_assignee=request.user)
-
-    relevant_submissions = {
-        x.approach_id: x for x in Submission.objects.filter(id__in=approaches_to_subs.values())
-    }
-
-    for approach in all_approaches:
-        approach.relevant_submission = relevant_submissions[approach.id]
-
-        if approach.review_state == '':
-            approaches.append(approach)
-        else:
-            reviewed_approaches.append(approach)
-
-        if approach.review_assignee == request.user:
-            num_assigned_to_user += 1
-
-    return render(
-        request,
-        'staff/review-approaches.html',
-        {
-            'task': task,
-            'approaches': approaches,
-            'form': ReviewApproachForm(request=request),
-            'reviewed_approaches': reviewed_approaches,
-            'mine': mine,
-            'num_assigned_to_user': num_assigned_to_user,
-        },
-    )
-
-
-@user_passes_test(lambda u: u.is_staff)
-@require_http_methods(['POST'])
-def submit_approach_review(request, approach_id):
-    approach = get_object_or_404(Approach, pk=approach_id)
-    form = ReviewApproachForm(request.POST, request=request)
-
-    if form.is_valid():
-        with transaction.atomic():
-            approach.review_state = form.cleaned_data['action']
-            approach.reject_reason = form.cleaned_data['reason']
-            approach.review_history.create(
-                reviewed_by=request.user,
-                review_state=form.cleaned_data['action'],
-                reject_reason=form.cleaned_data['reason'],
-            )
-            approach.save()
-
-        new_status = (
-            'reset' if form.cleaned_data['action'] == '' else approach.get_review_state_display()
-        )
-
-        messages.add_message(request, messages.SUCCESS, f'{approach.name} has been {new_status}.')
-
-        return safe_redirect(request, request.GET.get('next'))
-    else:
-        messages.add_message(request, messages.ERROR, 'The rejection reason is required.')
-        # This should never fail
-        logger.error(f'Failed to submit approach review, {form.errors}')
-        return safe_redirect(request, request.GET.get('next'))
 
 
 @user_passes_test(lambda u: u.is_staff)

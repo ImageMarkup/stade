@@ -68,35 +68,6 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
         super().save()
 
 
-class ReviewApproachForm(forms.Form):
-    approach_id = forms.IntegerField(widget=forms.HiddenInput())
-    action = forms.ChoiceField(
-        choices=[('accepted', 'Accept'), ('rejected', 'Reject'), ('reset', 'Reset')]
-    )
-    reason = forms.ChoiceField(choices=Approach.RejectReason.choices, required=False)
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        super().__init__(*args, **kwargs)
-
-    def clean_action(self):
-        action = self.cleaned_data['action']
-
-        if action == 'reset':
-            action = ''
-
-        return action
-
-    def clean(self):
-        super().clean()
-
-        if self.cleaned_data['action'] == 'rejected' and self.cleaned_data['reason'] == '':
-            raise forms.ValidationError('A rejection reason must be provided.')
-
-        if not self.request.user.is_staff:
-            raise forms.ValidationError("You don't have permission to do that.")
-
-
 class AcceptInvitationForm(forms.Form):
     invitation_id = forms.IntegerField(widget=forms.HiddenInput())
 
