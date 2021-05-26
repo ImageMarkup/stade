@@ -130,11 +130,33 @@ def stats(request):
     def with_num_teams(qs):
         return qs.annotate(num_teams=Count('team', distinct=True))
 
+    global_stats = {
+        'num_users': User.objects.count(),
+        'num_teams': Team.objects.count(),
+        'num_approaches': Approach.objects.count(),
+        'num_submissions': Submission.objects.count(),
+    }
+
+    if request.user.is_staff:
+        if settings.STADE_MAILCHIMP_API_KEY:
+            resp = requests.get(
+                f'{settings.STADE_MAILCHIMP_API_URL}/3.0/lists/{settings.STADE_MAILCHIMP_LIST_ID}',
+                auth=('', settings.STADE_MAILCHIMP_API_KEY),
+                headers={'Content-Type': 'application/json'},
+                timeout=(5, 5),
+            )
+            resp.raise_for_status()
+            resp_json = resp.json()
+            global_stats['num_mailchimp_subscribers'] = resp_json['stats']['member_count']
+        else:
+            global_stats['num_mailchimp_subscribers'] = 0
+
     context = {
         'live_challenge': with_num_teams(Challenge.objects.filter(name='ISIC Live')).first(),
         'challenges': with_num_teams(
             Challenge.objects.exclude(name__in=['ISIC Sandbox', 'ISIC Live'])
         ).order_by('-name'),
+        'global_stats': global_stats,
     }
 
     return render(request, 'stats.html', context)

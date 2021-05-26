@@ -40,7 +40,7 @@ class Challenge(models.Model):
                 num_successful_approaches=models.Count('approach', distinct=True),
             )
             .filter(challenge=self)
-            .values()
+            .order_by('name')
         )
         return d
 

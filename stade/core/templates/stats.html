@@ -5,6 +5,14 @@
 {% block content %}
   {% cache 21600 stats_page request.user.is_staff %}
   <div class="container dashboard-items">
+    <p>Users: {{ global_stats.num_users|intcomma }}</p>
+    <p>Teams: {{ global_stats.num_teams|intcomma }}</p>
+    <p>Successful approaches: {{ global_stats.num_approaches|intcomma }}</p>
+    <p>Submissions: {{ global_stats.num_submissions|intcomma }}</p>
+    {% if request.user.is_staff %}
+      <p>Mailing list subscribers: {{ global_stats.num_mailchimp_subscribers|intcomma }}</p>
+    {% endif %}
+
     <section class="live-challenge p-5">
       <div class="columns w-full">
         <div class="column section-content is-half">
@@ -23,7 +31,7 @@
             <h4>Success/Total</h4>
           </div>
           <ul>
-            {% for task in live_challenge.stats.tasks|dictsort:"name" %}
+            {% for task in live_challenge.stats.tasks %}
               <li>
                 <a href="#">
                   <span>{{ task.name }}</span>
@@ -61,9 +69,14 @@
               <h4>Success/Total</h4>
             </div>
             <ul>
-              {% for task in challenge.stats.tasks|dictsort:"name" %}
+              {% for task in challenge.stats.tasks %}
+                {% if request.user.is_staff %}
+                  <form id="request-submission-bundle-{{ task.id }}" action="{% url 'request-submission-bundle' task.id %}?next={{ request.path|urlencode }}" method="POST">
+                    {% csrf_token %}
+                  </form>
+                {% endif %}
                 <li>
-                  <a href="#">
+                  <a href="{% url 'task-landing' task.challenge.slug task.id %}">
                     <span>{{ task.name }}</span>
                   </a>
 
@@ -72,6 +85,10 @@
                     <span>/</span>
                     <span>{{ task.num_total_submissions|intcomma  }}</span>
                   </div>
+
+                  {% if request.user.is_staff %}
+                    <a onclick="document.getElementById('request-submission-bundle-{{ task.id }}').submit()" class="review-approach has-tooltip"><i class="material-icons">cloud_download</i><span class="tooltip is-left">Generate Submission Bundle</span></a>
+                  {% endif %}
                 </li>
               {% endfor %}
             </ul>
