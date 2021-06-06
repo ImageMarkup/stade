@@ -4,14 +4,28 @@
 
 {% block content %}
   {% cache 21600 stats_page request.user.is_staff %}
+  <div class="main-stats">
+    <div class="container columns">
+      <div class="stat column {% if request.user.is_staff %}is-one-fifth{% else %}is-one-quarter{% endif %}">
+        <span>Users:</span> {{ global_stats.num_users|intcomma }}
+      </div>
+      <div class="stat column {% if request.user.is_staff %}is-one-fifth{% else %}is-one-quarter{% endif %}">
+        <span>Teams:</span> {{ global_stats.num_teams|intcomma }}
+      </div>
+      <div class="stat column {% if request.user.is_staff %}is-one-fifth{% else %}is-one-quarter{% endif %}">
+        <span>Successful approaches:</span> {{ global_stats.num_approaches|intcomma }}
+      </div>
+      <div class="stat column {% if request.user.is_staff %}is-one-fifth{% else %}is-one-quarter{% endif %}">
+        <span>Submissions:</span> {{ global_stats.num_submissions|intcomma }}
+      </div>
+      <div class="stat column is-one-fifth">
+        {% if request.user.is_staff %}
+        <span>Mailing list subscribers:</span> {{ global_stats.num_mailchimp_subscribers|intcomma }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
   <div class="container dashboard-items">
-    <p>Users: {{ global_stats.num_users|intcomma }}</p>
-    <p>Teams: {{ global_stats.num_teams|intcomma }}</p>
-    <p>Successful approaches: {{ global_stats.num_approaches|intcomma }}</p>
-    <p>Submissions: {{ global_stats.num_submissions|intcomma }}</p>
-    {% if request.user.is_staff %}
-      <p>Mailing list subscribers: {{ global_stats.num_mailchimp_subscribers|intcomma }}</p>
-    {% endif %}
 
     <section class="live-challenge p-5">
       <div class="columns w-full">
