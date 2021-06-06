@@ -1,3 +1,23 @@
+.main-stats {
+  background: #454545;
+  color: #fff;
+  font-size: 48px;
+  margin-top: -25px; /* must be same as padding of .main-content */
+  margin-bottom: 45px;
+}
+
+.main-stats .stat {
+  line-height: 1.1em;
+  padding: 30px 0 35px;
+}
+
+.main-stats .stat span {
+  color: #59dedb;
+  font-size: 18px;
+  display: block;
+  line-height: 1.1em;
+}
+
 .dashboard-items {
   justify-content: space-around;
 }
