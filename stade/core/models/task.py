@@ -7,7 +7,7 @@ from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from girder_utils.models import SelectRelatedManager
+from girder_utils.db import SelectRelatedManager
 from s3_file_field import S3FileField
 
 from .challenge import Challenge
