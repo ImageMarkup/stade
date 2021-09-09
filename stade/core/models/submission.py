@@ -3,16 +3,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from girder_utils.db import DeferredFieldsManager
 from s3_file_field import S3FileField
-
-
-class DeferredFieldsManager(models.Manager):
-    def __init__(self, *deferred_fields):
-        self.deferred_fields = deferred_fields
-        super().__init__()
-
-    def get_queryset(self):
-        return super().get_queryset().defer(*self.deferred_fields)
 
 
 class Submission(models.Model):
