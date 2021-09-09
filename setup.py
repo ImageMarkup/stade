@@ -43,7 +43,7 @@ setup(
         'django-configurations[database,email]',
         'django-extensions',
         'django-filter',
-        'django-girder-utils',
+        'django-girder-utils>=0.10',
         'django-import-export',
         'django-jazzmin',
         'django-markdownify',
