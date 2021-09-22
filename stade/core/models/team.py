@@ -21,7 +21,7 @@ class Team(models.Model):
         return f'{self.name}'
 
     def user_full_names(self):
-        return sorted([x.get_full_name() for x in self.users.all()])
+        return sorted(x.get_full_name() for x in self.users.all())
 
     # todo, this doesn't work at all
     @transaction.atomic

@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import Optional
 
 from django.contrib import admin
 from django.db.models.query import QuerySet
@@ -30,11 +30,11 @@ class TaskListFilter(admin.SimpleListFilter):
     parameter_name = 'approach__task'
 
     # Remove type ignore on release of https://github.com/typeddjango/django-stubs/pull/217
-    def lookups(self, request, model_admin) -> List[Tuple[int, str]]:  # type: ignore
+    def lookups(self, request, model_admin) -> list[tuple[int, str]]:  # type: ignore
         # Sorting has to be done in python because the string representation of a task
         # differs from the name.
         return sorted(
-            [(t.id, str(t)) for t in Task.objects.all()], key=lambda x: str(x[1]), reverse=True
+            ((t.id, str(t)) for t in Task.objects.all()), key=lambda x: str(x[1]), reverse=True
         )
 
     def queryset(self, request, queryset) -> 'Optional[QuerySet[Task]]':
