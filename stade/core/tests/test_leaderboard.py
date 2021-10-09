@@ -66,7 +66,7 @@ def task_with_submissions(db, approach_factory, submission_factory, task_factory
 
 @pytest.mark.django_db
 def test_leaderboard_by_approach(task_with_submissions, client):
-    resp = client.get(f'/api/leaderboard/{task_with_submissions.id}/by-approach')
+    resp = client.get(f'/api/leaderboard/{task_with_submissions.id}/by-approach/')
     assert resp.status_code == 200
 
     # assert the by approach leaderboard looks like
@@ -92,7 +92,7 @@ def test_leaderboard_by_approach(task_with_submissions, client):
 
 @pytest.mark.django_db
 def test_leaderboard_by_team(task_with_submissions, client):
-    resp = client.get(f'/api/leaderboard/{task_with_submissions.id}/by-team')
+    resp = client.get(f'/api/leaderboard/{task_with_submissions.id}/by-team/')
     assert resp.status_code == 200
 
     # assert the by team leaderboard looks like
