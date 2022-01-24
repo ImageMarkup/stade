@@ -1,5 +1,3 @@
-from typing import Optional
-
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 from django.db import models
@@ -73,7 +71,7 @@ class Approach(models.Model):
         return Submission.objects.filter(approach=self).order_by('-created').first()
 
     @property
-    def latest_successful_submission(self) -> Optional[Submission]:
+    def latest_successful_submission(self) -> Submission | None:
         return (
             Submission.objects.filter(approach=self, status=Submission.Status.SUCCEEDED)
             .order_by('-created')

@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Optional, cast
+from typing import cast
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -103,7 +103,7 @@ class Task(models.Model):
 
         return Submission.objects.filter(**filters)
 
-    def next_available_submission(self, team) -> Optional[datetime]:
+    def next_available_submission(self, team) -> datetime | None:
         """
         Return a datetime of when the next submission can be made.
 
