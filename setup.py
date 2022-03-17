@@ -55,7 +55,7 @@ setup(
         'rules',
         'uritemplate',
         # Production-only
-        'django-composed-configuration[prod]>=0.16',
+        'django-composed-configuration[prod]>=0.20.0',
         'django-s3-file-field[boto3]',
         'gunicorn',
     ],
