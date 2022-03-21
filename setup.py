@@ -50,7 +50,7 @@ setup(
         'django-oauth-toolkit',
         'djangorestframework',
         'drf-yasg',
-        'isic-challenge-scoring',
+        'isic-challenge-scoring>=5.6',
         'requests',
         'rules',
         'uritemplate',
