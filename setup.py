@@ -38,12 +38,12 @@ setup(
     install_requires=[
         'celery',
         'dictdiffer',
-        'django>=3.2',
+        'django',
         'django-allauth',
         'django-configurations[database,email]',
         'django-extensions',
         'django-filter',
-        'django-girder-utils>=0.10',
+        'django-girder-utils',
         'django-import-export',
         'django-jazzmin',
         'django-markdownify',
@@ -55,7 +55,7 @@ setup(
         'rules',
         'uritemplate',
         # Production-only
-        'django-composed-configuration[prod]>=0.20.0',
+        'django-composed-configuration[prod]>=0.20.1',
         'django-s3-file-field[boto3]',
         'gunicorn',
     ],

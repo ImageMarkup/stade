@@ -20,7 +20,7 @@ class StadeMixin(ConfigMixin):
     BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
     @staticmethod
-    def before_binding(configuration: ComposedConfiguration) -> None:
+    def mutate_configuration(configuration: ComposedConfiguration) -> None:
         # Install local apps first, to ensure any overridden resources are found first
         configuration.INSTALLED_APPS = [
             'stade.core.apps.CoreConfig',
@@ -60,10 +60,6 @@ class StadeMixin(ConfigMixin):
         'signup': 'stade.core.forms.CustomSignupForm',
         'reset_password_from_key': 'stade.core.forms.CustomResetPasswordKeyForm',
     }
-
-    # Workaround for static file storage to work correctly on Django 4.
-    # Taken from https://github.com/axnsan12/drf-yasg/issues/761#issuecomment-1031381674
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 class DevelopmentConfiguration(StadeMixin, DevelopmentBaseConfiguration):
