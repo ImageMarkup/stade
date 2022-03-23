@@ -23,7 +23,7 @@ from girder_utils.storages import expiring_url
 from isic_challenge_scoring import (
     ClassificationMetric,
     ClassificationScore,
-    ScoreException,
+    ScoreError,
     SegmentationScore,
 )
 
@@ -176,7 +176,7 @@ def _score_submission(submission):
         submission.validation_score = score.validation
         submission.score = score.to_dict()
         submission.status = Submission.Status.SUCCEEDED
-    except ScoreException as e:
+    except ScoreError as e:
         submission.status = Submission.Status.FAILED
         submission.fail_reason = e.args[0]
         submission.reset_scores()
