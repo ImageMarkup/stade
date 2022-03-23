@@ -70,10 +70,12 @@
       <ul class="landing-tasks">
         {% for task in challenge.tasks.all %}
           <li>
-            <a href="{% url 'task-detail' task.id %}"><i class=
-                                                             "material-icons">timelapse</i>
-              <p>{{ task.name }}</p></a>
-          </li>{% endfor %}
+            <a href="{% url 'task-detail' task.id %}">
+              <i class="material-icons">{% if challenge.locked or task.locked %}lock{% else %}timelapse{% endif %}</i>
+              <p>{{task.name}}</p>
+            </a>
+          </li>
+        {% endfor %}
       </ul>
     </div>
   </section>
