@@ -3,6 +3,18 @@
 {% load markdownify %}
 
 {% block content %}
+
+{% if task.locked or task.challenge.locked %}
+  <section class="section container message is-warning" style="padding:0">
+    <div class="message-header">
+      <p><i class="material-icons" style="vertical-align:middle">lock</i>Locked for Submission</p>
+    </div>
+    <div class="message-body">
+      This task is no longer open for submission. View our <a href="{% url 'challenges' %}">complete list of challenges</a> to find open tasks.
+    </div>
+  </section>
+{% endif %}
+
 <section class="section container">
   <div class="section-header">
     <h1><i class="material-icons">assignment</i> <a href="{{ task.get_absolute_url }}">{{ task.name }}</a></h1>
