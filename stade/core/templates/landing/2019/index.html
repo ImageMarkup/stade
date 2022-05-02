@@ -172,13 +172,7 @@
       excluded from participation in the Challenge, but must assure that their submissions are
       completely independent of the members of the organizing committee.
 
-      <ul class="landing-tasks">
-        {% for task in challenge.tasks.all %}
-          <li>
-            <a href="{% url 'task-detail' task.id %}"><i class="material-icons">timelapse</i>
-              <p>{{ task.name }}</p></a>
-          </li>{% endfor %}
-      </ul>
+      {% include 'partials/task-listing.html' %}
     </div>
   </section>
 {% endblock %}

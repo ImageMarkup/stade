@@ -87,14 +87,7 @@
         </li>
       </ul>
 
-      <ul class="landing-tasks">
-        {% for task in challenge.tasks.all %}
-          <li>
-            <a href="{% url 'task-landing' challenge_nicename task.id %}"><i class=
-                                                                                 "material-icons">timelapse</i>
-              <p>{{ task.name }}</p></a>
-          </li>{% endfor %}
-      </ul>
+      {% include 'partials/task-listing.html' %}
     </div>
   </section>
 {% endblock %}
