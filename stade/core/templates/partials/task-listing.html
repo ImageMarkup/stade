@@ -1,0 +1,29 @@
+<ul class="landing-tasks" style="width:100%">
+  {% for task in challenge.tasks.all %}
+    <li>
+      {% if challenge.locked or task.locked %}
+        {% if challenge.slug == 'live' %}
+          <a href="{% url 'challenge-landing' 'live' %}">
+        {% else %}
+            <a href="{% url 'task-landing' task.challenge.slug task.id %}">
+        {% endif %}
+        <i class="material-icons">
+          lock
+        </i>
+        <p>
+          {{ task.name }}
+        </p>
+            </a>
+      {% else %}
+            <a href="{% url 'task-detail' task.id %}">
+              <i class="material-icons">
+                timelapse
+              </i>
+              <p>
+                {{ task.name }}
+              </p>
+            </a>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
