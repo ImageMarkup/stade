@@ -61,12 +61,39 @@
         <h2>Upload Submission Data</h2>
 
         {% if approach.task_id == 55 %}
+          <div>
+            <h3>Submission File Format</h3>
+            <p><em>For the ISIC 2019 Challenge, the format of a submission file exactly matches that of the <code>ISIC_2019_Training_GroundTruth.csv</code> file.</em></p>
+            <p>A submission file is a single CSV (comma-separated value) file, with each input lesion response in
+              a row. File columns must be:</p>
+            <ul>
+              <li>image: an input image identifier of the form <code>ISIC_0000000</code></li>
+              <li>MEL: “Melanoma” diagnosis confidence</li>
+              <li>NV: “Melanocytic nevus” diagnosis confidence</li>
+              <li>BCC: “Basal cell carcinoma” diagnosis confidence</li>
+              <li>AK: “Actinic keratosis” diagnosis confidence</li>
+              <li>BKL: “Benign keratosis (solar lentigo / seborrheic keratosis / lichen planus-like keratosis)” diagnosis confidence</li>
+              <li>DF: “Dermatofibroma” diagnosis confidence</li>
+              <li>VASC: “Vascular lesion” diagnosis confidence</li>
+              <li>SCC: &quot;Squamous cell carcinoma&quot;</li>
+              <li>UNK: None of the others / &quot;out of distribution&quot; diagnosis confidence</li>
+            </ul>
+
+            <p>Diagnosis confidences are expressed as floating-point values in the closed interval [0.0, 1.0],
+<em>where 0.5 is used as the binary classification threshold</em>.</p> <p>Note that arbitrary score ranges and thresholds can be converted to the range of 0.0 to 1.0,
+with a threshold of 0.5, trivially using the following sigmoid conversion:</p> <p>1 / (1 + e^(-(a(x - b))))</p> <p>where x is the original score, b is the binary threshold, and a is a scaling parameter (i.e. the
+inverse measured standard deviation on a held-out dataset). Predicted responses should set the
+binary threshold b to a value where the classification system is expected to achieve 89%
+sensitivity, although this is not required.</p> <p>Predicted diagnosis confidence values may vary independently, though exactly one disease state is
+actually present in each input lesion image.</p>
+          </div>
+
           <article class="message is-info">
             <div class="message-header">
               <p>Sample Submission CSV</p>
             </div>
-            <div class="message-body">
 
+            <div class="message-body">
               <table class="table is-bordered">
                 <thead>
                 <tr>
@@ -132,12 +159,19 @@
                 </tr>
                 </tbody>
               </table>
+
+            Note several key elements:
+            <ul>
+              <li>A header row is provided</li>
+              <li>The image field uses values with an ISIC_ prefix and without any .jpg file extensions</li>
+              <li>The values are floating point (0 and 1 are invalid, but 0.0 and 1.0 are valid)</li>
+              <li>The row values do not necessarily sum to 1.0</li>
+              <li>The greatest value of each row is considered the overall diagnosis prediction</li>
+              <li>All values greater than 0.5 are considered positive binary diagnosis predictions</li>
+            </ul>
             </div>
           </article>
 
-          <p>For more information on submitting, please see the <a target="_blank"
-                                                                   href="https://challenge2019.isic-archive.com/submit.html">submission
-            documentation</a>.</p>
           {# Task 56 is 2020 Live #}
         {% elif approach.task.id == 56 %}
           <article class="message is-info">
