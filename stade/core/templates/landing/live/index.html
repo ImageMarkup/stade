@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% block content %}
+  {% load static %}
   <section class="section container">
     <div class="section-header">
       <h1>{{ challenge.name }} Challenge {% if challenge.locked %}[Closed]{% endif %}</h1>
@@ -36,7 +37,7 @@
       <h4><span style="text-decoration: underline;">Sponsors</span></h4>
       <ul>
         <li><strong>Canfield Scientific &nbsp;</strong><img class="alignnone wp-image-320"
-                                                            src="https://challenge2018.isic-archive.com/wp-content/uploads/2018/04/logo-canfield-site.png"
+                                                            src="{% static 'img/canfield_logo.png' %}"
                                                             alt="" width="170" height="23"></li>
       </ul>
       <h4><span style="text-decoration: underline;">Clinical Chair</span></h4>
