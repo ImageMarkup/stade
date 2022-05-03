@@ -50,7 +50,7 @@
         patients presented for skin cancer screening, from several different institutions. Images
         were collected with&nbsp;approval of the Ethics Review Committee of University of Queensland
         (Protocol-No. 2017001223) and Medical University of Vienna (Protocol-No. 1804/2017).</p>
-      <p>The distribution of disease states represent a modified “real world” setting whereby there
+      <p>The distribution of disease states represent a modified "real world" setting whereby there
         are more benign lesions than malignant lesions, but an over-representation of
         malignancies.</p>
       <h3>Response Data</h3>
@@ -64,17 +64,17 @@
         <li><code>image</code>: an input image identifier of the form <code>ISIC_
           <image_id></image_id>
         </code></li>
-        <li><code>MEL</code>: “Melanoma” diagnosis confidence</li>
-        <li><code>NV</code>: “Melanocytic nevus” diagnosis confidence</li>
-        <li><code>BCC</code>: “Basal cell carcinoma” diagnosis confidence</li>
-        <li><code>AKIEC</code>: “Actinic keratosis / Bowen’s disease (intraepithelial carcinoma)”
+        <li><code>MEL</code>: "Melanoma" diagnosis confidence</li>
+        <li><code>NV</code>: "Melanocytic nevus" diagnosis confidence</li>
+        <li><code>BCC</code>: "Basal cell carcinoma" diagnosis confidence</li>
+        <li><code>AKIEC</code>: "Actinic keratosis / Bowen’s disease (intraepithelial carcinoma)"
           diagnosis confidence
         </li>
-        <li><code>BKL</code>: “Benign keratosis (solar lentigo / seborrheic keratosis / lichen
-          planus-like keratosis)” diagnosis confidence
+        <li><code>BKL</code>: "Benign keratosis (solar lentigo / seborrheic keratosis / lichen
+          planus-like keratosis)" diagnosis confidence
         </li>
-        <li><code>DF</code>: “Dermatofibroma” diagnosis confidence</li>
-        <li><code>VASC</code>: “Vascular lesion” diagnosis confidence</li>
+        <li><code>DF</code>: "Dermatofibroma" diagnosis confidence</li>
+        <li><code>VASC</code>: "Vascular lesion" diagnosis confidence</li>
       </ol>
       <p>Diagnosis confidences are expressed as floating-point values in the closed interval <code>[0.0,
         1.0]</code>, where <code>0.5</code> is used as the binary classification threshold.&nbsp;Note
@@ -111,8 +111,8 @@
       <p>Clinical application on skin lesion classification has two goals eventually: Giving
         specific information and treatment options for a lesion, and detecting skin cancer with a
         reasonable sensitivity and specificity. The first task needs a correct specific diagnosis
-        out of multiple classes, whereas the second demands a binary decision “biopsy” versus “don’t
-        biopsy”. In the former ISIC challenges, focus was on the second task, therefore this year we
+        out of multiple classes, whereas the second demands a binary decision "biopsy" versus "don’t
+        biopsy". In the former ISIC challenges, focus was on the second task, therefore this year we
         want to rank for the more ambitious metric of normalized multiclass accuracy, as it is also
         closer to real evaluation of a dermatologist. This is also important for the extending
         reader study, where the winning algorithm(s) will be compared to physicians performance in
@@ -179,7 +179,7 @@
             <li>Submit these test predicted responses. You may submit a maximum of 3 separate
               approaches/algorithms to be evaluated independently. You may make unlimited
               submissions, but only the most recent submission for each approach will be used for
-              official judging. Use the “brief description of your algorithm’s approach” field on
+              official judging. Use the "brief description of your algorithm’s approach" field on
               the submission form to distinguish different approaches. Previously submitted
               approaches are available in the dropdown menu.
             </li>
