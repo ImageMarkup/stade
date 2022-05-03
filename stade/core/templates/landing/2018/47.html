@@ -12,23 +12,22 @@
       <p>Submit automated predictions of disease classification within&nbsp;dermoscopic images.</p>
       <p>Possible disease categories are:</p>
       <ol>
-        <li><a href="https://dermoscopedia.org/Melanoma" target="_blank" rel="noopener">Melanoma</a>
+        <li><a href="https://dermoscopedia.org/Melanoma">Melanoma</a>
         </li>
-        <li><a href="https://dermoscopedia.org/Benign_Melanocytic_lesions" target="_blank"
-               rel="noopener">Melanocytic nevus</a></li>
-        <li><a href="https://dermoscopedia.org/Basal_cell_carcinoma" target="_blank" rel="noopener">Basal
+        <li><a href="https://dermoscopedia.org/Benign_Melanocytic_lesions">Melanocytic nevus</a></li>
+        <li><a href="https://dermoscopedia.org/Basal_cell_carcinoma">Basal
           cell carcinoma</a></li>
         <li><a
             href="https://dermoscopedia.org/Actinic_keratosis_/_Bowen%27s_disease_/_keratoacanthoma_/_squamous_cell_carcinoma"
-            target="_blank" rel="noopener">Actinic keratosis / Bowen’s disease (intraepithelial
+             >Actinic keratosis / Bowen’s disease (intraepithelial
           carcinoma)</a></li>
         <li><a
             href="https://dermoscopedia.org/Solar_lentigines_/_seborrheic_keratoses_/_lichen_planus-like_keratosis"
-            target="_blank" rel="noopener">Benign keratosis (solar lentigo / seborrheic keratosis /
+             >Benign keratosis (solar lentigo / seborrheic keratosis /
           lichen planus-like keratosis)</a></li>
-        <li><a href="https://dermoscopedia.org/Dermatofibromas" target="_blank" rel="noopener">Dermatofibroma</a>
+        <li><a href="https://dermoscopedia.org/Dermatofibromas">Dermatofibroma</a>
         </li>
-        <li><a href="https://dermoscopedia.org/Vascular_lesions" target="_blank" rel="noopener">Vascular
+        <li><a href="https://dermoscopedia.org/Vascular_lesions">Vascular
           lesion</a></li>
       </ol>
 
@@ -45,7 +44,7 @@
       </p>
       <p>The lesion images come from the <a href="https://doi.org/10.7910/DVN/DBW86T">HAM10000
         Dataset</a>, and were acquired with a variety of <a
-          href="https://dermoscopedia.org/Principles_of_dermoscopy" target="_blank" rel="noopener">dermatoscope
+          href="https://dermoscopedia.org/Principles_of_dermoscopy">dermatoscope
         types</a>, from all anatomic sites (excluding mucosa and nails), from a historical sample of
         patients presented for skin cancer screening, from several different institutions. Images
         were collected with&nbsp;approval of the Ethics Review Committee of University of Queensland
@@ -57,8 +56,7 @@
       <p>The response data are sets of binary classifications for each of the 7 disease states,
         indicating the diagnosis of each input lesion image.</p>
       <p>Response data are all encoded within a single CSV file&nbsp;(<a
-          href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank"
-          rel="noopener">comma-separated value</a>) file, with each classification response in a
+          href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated value</a>) file, with each classification response in a
         row. File columns must be:</p>
       <ol type="A">
         <li><code>image</code>: an input image identifier of the form <code>ISIC_
@@ -124,24 +122,24 @@
       <h4>Individual Category Metrics</h4>
       <ul>
         <li><a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity"
-               target="_blank" rel="noopener">sensitivity</a></li>
+                >sensitivity</a></li>
         <li><a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity"
-               target="_blank" rel="noopener">specificity</a></li>
+                >specificity</a></li>
         <li><a href="https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification"
-               target="_blank" rel="noopener">accuracy</a></li>
+                >accuracy</a></li>
         <li><a
             href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve"
-            target="_blank" rel="noopener">area under the receiver operating characteristic curve
+             >area under the receiver operating characteristic curve
           (AUC)</a></li>
         <li><a href="http://fastml.com/what-you-wanted-to-know-about-mean-average-precision/"
-               target="_blank" rel="noopener">mean average precision</a></li>
-        <li><a href="https://en.wikipedia.org/wiki/F1_score" target="_blank" rel="noopener">F1
+                >mean average precision</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/F1_score">F1
           score</a></li>
         <li>AUC integrated between 80% to 100% sensitivity (AUC80) for Melanoma diagnosis only</li>
         <li><a href="https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values"
-               target="_blank" rel="noopener">positive predictive value (PPV)</a></li>
+                >positive predictive value (PPV)</a></li>
         <li><a href="https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values"
-               target="_blank" rel="noopener">negative predictive value (NPV)</a></li>
+                >negative predictive value (NPV)</a></li>
       </ul>
       <h5>Aggregate Metrics</h5>
       <ul>
