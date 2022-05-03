@@ -61,8 +61,6 @@ class StadeMixin(ConfigMixin):
         'reset_password_from_key': 'stade.core.forms.CustomResetPasswordKeyForm',
     }
 
-    CORS_ORIGIN_WHITELIST = ['https://challenge2019.isic-archive.com']
-
 
 class DevelopmentConfiguration(StadeMixin, DevelopmentBaseConfiguration):
     # Not required
