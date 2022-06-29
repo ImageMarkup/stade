@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/stade/data.css' %}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.2.0/dist/bulma-tooltip.min.css"
+      integrity="sha256-OdzWB7wl1AMkFaqhYBnoQJGUJMDAexXa44rXs/d2n4A=" crossorigin="anonymous">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.8.1/cdn.min.js"
+      integrity="sha512-R/Jhpa6TNKZy3VmvYNBe7nQviLLpNXU64csnTYd6cy64donZkeqfqpXSoJRiZ8M1MCgejev/j5NoTx0rZEy+hg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+    function dataTabs() {
+        return {
+            activeTab: location.hash.replace('#', '') || 2016,
+            makeActiveTab(year) {
+                this.activeTab = year;
+                location.hash = year;
+            }
+        }
+    }
+</script>
+
+<section class="section container">
+    <div class="section-header">
+        <h1>ISIC Challenge Datasets</h1>
+    </div>
+
+    <div class="section-content" x-data="dataTabs()">
+        <div class="tabs is-boxed is-large">
+            <ul class="m-0">
+                <li @click="makeActiveTab(2016)" :class="{'is-active': activeTab == 2016}"><a>2016</a></li>
+                <li @click="makeActiveTab(2017)" :class="{'is-active': activeTab == 2017}"><a>2017</a></li>
+                <li @click="makeActiveTab(2018)" :class="{'is-active': activeTab == 2018}"><a>2018</a></li>
+                <li @click="makeActiveTab(2019)" :class="{'is-active': activeTab == 2019}"><a>2019</a></li>
+                <li @click="makeActiveTab(2020)" :class="{'is-active': activeTab == 2020}"><a>2020</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <div x-show="activeTab == 2016">{% include 'data/2016.html' %}</div>
+            <div x-show="activeTab == 2017">{% include 'data/2017.html' %}</div>
+            <div x-show="activeTab == 2018">{% include 'data/2018.html' %}</div>
+            <div x-show="activeTab == 2019">{% include 'data/2019.html' %}</div>
+            <div x-show="activeTab == 2020">{% include 'data/2020.html' %}</div>
+        </div>
+    </div>
+</section>
+{% endblock %}

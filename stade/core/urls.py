@@ -66,7 +66,7 @@ urlpatterns = [
         api_views.submission_scores,
         name='submission-scores',
     ),
-    path('data/', TemplateView.as_view(template_name='data.html'), name='data'),
+    path('data/', TemplateView.as_view(template_name='data/base.html'), name='data'),
     path('stats/', views.stats, name='stats'),
     path('challenges/', views.challenges, name='challenges'),
     path('leaderboards/<challenge_slug:challenge>/', views.leaderboard_page, name='leaderboards'),

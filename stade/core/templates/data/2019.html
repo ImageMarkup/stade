@@ -1,0 +1,103 @@
+<table class="table is-hoverable is-bordered">
+    <thead>
+        <tr>
+            <th><abbr title="Task">Task</abbr></th>
+            <th><abbr title="Training Data">Training Data</abbr></th>
+            <th><abbr title="Training Ground Truth Data">Training Ground Truth</abbr></th>
+            <th><abbr title="Test Data">Test Data</abbr></th>
+            <th><abbr title="Test Ground Truth Data">Test Ground Truth</abbr></th>
+            <th><abbr title="License">License</abbr></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>1</th>
+            <td>
+                <a href="https://isic-challenge-data.s3.amazonaws.com/2019/ISIC_2019_Training_Input.zip">
+                    Download (9.1GB)
+                </a>
+                <br>
+                25,331 JPEG images of skin lesions.
+            </td>
+            <td rowspan="2">
+                <a href="https://isic-challenge-data.s3.amazonaws.com/2019/ISIC_2019_Training_GroundTruth.csv">
+                    Download (1MB)
+                </a>
+                <br>
+                25,331 entries of gold standard lesion diagnoses.
+            </td>
+            <td>
+                <a href="https://isic-challenge-data.s3.amazonaws.com/2019/ISIC_2019_Test_Input.zip">
+                    Download (3.6GB)
+                </a>
+                <br>
+                8,238 JPEG images of skin lesions.
+            </td>
+            <td>
+                {% include 'partials/not_available.html' %}
+            </td>
+            <td rowspan="2">
+                <a href="https://creativecommons.org/licenses/by-nc/4.0/">
+                    CC-BY-NC
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>
+                <a href="https://isic-challenge-data.s3.amazonaws.com/2019/ISIC_2019_Training_Metadata.csv">
+                    Download (1MB)
+                </a>
+                <br>
+                25,331 metadata entries of age, sex, general anatomic site, and common lesion identifier.
+            </td>
+            <td>
+                <a href="https://isic-challenge-data.s3.amazonaws.com/2019/ISIC_2019_Test_Metadata.csv">
+                    Download (287KB)
+                </a>
+                <br>
+                8,238 metadata entries of age, sex, and general anatomic site.
+            </td>
+            <td>
+                {% include 'partials/not_available.html' %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Citing 2019 datasets:</h3>
+To comply with the attribution requirements of the
+<a href="https://creativecommons.org/licenses/by-nc/4.0/">
+    CC-BY-NC license
+</a>,
+the aggregate "ISIC 2019: Training" data must be cited as:
+<blockquote>
+    <p>BCN_20000 Dataset: (c) Department of Dermatology, Hospital
+        Clínic de Barcelona</p>
+    <p>HAM10000 Dataset: (c) by ViDIR Group, Department of
+        Dermatology, Medical University of Vienna;
+        <a href="https://doi.org/10.1038/sdata.2018.161">https://doi.org/10.1038/sdata.2018.161</a>
+    </p>
+    <p>MSK Dataset: (c) Anonymous; <a href="https://arxiv.org/abs/1710.05006">https://arxiv.org/abs/1710.05006</a>;
+        <a href="https://arxiv.org/abs/1902.03368">https://arxiv.org/abs/1902.03368</a>
+    </p>
+</blockquote>
+When referencing this dataset in your own manuscripts
+and publications, please use the following full citations:
+<blockquote>
+    <p>[1] Tschandl P., Rosendahl C. & Kittler H. The HAM10000
+        dataset, a large collection of multi-source dermatoscopic images
+        of common pigmented skin lesions. Sci. Data 5, 180161
+        doi.10.1038/sdata.2018.161 (2018)</p>
+    <p>[2] Noel C. F. Codella, David Gutman, M. Emre Celebi, Brian
+        Helba, Michael A. Marchetti, Stephen W. Dusza, Aadi Kalloo,
+        Konstantinos Liopyris, Nabin Mishra, Harald Kittler, Allan
+        Halpern: "Skin Lesion Analysis Toward Melanoma Detection: A
+        Challenge at the 2017 International Symposium on Biomedical
+        Imaging (ISBI), Hosted by the International Skin Imaging
+        Collaboration (ISIC)", 2017; arXiv:1710.05006.</p>
+    <p>[3] Marc Combalia, Noel C. F. Codella, Veronica Rotemberg,
+        Brian Helba, Veronica Vilaplana, Ofer Reiter, Allan C. Halpern,
+        Susana Puig, Josep Malvehy: "BCN20000: Dermoscopic Lesions in the
+        Wild", 2019; arXiv:1908.02288.</p>
+</blockquote>
