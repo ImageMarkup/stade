@@ -7,17 +7,17 @@
 
     <div class="section-content">
       <h2><strong>Summary</strong></h2>
-      <p>In addition to hosting Grand Challenges with specific timelines and associated awards and workshops, 
-        ISIC has made its Challenge platform and datasets from the Grand Challenges available on an ongoing basis. 
-        These <i>Live Challenges</i> serve as a resource for researchers looking to benchmark the performance of their algorithms 
+      <p>In addition to hosting Grand Challenges with specific timelines and associated awards and workshops,
+        ISIC has made its Challenge platform and datasets from the Grand Challenges available on an ongoing basis.
+        These <i>Live Challenges</i> serve as a resource for researchers looking to benchmark the performance of their algorithms
         and for teachers and students in need of practice and testing opportunities.
-      </p>   
+      </p>
       <p><strong>The following tasks are open for live-submission scoring:</strong>
       </p>
       <ul>
-        <li><span style="font-weight: 400;"><a href="https://challenge.isic-archive.com/landing/2018/45/">2018 Task 1</a>: Lesion Segmentation &nbsp;</span></li>
-        <li><span style="font-weight: 400;"><a href="https://challenge.isic-archive.com/landing/2018/47/">2018 Task 3</a>: Lesion Diagnosis Classification (7 classes)</span></li>
-        <li><span style="font-weight: 400;"><a href="https://challenge.isic-archive.com/landing/2019/">2019</a>: Lesion Diagnosis Classification (8 classes + 1 out-of-distribution class)</span></li>
+        <li><span style="font-weight: 400;"><a href="{% url 'task-landing' 2018 45 %}">2018 Task 1</a>: Lesion Segmentation &nbsp;</span></li>
+        <li><span style="font-weight: 400;"><a href="{% url 'task-landing' 2018 47 %}">2018 Task 3</a>: Lesion Diagnosis Classification (7 classes)</span></li>
+        <li><span style="font-weight: 400;"><a href="{% url 'challenge-landing' 2019 %}">2019</a>: Lesion Diagnosis Classification (8 classes + 1 out-of-distribution class)</span></li>
         <li><span style="font-weigth: 400;"><a href="https://www.kaggle.com/c/siim-isic-melanoma-classification/overview">2020</a>: SIIM-ISIC Melanoma Classification with patient-clustered images (2 classes)</span></li>
       </ul>
       <p><span style="font-weight: 400;">Each competitor may participate in any or all of these tasks. </span>
