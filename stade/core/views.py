@@ -45,6 +45,10 @@ def leaderboard_page(request, challenge):
 def task_landing(request, challenge, task_id):
     task = get_object_or_404(Task.objects.filter(challenge=challenge), pk=task_id)
 
+    # The 2019 challenge doesn't have distinct task landing pages
+    if challenge.slug == '2019':
+        return challenge_landing(request, challenge)
+
     return render(
         request,
         f'landing/{challenge.slug}/{task_id}.html',
