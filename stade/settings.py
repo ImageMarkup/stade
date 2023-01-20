@@ -92,3 +92,5 @@ class HerokuProductionConfiguration(StadeMixin, HerokuProductionBaseConfiguratio
             'LOCATION': 'cache',
         }
     }
+
+    SENTRY_TRACES_SAMPLE_RATE = 0.01  # sample 1% of requests for performance monitoring
