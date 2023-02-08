@@ -49,6 +49,7 @@
               <li>
                 <a href="#">
                   <span>{{ task.name }}</span>
+                  {% include "partials/task-submission-timespan.html" %}
                 </a>
 
                 <div class="is-flex is-align-items-center pr-4">
@@ -92,6 +93,7 @@
                 <li>
                   <a href="{% url 'task-landing' task.challenge.slug task.id %}">
                     <span>{{ task.name }}</span>
+                    {% include "partials/task-submission-timespan.html" %}
                   </a>
 
                   <div class="is-flex is-align-items-center pr-4">

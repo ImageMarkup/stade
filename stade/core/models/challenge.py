@@ -38,6 +38,8 @@ class Challenge(models.Model):
                     distinct=True,
                 ),
                 num_successful_approaches=models.Count('approach', distinct=True),
+                first_submission=models.Min('approach__submission__created'),
+                last_submission=models.Max('approach__submission__created'),
             )
             .filter(challenge=self)
             .order_by('name')

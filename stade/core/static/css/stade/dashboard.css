@@ -1,3 +1,9 @@
+.submission-timespan {
+  font-size: 13px;
+  font-weight: normal;
+  margin-left: 0.5em;
+}
+
 .main-stats {
   background: #454545;
   color: #fff;

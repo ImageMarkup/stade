@@ -1,0 +1,5 @@
+{% if task.first_submission %}
+  <span class="submission-timespan">
+    ({{ task.first_submission|date:"M Y" }} - {% if task.locked %}{{ task.last_submission|date:"M Y" }}{% else %}Present{% endif %})
+  </span>
+{% endif %}
