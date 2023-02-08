@@ -80,6 +80,16 @@ class Task(models.Model):
         return f'{self.challenge.name}: {self.name}'
 
     @property
+    def submission_timespan(self):
+        submissions = Submission.objects.filter(approach__task=self).order_by('created')
+        first_submission = submissions.first()
+        last_submission = submissions.last()
+        return {
+            'first_submission': first_submission.created if first_submission else None,
+            'last_submission': last_submission.created if last_submission else None,
+        }
+
+    @property
     def allowed_submission_extension(self):
         return {self.Type.SEGMENTATION: 'zip', self.Type.CLASSIFICATION: 'csv'}[self.type]
 
