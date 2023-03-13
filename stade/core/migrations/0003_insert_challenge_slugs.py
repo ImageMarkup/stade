@@ -18,6 +18,5 @@ def generate_challenge_slugs(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [('core', '0002_add_challenge_slug')]
     operations = [migrations.RunPython(generate_challenge_slugs)]
