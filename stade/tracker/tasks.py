@@ -6,7 +6,7 @@ import requests
 logger = get_task_logger(__name__)
 
 
-@shared_task(time_limit=10)
+@shared_task(soft_time_limit=10, time_limit=15)
 def add_mailchimp_subscriber(email):
     resp = requests.post(
         f'{settings.STADE_MAILCHIMP_API_URL}/3.0/lists/{settings.STADE_MAILCHIMP_LIST_ID}/members',
