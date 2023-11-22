@@ -58,7 +58,7 @@ setup(
         'uritemplate',
         # Production-only
         'django-composed-configuration[prod]>=0.20.1',
-        'django-s3-file-field[boto3]',
+        'django-s3-file-field[s3]>=1',
         'gunicorn',
     ],
     extras_require={
