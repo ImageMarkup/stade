@@ -146,9 +146,10 @@ def _score_submission(submission):
         prediction_file: FieldFile = submission.test_prediction_file
 
         if submission.approach.task.type == Task.Type.SEGMENTATION:
-            with field_file_to_local_path(truth_file) as truth_file_path, field_file_to_local_path(
-                prediction_file
-            ) as prediction_file_path:
+            with (
+                field_file_to_local_path(truth_file) as truth_file_path,
+                field_file_to_local_path(prediction_file) as prediction_file_path,
+            ):
                 score = SegmentationScore.from_zip_file(
                     truth_file_path,
                     prediction_file_path,

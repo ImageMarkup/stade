@@ -147,11 +147,11 @@ class TeamForm(forms.ModelForm):
 
     def get_invites(self):
         for field in range(3):
-            if self.cleaned_data[f'initial_invite_{field+1}']:
+            if self.cleaned_data[f'initial_invite_{field + 1}']:
                 yield TeamInvitation(
                     sender=self.request.user,
                     team=self.instance,
-                    recipient=self.cleaned_data[f'initial_invite_{field+1}'].lower(),
+                    recipient=self.cleaned_data[f'initial_invite_{field + 1}'].lower(),
                 )
 
 
