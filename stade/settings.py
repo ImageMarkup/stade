@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from botocore.config import Config
 from composed_configuration import (
     ComposedConfiguration,
     ConfigMixin,
@@ -77,13 +78,11 @@ class TestingConfiguration(StadeMixin, TestingBaseConfiguration):
 
 
 class ProductionConfiguration(StadeMixin, ProductionBaseConfiguration):
-    DEFAULT_FILE_STORAGE = 'stade.core.storage_backends.TimeoutS3Boto3Storage'
     # TODO: What about this?
     EMAIL_TIMEOUT = 10
 
 
 class HerokuProductionConfiguration(StadeMixin, HerokuProductionBaseConfiguration):
-    DEFAULT_FILE_STORAGE = 'stade.core.storage_backends.TimeoutS3Boto3Storage'
     # TODO: What about this?
     EMAIL_TIMEOUT = 10
     CACHES = {
@@ -94,3 +93,12 @@ class HerokuProductionConfiguration(StadeMixin, HerokuProductionBaseConfiguratio
     }
 
     SENTRY_TRACES_SAMPLE_RATE = 0.01  # sample 1% of requests for performance monitoring
+
+    @staticmethod
+    def mutate_configuration(configuration: ComposedConfiguration) -> None:
+        configuration.AWS_S3_CLIENT_CONFIG = Config(
+            connect_timeout=3,
+            read_timeout=10,
+            retries={'max_attempts': 5},
+            signature_version=configuration.AWS_S3_SIGNATURE_VERSION,
+        )
