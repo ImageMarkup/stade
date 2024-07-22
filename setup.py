@@ -38,7 +38,7 @@ setup(
     install_requires=[
         'celery',
         'dictdiffer',
-        'django<6.0',
+        'django>=5,<6.0',
         'django-allauth',
         'django-configurations[database,email]',
         'django-extensions',
