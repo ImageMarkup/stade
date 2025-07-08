@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="section container">
+    <div class="section-header">
+      <h1>{{ challenge.name }} Challenge {% if challenge.locked %}[Closed]{% endif %}</h1>
+    </div>
+
+    <div class="section-content">
+      <div id="summary">
+        <h2>Summary</h2>
+        <p>
+          The overarching goal of the benchmark is to develop image analysis tools that classify
+          the diagnosis of skin lesions using the following set of information for each case:
+        </p>
+        <ul>
+          <li>Clinical close-up image</li>
+          <li>Dermatoscopic image</li>
+          <li>Metadata (more detail below)</li>
+        </ul>
+        <p>
+          This live challenge features the MILK10k training dataset (5,240 lesions) and a blind
+          held-out test dataset (479 lesions) called the MILK10k Benchmark.
+        </p>
+      </div>
+      <div id="task">
+        <h2>Task</h2>
+        <p>
+          The task is multi-category lesion diagnosis classification.
+          Submissions are required to provide eleven probability estimates for each lesion
+          identifier (<code>lesion_id</code>), one for each of the following diagnostic categories:
+        </p>
+        <ol>
+          <li>Actinic keratosis / intraepidermal carcinoma (<code>AKIEC</code>)</li>
+          <li>Basal cell carcinoma (<code>BCC</code>)</li>
+          <li>Other benign proliferations, including collision tumors (<code>BEN_OTH</code>)</li>
+          <li>Benign keratinocytic lesion (<code>BKL</code>)</li>
+          <li>Dermatofibroma (<code>DF</code>)</li>
+          <li>Inflammatory and infectious conditions (<code>INF</code>)</li>
+          <li>Other malignant proliferations, including collision tumors (<code>MAL_OTH</code>)</li>
+          <li>Melanoma (<code>MEL</code>)</li>
+          <li>Melanocytic nevus (<code>NV</code>)</li>
+          <li>Squamous cell carcinoma / keratoacanthoma (<code>SCCKA</code>)</li>
+          <li>Vascular lesions and hemorrhage (<code>VASC</code>)</li>
+        </ol>
+      </div>
+      <div id="input-data">
+        <h2>Input Data</h2>
+        <p>
+          The input data are image pairs with additional metadata.
+          Each lesion is composed of one clinical close-up image and one dermoscopic image.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Clinical close-up image</th>
+              <th>Dermatoscopy image</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <img src="{% static 'img/landing/MILK10k/ISIC_7876146.jpg' %}" />
+                <em>Image provided by the MILK study team</em>
+              </td>
+              <td>
+                <img src="{% static 'img/landing/MILK10k/ISIC_8356317.jpg' %}" />
+                <em>Image provided by the MILK study team</em>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          All images are annotated using the <strong>MONET framework</strong> (Kim et al., 2024),
+          with concept term <strong>probability scores</strong> included for the following groups:
+        </p>
+        <ul>
+          <li>Ulceration, crust</li>
+          <li>Hair</li>
+          <li>Vasculature, vessels</li>
+          <li>Erythema</li>
+          <li>Pigmentation</li>
+          <li>Gel, water drop, dermoscopy liquid</li>
+          <li>Skin markings, pen ink, purple pen</li>
+        </ul>
+        <p>
+          <em>
+            Kim C, Gadgil SU, DeGrave AJ, et al. Transparent medical image AI via an image-text
+            foundation model grounded in medical literature. Nat Med. 2024;30(4):1154-1165.
+            <a href="https://doi.org/10.1038/s41591-024-02887-x">doi:10.1038/s41591-024-02887-x</a>
+          </em>
+        </p>
+        <p>
+          Additional metadata includes:
+        </p>
+        <ul>
+          <li><strong>Age</strong> (grouped in 5-year intervals)</li>
+          <li><strong>Sex</strong></li>
+          <li>
+            <strong>Skin tone</strong>, categorized from <code>0</code> (very dark) to <code>5</code>
+            (very light) — designed to avoid confusion with Fitzpatrick skin types
+          </li>
+          <li><strong>Anatomical site</strong></li>
+        </ul>
+      </div>
+      <div id="response-data">
+        <h2>Response Data</h2>
+        <p>
+          Response data are binary classification probabilities for each of the 11 diagnostic
+          categories over all 479 lesions in the MILK10k Benchmark dataset.
+          Responses must be encoded in a CSV (comma-separated value) file and submitted
+          through the ISIC Challenge submission system, which provides automated format
+          validation and scoring. File columns must be:
+        </p>
+        <ol type="A">
+          <li><code>lesion_id</code></li>
+          <li><code>AKIEC</code></li>
+          <li><code>BCC</code></li>
+          <li><code>BEN_OTH</code></li>
+          <li><code>BKL</code></li>
+          <li><code>DF</code></li>
+          <li><code>INF</code></li>
+          <li><code>MAL_OTH</code></li>
+          <li><code>MEL</code></li>
+          <li><code>NV</code></li>
+          <li><code>SCCKA</code></li>
+          <li><code>VASC</code></li>
+        </ol>
+        <p>
+          Responses are expressed as floating-point values in the closed interval
+          <code>[0.0, 1.0]</code>, where <code&ge;0.5</code> is used as the binary classification
+          threshold (see <a href="#evaluation">Evaluation</a>).
+        </p>
+      </div>
+      <div id="evaluation">
+        <h2>Evaluation</h2>
+        <p>
+          The primary evaluation metric is <strong>Macro F1 Score</strong> (Dice coefficient)
+          for diagnostic categories. The macro F1 score is a multi-class classification metric
+          that calculates the average of individual F1 scores for each class, treating all classes
+          equally. It's calculated by first computing the F1 score for each class (using precision
+          and recall), and then averaging these per-class F1 scores. This averaging method doesn't
+          consider class support or prevalence, meaning each class contributes equally to the
+          overall score.
+        </p>
+        <p>
+          Individual responses will be binarized using <code>&ge;0.5</code> as the decision
+          threshold for positive prediction. Therefore, it is possible that a lesion may be counted
+          as being predicted "positive" (<code>response&ge;0.5</code>) for any number
+          (0, 1, 2, …, 11) of the eleven diagnosis categories.
+        </p>
+      </div>
+      <div id="datasets">
+        <h2>Datasets</h2>
+        <p>
+          This live challenge features the MILK10k Benchmark dataset, comprising 958 images —
+          specifically, close-up and dermatoscopic image pairs for 479 skin lesions. The benchmark
+          dataset originates from the same sources as the original
+          <a href="https://doi.org/10.34970/262082">MILK10k</a> and covers the same eleven
+          diagnostic categories.
+        </p>
+        <p>
+          Although the diagnostic category structure aligns with that of MILK10k, the granular
+          ISIC-DX diagnoses differ. The MILK10k Benchmark includes new ISIC-DX diagnoses not
+          present in the original dataset, while some original diagnoses are omitted—particularly
+          within the "other benign" and "other malignant" categories.
+        </p>
+        <p>
+          For each image in MILK10k, we also provide the most specific ISIC-DX diagnosis in the
+          supplemental data file. While specific diagnoses of the MILK10k Benchmark are not
+          disclosed directly, all possible granular ISIC-DX diagnoses are listed in the table
+          below.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Diagnostic Category</th>
+              <th>Abbreviation</th>
+              <th>ISIC-DX</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Actinic keratosis/intraepidermal carcinoma</td>
+              <td><code>AKIEC</code></td>
+              <td>
+                <ul>
+                  <li>Solar or actinic keratosis</li>
+                  <li>Squamous cell carcinomsitu</li>
+                  <li>Bowen's disease</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Basal cell carcinoma</td>
+              <td><code>BCC</code></td>
+              <td>
+                <ul>
+                  <li>Basal cell carcinoma</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Other benign proliferations including collisions</td>
+              <td><code>BEN_OTH</code></td>
+              <td>
+                <ul>
+                  <li>Benign - Other</li>
+                  <li>Benign soft tissue proliferations - Fibro-histiocytic</li>
+                  <li>Benign soft tissue proliferations - Vascular</li>
+                  <li>Collision - Only benign proliferations</li>
+                  <li>Cylindroma</li>
+                  <li>Exogenous</li>
+                  <li>Fibroepithelial polyp</li>
+                  <li>Fibroma, Infundibular or epidermal cyst</li>
+                  <li>Juvenile xanthogranuloma</li>
+                  <li>Mastocytosis</li>
+                  <li>Mucosal melanotic macule</li>
+                  <li>Scar</li>
+                  <li>Sebaceous hyperplasia</li>
+                  <li>Spiradenoma</li>
+                  <li>Supernumerary nipple</li>
+                  <li>Trichilemmal or isthmic-catagen or pilar cyst</li>
+                  <li>Trichoblastoma</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Benign keratinocytic lesion</td>
+              <td><code>BKL</code></td>
+              <td>
+                <ul>
+                  <li>Clear cell acanthoma</li>
+                  <li>Ink-spot lentigo</li>
+                  <li>Lichen planus like keratosis</li>
+                  <li>Seborrheic keratosis</li>
+                  <li>Solar lentigo</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Dermatofibroma</td>
+              <td><code>DF</code></td>
+              <td>
+                <ul>
+                  <li>Dermatofibroma</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Inflammatory and infectious</td>
+              <td><code>INF</code></td>
+              <td>
+                <ul>
+                  <li>Inflammatory or infectious diseases</li>
+                  <li>Molluscum</li>
+                  <li>Porokeratosis</li>
+                  <li>Verruca</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Other malignant proliferations including collisions</td>
+              <td><code>MAL_OTH</code></td>
+              <td>
+                <ul>
+                  <li>Atypical fibroxanthoma</li>
+                  <li>Collision - At least one malignant proliferation</li>
+                  <li>Kaposi sarcoma</li>
+                  <li>Lymphocytic proliferations - T-Cell/NK</li>
+                  <li>Malignant peripheral nerve sheath tumor</li>
+                  <li>Merkel cell carcinoma</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Melanoma</td>
+              <td><code>MEL</code></td>
+              <td>
+                <ul>
+                  <li>Melanoma Invasive</li>
+                  <li>Melanoma in situ</li>
+                  <li>Melanoma metastasis</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Melanocytic Nevus, any type</td>
+              <td><code>NV</code></td>
+              <td>
+                <ul>
+                  <li>Blue nevus</li>
+                  <li>Nevus</li>
+                  <li>Nevus, Acral</li>
+                  <li>Nevus, BAP-1 deficient</li>
+                  <li>Nevus, Balloon cell</li>
+                  <li>Nevus, Combined</li>
+                  <li>Nevus, Congenital</li>
+                  <li>Nevus, Deep penetrating</li>
+                  <li>Nevus, NOS, Compound</li>
+                  <li>Nevus, NOS, Dermal</li>
+                  <li>Nevus, NOS, Junctional</li>
+                  <li>Nevus, Recurrent or persistent</li>
+                  <li>Nevus, Reed</li>
+                  <li>Nevus, Spilus</li>
+                  <li>Nevus, Spitz</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Squamous cell carcinoma/keratoacanthoma</td>
+              <td><code>SCCKA</code></td>
+              <td>
+                <ul>
+                  <li>Keratoacanthoma</li>
+                  <li>Squamous cell carcinoma, Invasive</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Vascular lesions and hemorrhage</td>
+              <td><code>VASC</code></td>
+              <td>
+                <ul>
+                  <li>Angiokeratoma</li>
+                  <li>Arterio-venous malformation</li>
+                  <li>Hemangioma</li>
+                  <li>Hemangioma, Hobnail</li>
+                  <li>Lymphangioma</li>
+                  <li>Pyogenic granuloma</li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="organizers">
+        <h2>Organizers</h2>
+        <ul>
+          <li>
+            <strong>Harald Kittler, MD</strong> ;<br>
+            <em>Department of Dermatology, Medical University of Vienna, Vienna, Austria</em>
+          </li>
+          <li>
+            <strong>Philipp Tschandl, MD, PhD</strong> ;<br>
+            <em>Department of Dermatology, Medical University of Vienna, Vienna, Austria</em>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+{% endblock %}

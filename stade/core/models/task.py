@@ -27,6 +27,7 @@ class Task(models.Model):
         BALANCED_ACCURACY = 'balanced_accuracy', _('Balanced Accuracy')
         AVERAGE_PRECISION = 'ap', _('Average Precision')
         AUC = 'auc', _('AUC')
+        DICE = 'dice', _('Dice Coefficient')
 
     type = models.CharField(max_length=20, choices=Type.choices)
     metric_field = models.CharField(

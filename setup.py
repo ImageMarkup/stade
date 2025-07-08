@@ -29,10 +29,10 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Programming Language :: Python',
     ],
-    python_requires='>=3.12',
+    python_requires='>=3.13',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -50,7 +50,7 @@ setup(
         'django-oauth-toolkit',
         'djangorestframework',
         'drf-yasg',
-        'isic-challenge-scoring>=5.6',
+        'isic-challenge-scoring>=5.7',
         'requests',
         'rules',
         # See https://github.com/axnsan12/drf-yasg/issues/874
