@@ -1,6 +1,7 @@
-{% extends "base.html" %} {% block content %}
-  {% load static %}
+{% extends "base.html" %}
+{% load static %}
 
+{% block content %}
   <section class="section container">
     <div class="section-header">
       <h1>{{ challenge.name }} Challenge - {{ task.name }} {% if challenge.locked %}
