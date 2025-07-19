@@ -50,7 +50,7 @@ setup(
         'django-oauth-toolkit',
         'djangorestframework',
         'drf-yasg',
-        'isic-challenge-scoring>=5.7',
+        'isic-challenge-scoring>=5.8',
         'requests',
         'rules',
         # See https://github.com/axnsan12/drf-yasg/issues/874
