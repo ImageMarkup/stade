@@ -41,7 +41,7 @@ drf-yasg==1.21.7
 gunicorn==22.0.0
 idna==3.7
 inflection==0.5.1
-isic-challenge-scoring==5.7.0
+isic-challenge-scoring==5.8.0
 jmespath==1.0.1
 joblib==1.4.2
 jwcrypto==1.5.6
