@@ -8,6 +8,26 @@
     </div>
 
     <div class="section-content">
+    {% if not challenge.tasks.first.locked %}
+      <div class="box has-text-centered" style="background: linear-gradient(135deg, #00a9a5 0%, #427aa1 100%); padding: 2.5rem 2rem; margin-bottom: 2rem; border-radius: 10px;">
+        <h3 class="subtitle is-4 has-text-white mb-4">Get Started</h3>
+        <div class="buttons is-centered">
+          <a href="{% url 'task-detail' challenge.tasks.first.id %}" class="button is-white is-medium">
+            <span class="icon">
+              <i class="material-icons">upload</i>
+            </span>
+            <span><strong>Submit to Challenge</strong></span>
+          </a>
+          <a href="{% url 'data' %}#milk10k" class="button is-white is-medium">
+            <span class="icon">
+              <i class="material-icons">download</i>
+            </span>
+            <span><strong>Download Data</strong></span>
+          </a>
+        </div>
+      </div>
+    {% endif %}
+
       <div id="summary">
         <h2>Summary</h2>
         <p>
