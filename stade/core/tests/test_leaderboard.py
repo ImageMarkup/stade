@@ -14,7 +14,9 @@ def task_with_submissions(db, approach_factory, submission_factory, task_factory
     - an approach where the most recent score is worse than a prior score (t1_a0)
     - a team with a better approach which has been rejected (t3)
     """
-    task = task_factory(challenge__name='Test Challenge', name='Test Task', scores_published=True)
+    task = task_factory(
+        challenge__name='Test Challenge', name='Test Task', scores_published=True, hidden=False
+    )
 
     teams = [
         team_factory(challenge=task.challenge),
@@ -66,7 +68,9 @@ def task_with_submissions(db, approach_factory, submission_factory, task_factory
 
 @pytest.mark.django_db
 def test_leaderboard_by_approach(task_with_submissions, client):
-    resp = client.get(f'/api/leaderboard/{task_with_submissions.id}/by-approach/')
+    resp = client.get(
+        f'/leaderboards/{task_with_submissions.challenge.slug}/?task={task_with_submissions.id}&group_by=approach'  # noqa: E501
+    )
     assert resp.status_code == 200
 
     # assert the by approach leaderboard looks like
@@ -74,39 +78,43 @@ def test_leaderboard_by_approach(task_with_submissions, client):
     # team0 | approach1 | .80
     # team1 | approach1 | .78
     # team3 | approach1 | .60
-    first, second, third, fourth = resp.json()['results']
+    submissions = resp.context['submissions']
+    first, second, third, fourth = submissions[:4]
 
-    assert first['team_name'] == 'team_0'
-    assert first['approach_name'] == 'approach_0'
-    assert first['overall_score'] == 0.95
-    assert second['team_name'] == 'team_0'
-    assert second['approach_name'] == 'approach_1'
-    assert second['overall_score'] == 0.80
-    assert third['team_name'] == 'team_1'
-    assert third['approach_name'] == 'approach_0'
-    assert third['overall_score'] == 0.78
-    assert fourth['team_name'] == 'team_3'
-    assert fourth['approach_name'] == 'approach_1'
-    assert fourth['overall_score'] == 0.60
+    assert first.approach.team.name == 'team_0'
+    assert first.approach.name == 'approach_0'
+    assert first.overall_score == 0.95
+    assert second.approach.team.name == 'team_0'
+    assert second.approach.name == 'approach_1'
+    assert second.overall_score == 0.80
+    assert third.approach.team.name == 'team_1'
+    assert third.approach.name == 'approach_0'
+    assert third.overall_score == 0.78
+    assert fourth.approach.team.name == 'team_3'
+    assert fourth.approach.name == 'approach_1'
+    assert fourth.overall_score == 0.60
 
 
 @pytest.mark.django_db
 def test_leaderboard_by_team(task_with_submissions, client):
-    resp = client.get(f'/api/leaderboard/{task_with_submissions.id}/by-team/')
+    resp = client.get(
+        f'/leaderboards/{task_with_submissions.challenge.slug}/?task={task_with_submissions.id}&group_by=team'  # noqa: E501
+    )
     assert resp.status_code == 200
 
     # assert the by team leaderboard looks like
     # team4 | approach0 | .95
     # team5 | approach0 | .78
     # team7 | approach1 | .60
-    first, second, third = resp.json()['results']
+    submissions = resp.context['submissions']
+    first, second, third = submissions[:3]
 
-    assert first['team_name'] == 'team_5'
-    assert first['approach_name'] == 'approach_0'
-    assert first['overall_score'] == 0.95
-    assert second['team_name'] == 'team_6'
-    assert second['approach_name'] == 'approach_0'
-    assert second['overall_score'] == 0.78
-    assert third['team_name'] == 'team_8'
-    assert third['approach_name'] == 'approach_1'
-    assert third['overall_score'] == 0.60
+    assert first.approach.team.name == 'team_5'
+    assert first.approach.name == 'approach_0'
+    assert first.overall_score == 0.95
+    assert second.approach.team.name == 'team_6'
+    assert second.approach.name == 'approach_0'
+    assert second.overall_score == 0.78
+    assert third.approach.team.name == 'team_8'
+    assert third.approach.name == 'approach_1'
+    assert third.overall_score == 0.60
