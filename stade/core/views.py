@@ -41,7 +41,7 @@ def leaderboard_page(request, challenge):
     if group_by not in ['team', 'approach']:
         group_by = 'team' if challenge.slug != 'live' else 'approach'
 
-    tasks = challenge.tasks.filter(scores_published=True).order_by('name')
+    tasks = challenge.tasks.filter(scores_published=True).order_by('position')
 
     if not request.user.is_staff:
         tasks = tasks.filter(hidden=False)
