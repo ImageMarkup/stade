@@ -17,7 +17,7 @@ from .team import Team
 
 class Task(models.Model):
     class Meta:
-        ordering = ['id']
+        ordering = ['position', 'id']
 
     class Type(models.TextChoices):
         SEGMENTATION = 'segmentation', _('Segmentation')
@@ -72,6 +72,7 @@ class Task(models.Model):
         help_text='Whether approaches should require a manuscript.',
     )
     test_ground_truth_file = S3FileField()
+    position = models.PositiveSmallIntegerField(default=0)
 
     # Define custom "objects" first, so it will be the "_default_manager", which is more efficient
     # for many automatically generated queries
