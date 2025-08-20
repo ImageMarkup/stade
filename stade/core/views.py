@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Count, Exists, OuterRef, Prefetch
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import TemplateDoesNotExist, get_template
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
@@ -108,15 +109,15 @@ def leaderboard_page(request, challenge):
 def task_landing(request, challenge, task_id):
     task = get_object_or_404(Task.objects.filter(challenge=challenge), pk=task_id)
 
-    # The 2019 challenge doesn't have distinct task landing pages
-    if challenge.slug == '2019':
-        return challenge_landing(request, challenge)
+    template = f'landing/{challenge.slug}/{task_id}.html'
 
-    return render(
-        request,
-        f'landing/{challenge.slug}/{task_id}.html',
-        {'challenge': challenge, 'task': task},
-    )
+    # certain challenges don't have distinct task landing pages e.g. 2019 and MILK10k
+    try:
+        get_template(template)
+    except TemplateDoesNotExist:
+        return redirect(reverse('challenge-landing', args=[challenge.slug]))
+
+    return render(request, template, {'challenge': challenge, 'task': task})
 
 
 def challenge_landing(request, challenge):
