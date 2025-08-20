@@ -4,7 +4,6 @@ from django.views.generic import TemplateView
 
 from stade.core import views
 from stade.core.models import Challenge
-from stade.core.rest import views as api_views
 
 
 class ChallengeFromSlugConverter:
@@ -47,24 +46,6 @@ urlpatterns = [
         'staff/request-submission-bundle/<int:task_id>/',
         views.request_submission_bundle,
         name='request-submission-bundle',
-    ),
-    path('api/challenge/<int:challenge_id>/', api_views.challenge_detail, name='challenge-detail'),
-    path(
-        'api/leaderboard/<int:task_id>/by-approach/',
-        api_views.leaderboard,
-        {'cluster': 'approach'},
-        name='leaderboard-by-approach',
-    ),
-    path(
-        'api/leaderboard/<int:task_id>/by-team/',
-        api_views.leaderboard,
-        {'cluster': 'team'},
-        name='leaderboard-by-team',
-    ),
-    path(
-        'api/submission/<int:submission_id>/score/',
-        api_views.submission_scores,
-        name='submission-scores',
     ),
     path('data/', TemplateView.as_view(template_name='data/base.html'), name='data'),
     path('stats/', views.stats, name='stats'),

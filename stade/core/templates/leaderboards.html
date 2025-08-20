@@ -1,15 +1,561 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block extra_head %}
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-  <link href="https://leaderboard.isic-archive.com/css/chunk-vendors.css" rel="stylesheet">
-  <link href="https://leaderboard.isic-archive.com/css/app.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          width: {
+            '25': '6.25rem',
+            '38': '9.5rem',
+            '70': '17.5rem',
+            '125': '31.25rem'
+          },
+          height: {
+            '125': '31.25rem'
+          }
+        }
+      }
+    }
+  </script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 {% endblock %}
 
 {% block content %}
-  <section class="section container">
-    <div id="leaderboard-app" data-challenge-id="{{ challenge.id }}" data-by-team-default="{% if by_team_default %}true{% else %}false{% endif %}"></div>
-    <script src="https://leaderboard.isic-archive.com/js/chunk-vendors.js" type="text/javascript"></script>
-    <script src="https://leaderboard.isic-archive.com/js/app.js" type="text/javascript"></script>
-  </section>
+  <div class="bg-gray-100 min-h-screen p-10">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden" x-data="leaderboard()" x-init="init()">
+      <div class="flex justify-between items-center py-3 px-8 bg-white border-b border-gray-300">
+        <h1 class="m-0 text-2xl font-normal text-gray-800">{{ challenge.name }} Leaderboards</h1>
+        <div class="flex items-center gap-2">
+          <form method="get" id="grouping-form">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <span>Group By Team</span>
+              <div class="relative inline-block w-12 h-6">
+                <input type="checkbox"
+                       id="group-toggle"
+                       {% if group_by == 'team' %}checked{% endif %}
+                       @change="toggleGrouping()"
+                       class="sr-only peer">
+                <div class="w-12 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </div>
+            </label>
+            <input type="hidden" name="task" value="{% if active_task %}{{ active_task.id }}{% endif %}">
+            <input type="hidden" name="group_by" id="group_by_input" value="{{ group_by }}">
+          </form>
+        </div>
+      </div>
+
+      {% if tasks %}
+        <div class="flex bg-gray-600 mx-0 mb-[-8px] px-8 h-[68px] items-end rounded-t-lg">
+          {% for task in tasks %}
+            <a href="?task={{ task.id }}&group_by={{ group_by }}"
+               class="{% if task.id == active_task.id %}bg-white border-t-2 border-blue-600 text-gray-700 font-semibold{% else %}!text-white text-opacity-80 hover:text-white font-medium{% endif %} no-underline pt-3 pb-4 px-6 mx-1.5 mb-0 transition-all duration-200 border-t-2 border-transparent text-sm">
+              {{ task.name }}
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if active_task and submissions %}
+        <table class="w-full border-collapse bg-white">
+          <thead>
+            <tr>
+              <th class="text-left py-2 px-4 bg-gray-50 border-b border-gray-300 font-medium text-black text-opacity-87">
+                Rank
+                <small class="block font-normal text-black text-opacity-54 text-sm">{{ stats.total_submissions }} total</small>
+              </th>
+              <th class="text-left py-2 px-4 bg-gray-50 border-b border-gray-300 font-medium text-black text-opacity-87">
+                Team
+                <small class="block font-normal text-black text-opacity-54 text-sm">{{ stats.unique_teams }} unique teams</small>
+              </th>
+              <th class="text-left py-2 px-4 bg-gray-50 border-b border-gray-300 font-medium text-black text-opacity-87">Approach</th>
+              <th class="text-left py-2 px-4 bg-gray-50 border-b border-gray-300 font-medium text-black text-opacity-87">Manuscript</th>
+              <th class="text-left py-2 px-4 bg-gray-50 border-b border-gray-300 font-medium text-black text-opacity-87">
+                Used External Data
+                <small class="block font-normal text-black text-opacity-54 text-sm">{{ stats.used_external_data }} yes</small>
+              </th>
+              <th class="text-left py-2 px-4 bg-gray-50 border-b border-gray-300 font-medium text-black text-opacity-87">
+                Primary Metric Value
+                <small class="block font-normal text-black text-opacity-54 text-sm">{% if active_task.type == 'segmentation' %}Jaccard Index{% else %}{{ active_task.get_metric_field_display }}{% endif %}</small>
+              </th>
+              <th class="text-left py-2 px-4 bg-gray-50 border-b border-gray-300 font-medium text-black text-opacity-87"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for submission in submissions %}
+              <tr class="cursor-pointer transition-colors duration-200 hover:bg-gray-100" @click="toggleDetails({{ submission.id }})" data-submission-id="{{ submission.id }}">
+                <td class="py-2 px-4 border-b border-gray-300">{{ forloop.counter }}</td>
+                <td class="py-2 px-4 border-b border-gray-300">
+                  <div>{{ submission.approach.team.name }}</div>
+                  {% if submission.approach.team.institution %}
+                    <div class="text-sm text-gray-600 mt-0.5">
+                      {{ submission.approach.team.institution }}
+                    </div>
+                  {% endif %}
+                </td>
+                <td class="py-2 px-4 border-b border-gray-300">{{ submission.approach.name }}</td>
+                <td class="py-2 px-4 border-b border-gray-300">
+                  {% if submission.approach.manuscript_url %}
+                    <a href="{{ submission.approach.manuscript_url }}" target="_blank" title="View manuscript">
+                      <i class="material-icons text-green-600">description</i>
+                    </a>
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td class="py-2 px-4 border-b border-gray-300">
+                  {% if submission.approach.uses_external_data %}
+                    <div class="flex items-center gap-1">
+                      <i class="material-icons text-orange-600">public</i>
+                      <span>Yes</span>
+                    </div>
+                  {% else %}
+                    <div class="flex items-center gap-1">
+                      <i class="material-icons text-blue-600">public_off</i>
+                      <span>No</span>
+                    </div>
+                  {% endif %}
+                </td>
+                <td class="py-2 px-4 border-b border-gray-300">{{ submission.overall_score|floatformat:3 }}</td>
+                <td class="py-2 px-4 border-b border-gray-300">
+                  {% if active_task.type != 'segmentation' %}
+                    <button class="bg-none border-none text-blue-600 cursor-pointer py-1 px-2 text-sm hover:underline" @click.stop="toggleDetails({{ submission.id }})">
+                      Details <span x-text="expandedSubmission === {{ submission.id }} ? '▲' : '▼'"></span>
+                    </button>
+                  {% endif %}
+                </td>
+              </tr>
+              <tr class="bg-gray-50" id="detail-{{ submission.id }}" x-show="expandedSubmission === {{ submission.id }}" data-task-type="{{ active_task.type }}">
+                <td colspan="7" class="p-0">
+                  <div class="p-6 bg-gray-100 shadow-inner">
+                    {% if active_task.type == 'classification' %}
+                      <div class="flex flex-col xl:flex-row gap-6 p-0">
+                        <div class="flex-1 min-w-0">
+                          <template x-if="getCategoryMetrics({{ submission.id }}).categories.length > 0">
+                            <div>
+                              <table class="w-full border-collapse mb-5 text-sm">
+                                <thead>
+                                  <tr>
+                                    <th class="bg-blue-500 !text-white font-semibold p-3 w-38">Category Metrics</th>
+                                    <th class="bg-blue-500 !text-white font-semibold p-3 text-center w-25">
+                                      <div class="relative inline-block group">
+                                        <span class="cursor-help border-b border-dotted border-gray-300">Mean Value</span>
+                                        <div class="invisible group-hover:visible absolute z-50 w-70 bg-gray-800 !text-white text-left rounded-md p-2 bottom-full left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm leading-relaxed shadow-lg">
+                                          The arithmetic mean (macro averaging) of values from all diagnosis categories
+                                        </div>
+                                      </div>
+                                    </th>
+                                    <th class="bg-blue-500 !text-white font-semibold p-3 text-center" :colspan="getCategoryMetrics({{ submission.id }}).categories.length">Diagnosis Category</th>
+                                  </tr>
+                                  <tr>
+                                    <th class="bg-blue-400 !text-white font-semibold p-2"></th>
+                                    <th class="bg-blue-400 !text-white font-semibold p-2"></th>
+                                    <template x-for="category in getCategoryMetrics({{ submission.id }}).categories" :key="category">
+                                      <th class="bg-blue-400 !text-white font-semibold p-2 text-center text-base">
+                                        <template x-if="getTooltipText(category)">
+                                          <div class="relative inline-block group">
+                                            <span class="cursor-help border-b border-dotted border-gray-300" x-text="category"></span>
+                                            <div class="invisible group-hover:visible absolute z-50 w-70 bg-gray-800 !text-white text-left rounded-md p-2 bottom-full left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm leading-relaxed shadow-lg" x-text="getTooltipText(category)"></div>
+                                          </div>
+                                        </template>
+                                        <template x-if="!getTooltipText(category)">
+                                          <span x-text="category"></span>
+                                        </template>
+                                      </th>
+                                    </template>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <template x-for="metric in getCategoryMetrics({{ submission.id }}).metrics" :key="metric.name">
+                                    <tr class="bg-gray-50 even:bg-white hover:bg-gray-100">
+                                      <td class="font-medium text-gray-800 bg-gray-200 w-38 p-2 border border-gray-300">
+                                        <template x-if="getTooltipText(metric.name)">
+                                          <div class="relative inline-block group">
+                                            <span class="cursor-help border-b border-dotted border-gray-600" x-text="metric.displayName"></span>
+                                            <div class="invisible group-hover:visible absolute z-50 w-70 bg-gray-800 !text-white text-left rounded-md p-2 bottom-full left-0 transform translate-x-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm leading-relaxed shadow-lg" x-text="getTooltipText(metric.name)"></div>
+                                          </div>
+                                        </template>
+                                        <template x-if="!getTooltipText(metric.name)">
+                                          <span x-text="metric.displayName"></span>
+                                        </template>
+                                      </td>
+                                      <td class="text-center font-semibold text-green-700 w-25 p-2 border border-gray-300" x-text="metric.meanValue"></td>
+                                      <template x-for="value in metric.categoryValues" :key="value.category">
+                                        <td class="text-center text-base p-2 border border-gray-300" x-text="value.displayValue"></td>
+                                      </template>
+                                    </tr>
+                                  </template>
+                                </tbody>
+                              </table>
+                            </div>
+                          </template>
+
+                          <div class="metrics-container" x-show="hasAggregateMetrics({{ submission.id }})">
+                            <template x-if="hasAggregateMetrics({{ submission.id }})">
+                              <div class="my-5">
+                                <div>
+                                  <table class="w-full border-collapse mb-5 text-sm">
+                                    <thead>
+                                      <tr>
+                                        <th class="bg-blue-500 !text-white font-semibold p-3">Aggregate Metrics</th>
+                                        <th class="bg-blue-500 !text-white font-semibold p-3 text-center w-25">
+                                          <div class="relative inline-block group">
+                                            <span class="cursor-help border-b border-dotted border-gray-300">Value</span>
+                                            <div class="invisible group-hover:visible absolute z-50 w-70 bg-gray-800 !text-white text-left rounded-md p-2 bottom-full left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm leading-relaxed shadow-lg">
+                                              Incorporates all diagnosis categories together
+                                            </div>
+                                          </div>
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td class="bg-gray-50 p-3 border border-gray-300">
+                                          <div class="relative inline-block group">
+                                            <span class="cursor-help border-b border-dotted border-gray-600">Balanced Multiclass Accuracy</span>
+                                            <div class="invisible group-hover:visible absolute z-50 w-70 bg-gray-800 !text-white text-left rounded-md p-2 bottom-full left-0 transform translate-x-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm leading-relaxed shadow-lg" x-text="getTooltipText('balanced_accuracy')">
+                                            </div>
+                                          </div>
+                                        </td>
+                                        <td class="text-center font-semibold text-green-700 p-3 border border-gray-300" x-text="getAggregateMetricValue({{ submission.id }})"></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </template>
+                          </div>
+                        </div>
+
+                        <div class="flex-none xl:w-125 flex justify-center items-start">
+                          <div id="roc-{{ submission.id }}" class="flex justify-center m-0 w-125 h-125"></div>
+                        </div>
+                      </div>
+
+                      <script type="application/json" id="score-data-{{ submission.id }}">
+                        {{ submission.score_json|safe }}
+                      </script>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% elif active_task %}
+        <div class="text-center py-10 text-black text-opacity-54">
+          <p>No submissions found for this task.</p>
+        </div>
+      {% else %}
+        <div class="text-center py-10 text-black text-opacity-54">
+          <p>No tasks available for this challenge.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    function leaderboard() {
+      return {
+        expandedSubmission: null,
+        loadedSubmissions: new Set(),
+        submissionMetrics: {},
+
+        toggleGrouping() {
+          const toggle = document.getElementById('group-toggle');
+          const groupByInput = document.getElementById('group_by_input');
+          groupByInput.value = toggle.checked ? 'team' : 'approach';
+          document.getElementById('grouping-form').submit();
+        },
+
+        toggleDetails(submissionId) {
+          if (this.expandedSubmission === submissionId) {
+            this.expandedSubmission = null;
+          } else {
+            const detailRow = document.getElementById(`detail-${submissionId}`);
+            const taskType = detailRow?.dataset.taskType;
+
+            // disable details for segmentation tasks
+            if (taskType === 'segmentation') {
+              return;
+            }
+
+            this.expandedSubmission = submissionId;
+
+            if (!this.loadedSubmissions.has(submissionId)) {
+              this.loadSubmissionDetails(submissionId);
+              this.loadedSubmissions.add(submissionId);
+            }
+          }
+        },
+
+        loadSubmissionDetails(submissionId) {
+          const scoreElement = document.getElementById(`score-data-${submissionId}`);
+          if (!scoreElement) {
+            return;
+          }
+
+          try {
+            const scores = JSON.parse(scoreElement.textContent);
+
+            if (scores) {
+              this.processMetricsData(submissionId, scores);
+
+              if (scores.rocs) {
+                this.renderRocCurve(submissionId, scores);
+              }
+            }
+          } catch (e) {
+            console.error('Error parsing score data:', e);
+          }
+        },
+
+        renderRocCurve(submissionId, scores) {
+          const container = document.getElementById(`roc-${submissionId}`);
+          if (!container || !scores.rocs) {
+            return;
+          }
+
+          const submissionRow = document.querySelector(`[data-submission-id="${submissionId}"]`);
+          const approachName = submissionRow ? submissionRow.cells[2].textContent : `Submission ${submissionId}`;
+
+
+          const traces = [];
+          const categoryDefinitions = this.getCategoryDefinitions();
+          const categoryOrder = categoryDefinitions.map(cat => cat.id);
+          const allCategories = Object.keys(scores.rocs);
+          // sort categories according to the defined order
+          const categories = allCategories.sort((a, b) => {
+            const indexA = categoryOrder.indexOf(a);
+            const indexB = categoryOrder.indexOf(b);
+            if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+            if (indexA === -1) return 1;
+            if (indexB === -1) return -1;
+            return indexA - indexB;
+          });
+
+          categories.forEach(categoryId => {
+            const roc = scores.rocs[categoryId];
+            if (roc && roc.fpr && roc.tpr) {
+              traces.push({
+                name: categoryId,
+                x: roc.fpr,
+                y: roc.tpr,
+                text: roc.threshold,
+                hovertemplate: 'FPR: %{x:.1%}<br>TPR: %{y:.1%}<br>Threshold: %{text:.3f}',
+                type: 'scatter',
+                mode: 'lines'
+              });
+            }
+          });
+
+          // diagonal reference line
+          traces.push({
+            type: 'scatter',
+            mode: 'lines',
+            x: [0, 1],
+            y: [0, 1],
+            showlegend: false,
+            hoverinfo: 'skip',
+            opacity: 0.2,
+            line: { color: 'black', width: 1, dash: 'longdash' }
+          });
+
+          // Wrap long approach names
+          const wrappedName = approachName.length > 60
+            ? approachName.replace(/(?!.{1,60}$)(.{1,60})\s/g, '$1<br>')
+            : approachName;
+
+          const layout = {
+            title: {
+              text: `<b>ROC</b><br>${wrappedName}`,
+              y: 0.97,
+              yanchor: 'top',
+              font: { size: 14 }
+            },
+            width: 500,
+            height: 500,
+            margin: { l: 60, r: 20, t: 70, b: 65, autoexpand: false },
+            xaxis: { title: 'FPR', range: [0, 1], fixedrange: true },
+            yaxis: { title: 'TPR', range: [0, 1], fixedrange: true },
+            showlegend: true,
+            legend: { x: 1, xanchor: 'right', y: 0.1, yanchor: 'bottom' },
+            annotations: [
+              {
+                showarrow: false,
+                text: '<i>Click to toggle</i>',
+                font: { size: 8 },
+                x: 0.98,
+                xref: 'paper',
+                xanchor: 'right',
+                y: 0.07,
+                yref: 'paper'
+              }
+            ],
+            hovermode: 'closest',
+            hoverdistance: 2, // require pointer to be close to point before showing tooltip
+            dragmode: false // disable dragging
+          };
+
+          const config = {
+            displaylogo: false,
+            modeBarButtonsToRemove: [
+              'toggleSpikelines',
+              'hoverClosestCartesian',
+              'hoverCompareCartesian'
+            ]
+          };
+
+          Plotly.newPlot(container, traces, layout, config);
+        },
+
+        processMetricsData(submissionId, scores) {
+          if (!scores || Object.keys(scores).length === 0) {
+            this.submissionMetrics[submissionId] = null;
+            return;
+          }
+
+          this.submissionMetrics[submissionId] = scores;
+        },
+
+        getMetricMapping() {
+          return {
+            'balanced_accuracy': 'Balanced Multiclass Accuracy',
+            'auc': 'AUC',
+            'auc_sens_80': 'AUC, Sens > 80%',
+            'ap': 'Average Precision',
+            'accuracy': 'Accuracy',
+            'sensitivity': 'Sensitivity',
+            'specificity': 'Specificity',
+            'dice': 'Dice Coefficient',
+            'ppv': 'PPV',
+            'npv': 'NPV'
+          };
+        },
+
+        hasAggregateMetrics(submissionId) {
+          const scores = this.submissionMetrics[submissionId];
+          return scores && scores.aggregate && scores.aggregate.balanced_accuracy !== undefined;
+        },
+
+        getAggregateMetricValue(submissionId) {
+          const scores = this.submissionMetrics[submissionId];
+          if (!scores || !scores.aggregate || scores.aggregate.balanced_accuracy === undefined) {
+            return '-';
+          }
+          return parseFloat(scores.aggregate.balanced_accuracy).toFixed(3);
+        },
+
+        getCategoryMetrics(submissionId) {
+          const scores = this.submissionMetrics[submissionId];
+          if (!scores || !scores.per_category) return { categories: [], metrics: [] };
+
+          const metricMapping = this.getMetricMapping();
+          const availableMetrics = Object.keys(scores.per_category);
+
+          const metricOrder = [
+            'auc',
+            'auc_sens_80',
+            'ap',
+            'accuracy',
+            'sensitivity',
+            'specificity',
+            'dice',
+            'ppv',
+            'npv'
+          ];
+
+          const categoryDefinitions = this.getCategoryDefinitions();
+          let categories = [];
+          // assume all categories are present in the first metric and grab them
+          if (availableMetrics.length > 0) {
+            const firstMetric = scores.per_category[availableMetrics[0]];
+            if (typeof firstMetric === 'object') {
+              categories = Object.keys(firstMetric);
+            }
+          }
+
+          categories = categories.sort((a, b) => a.localeCompare(b));
+
+          const metrics = [];
+
+          metricOrder.forEach(metric => {
+            if (availableMetrics.includes(metric) && scores.per_category[metric] && typeof scores.per_category[metric] === 'object') {
+              const displayName = metricMapping[metric] || metric.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+              const values = categories.map(cat => scores.per_category[metric][cat]).filter(v => v !== undefined && v !== null);
+              const meanValue = values.length > 0 ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(3) : '0.000';
+
+              const categoryValues = categories.map(category => {
+                const value = scores.per_category[metric][category];
+                return {
+                  category,
+                  displayValue: value !== undefined && value !== null ? parseFloat(value).toFixed(3) : '-'
+                };
+              });
+
+              metrics.push({
+                name: metric,
+                displayName,
+                meanValue,
+                categoryValues
+              });
+            }
+          });
+
+          return { categories, metrics };
+        },
+
+        getCategoryDefinitions() {
+          return [
+            { id: 'malignant', name: 'Malignant', tooltip: 'Malignant' },
+            { id: 'melanoma', name: 'Melanoma', tooltip: 'Melanoma' },
+            { id: 'seborrheic_keratosis', name: 'Seborrheic keratosis', tooltip: 'Seborrheic keratosis' },
+            { id: 'AK', name: 'Actinic keratosis', tooltip: 'Actinic keratosis' },
+            { id: 'AKIEC', name: 'Actinic keratosis / Bowen\'s disease (intraepithelial carcinoma)', tooltip: 'Actinic keratosis / Bowen\'s disease (intraepithelial carcinoma)' },
+            { id: 'BCC', name: 'Basal cell carcinoma', tooltip: 'Basal cell carcinoma' },
+            { id: 'BEN_OTH', name: 'Other benign proliferations, including collision tumors', tooltip: 'Other benign proliferations, including collision tumors' },
+            { id: 'BKL', name: 'Benign keratosis (solar lentigo / seborrheic keratosis / lichen planus-like keratosis)', tooltip: 'Benign keratosis (solar lentigo / seborrheic keratosis / lichen planus-like keratosis)' },
+            { id: 'DF', name: 'Dermatofibroma', tooltip: 'Dermatofibroma' },
+            { id: 'INF', name: 'Inflammatory and infectious conditions', tooltip: 'Inflammatory and infectious conditions' },
+            { id: 'MAL_OTH', name: 'Other malignant proliferations, including collision tumors', tooltip: 'Other malignant proliferations, including collision tumors' },
+            { id: 'MEL', name: 'Melanoma', tooltip: 'Melanoma' },
+            { id: 'NV', name: 'Melanocytic nevus', tooltip: 'Melanocytic nevus' },
+            { id: 'SCC', name: 'Squamous cell carcinoma', tooltip: 'Squamous cell carcinoma' },
+            { id: 'SCCKA', name: 'Squamous cell carcinoma / keratoacanthoma', tooltip: 'Squamous cell carcinoma / keratoacanthoma' },
+            { id: 'UNK', name: 'None of the others / out of distribution', tooltip: 'None of the others / out of distribution' },
+            { id: 'VASC', name: 'Vascular lesion', tooltip: 'Vascular lesion' },
+          ];
+        },
+
+        getTooltipText(metricNameOrCategoryName) {
+          const tooltips = {
+            'balanced_accuracy': 'The greatest diagnosis category score determines the category prediction for each image; the mean recall of this multiclass confusion matrix (i.e. the mean of the diagonal element-wise divided by the positive incidences) is the balanced multiclass accuracy',
+            'auc': 'Area under the receiver operating characteristic (ROC) curve',
+            'auc_sens_80': 'Area under the receiver operating characteristic (ROC) curve, evaluated only for the region where sensitivity > 80%',
+            'ap': 'Area under the interpolated precision-recall (PR) curve',
+            'accuracy': 'Accuracy',
+            'sensitivity': 'Recall',
+            'specificity': 'Specificity',
+            'dice': 'F1 Score',
+            'ppv': 'Positive Predictive Value / Precision',
+            'npv': 'Negative Predictive Value',
+            'threshold_jaccard': 'Threshold Jaccard Index',
+            'jaccard': 'Jaccard Index'
+          };
+
+          const categoryDefinitions = this.getCategoryDefinitions();
+          const categoryMatch = categoryDefinitions.find(cat => cat.id === metricNameOrCategoryName);
+          if (categoryMatch) {
+            return categoryMatch.tooltip;
+          }
+
+          return tooltips[metricNameOrCategoryName] || '';
+        }
+      };
+    }
+  </script>
 {% endblock %}

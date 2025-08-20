@@ -77,3 +77,9 @@ class Approach(models.Model):
             .order_by('-created')
             .first()
         )
+
+    @property
+    def manuscript_url(self):
+        if self.manuscript:
+            return self.manuscript.url
+        return None

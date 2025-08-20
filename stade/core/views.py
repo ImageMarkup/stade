@@ -1,4 +1,5 @@
 from datetime import timedelta
+import json
 import logging
 
 from django.conf import settings
@@ -21,6 +22,7 @@ from stade.core.forms import (
     CreateSubmissionForm,
     TeamForm,
 )
+from stade.core.leaderboard import submissions_by_approach, submissions_by_team
 from stade.core.models import Approach, Challenge, Submission, Task, Team, TeamInvitation
 from stade.core.tasks import generate_submission_bundle, score_submission, send_team_invitation
 from stade.core.utils import safe_redirect
@@ -33,12 +35,73 @@ def handler500(request):
 
 
 def leaderboard_page(request, challenge):
-    # Default to grouping by team for all Challenges except 'live'
-    by_team_default = challenge.slug != 'live'
+    task_id = request.GET.get('task')
+    group_by = request.GET.get('group_by')
+
+    if group_by not in ['team', 'approach']:
+        group_by = 'team' if challenge.slug != 'live' else 'approach'
+
+    tasks = challenge.tasks.filter(scores_published=True).order_by('name')
+
+    if not request.user.is_staff:
+        tasks = tasks.filter(hidden=False)
+
+    if task_id:
+        try:
+            active_task = tasks.get(pk=task_id)
+        except Task.DoesNotExist:
+            active_task = tasks.first()
+    else:
+        active_task = tasks.first()
+
+    submissions = []
+    stats = {
+        'total_submissions': 0,
+        'unique_teams': 0,
+        'used_external_data': 0,
+    }
+
+    if group_by == 'team':
+        submission_ids = list(submissions_by_team(active_task.id))
+    else:
+        submission_ids = list(submissions_by_approach(active_task.id))
+
+    submissions = list(
+        Submission.objects.defer(None)  # avoid n+1 queries on the normally deferred score field
+        .select_related('approach', 'approach__team', 'creator')
+        .filter(id__in=submission_ids)
+        .order_by('-overall_score', 'created')
+    )[
+        0:200
+    ]  # leaderboards only show the top 200 results
+
+    for submission in submissions:
+        if submission.score and isinstance(submission.score, dict):
+            submission.score_json = json.dumps(submission.score)
+        else:
+            submission.score_json = '{}'
+
+    stats = {
+        'total_submissions': len(submissions),
+        'unique_teams': len(
+            set(s.approach.team.name for s in submissions if s.approach and s.approach.team)
+        ),
+        'used_external_data': sum(
+            1 for s in submissions if s.approach and s.approach.uses_external_data
+        ),
+    }
+
     return render(
         request,
         'leaderboards.html',
-        {'challenge': challenge, 'by_team_default': by_team_default},
+        {
+            'challenge': challenge,
+            'tasks': tasks,
+            'active_task': active_task,
+            'submissions': submissions,
+            'group_by': group_by,
+            'stats': stats,
+        },
     )
 
 
