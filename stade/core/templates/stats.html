@@ -90,7 +90,7 @@
                   </form>
                 {% endif %}
                 <li>
-                  <a href="{% if task.challenge.slug == 'milk10k' %}{% url 'challenge-landing' 'milk10k' %}{% else %}{% url 'task-landing' task.challenge.slug task.id %}{% endif %}">
+                  <a href="{% url 'task-landing' task.challenge.slug task.id %}">
                     <span>{{ task.name }}</span>
                   </a>
 
