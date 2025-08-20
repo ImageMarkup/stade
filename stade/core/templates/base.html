@@ -128,6 +128,17 @@
   </div>
 </header>
 
+{% if not request.user.is_authenticated %}
+  <div id="temporary-transition-banner" class="notification">
+    <div class="container">
+      <div class="notice-content">
+        <h1 class="banner-title">The MILK10k Challenge is open!</h1>
+        <h4 class="notice-title"><a href="{% url 'task-detail' 57 %}">Join the competition</a>!</h4>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
 {% load invites %}
 
 {% show_pending_invites request %}
