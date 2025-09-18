@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
   <section class="section container">
@@ -78,9 +79,9 @@
         significant, when detected early, melanoma survival exceeds 95%.
       </p>
       <p>
-        <a href="https://isic-challenge-data.s3.amazonaws.com/media/Melanoma-tutorial-for-ISBI-challenge.pptx">
+        <a href="{% static 'media/Melanoma-tutorial-for-ISBI-challenge.pptx' %}">
           <img
-              src="https://isic-challenge-data.s3.amazonaws.com/media/Melanoma-tutorial-for-ISBI-challenge.png"
+              src="{% static 'media/Melanoma-tutorial-for-ISBI-challenge.png' %}"
               alt="Melanoma Tutorial">
         </a>
       </p>
@@ -106,9 +107,9 @@
       </p>
       <p>
         <a href=
-               "https://isic-challenge-data.s3.amazonaws.com/media/DermoscopyImageAnalysisPPT_3.pdf">
+               "{% static 'media/DermoscopyImageAnalysisPPT_3.pdf' %}">
           <img
-              src="https://isic-challenge-data.s3.amazonaws.com/media/DermoscopyImageAnalysisPPT_3.png"
+              src="{% static 'media/DermoscopyImageAnalysisPPT_3.png' %}"
               alt="Dermoscopic Image Analysis">
         </a>
       </p>
