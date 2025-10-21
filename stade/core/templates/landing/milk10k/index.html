@@ -4,7 +4,7 @@
 {% block content %}
   <section class="section container">
     <div class="section-header">
-      <h1>{{ challenge.name }} Challenge {% if challenge.locked %}[Closed]{% endif %}</h1>
+      <h1>MILK10k Benchmark {% if challenge.locked %}[Closed]{% endif %}</h1>
     </div>
 
     <div class="section-content">
@@ -16,7 +16,7 @@
             <span class="icon">
               <i class="material-icons">upload</i>
             </span>
-            <span><strong>Submit to Challenge</strong></span>
+            <span><strong>Submit to leaderboard</strong></span>
           </a>
           <a href="{% url 'data' %}#milk10k" class="button is-white is-medium">
             <span class="icon">
@@ -40,7 +40,7 @@
           <li>Metadata (more detail below)</li>
         </ul>
         <p>
-          This live challenge features the MILK10k training dataset (5,240 lesions) and a blind
+          This benchmark features the MILK10k training dataset (5,240 lesions) and a blind
           held-out test dataset (479 lesions) called the MILK10k Benchmark.
         </p>
       </div>
@@ -174,7 +174,7 @@
       <div id="datasets">
         <h2>Datasets</h2>
         <p>
-          This live challenge features the MILK10k Benchmark dataset, comprising 958 images —
+          This benchmark features the MILK10k Benchmark dataset, comprising 958 images —
           specifically, close-up and dermatoscopic image pairs for 479 skin lesions. The benchmark
           dataset originates from the same sources as the original
           <a href="https://doi.org/10.34970/262082">MILK10k</a> and covers the same eleven
