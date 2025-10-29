@@ -81,18 +81,18 @@ def test_leaderboard_by_approach(task_with_submissions, client):
     submissions = resp.context['submissions']
     first, second, third, fourth = submissions[:4]
 
-    assert first.approach.team.name == 'team_0'
-    assert first.approach.name == 'approach_0'
-    assert first.overall_score == 0.95
-    assert second.approach.team.name == 'team_0'
-    assert second.approach.name == 'approach_1'
-    assert second.overall_score == 0.80
-    assert third.approach.team.name == 'team_1'
-    assert third.approach.name == 'approach_0'
-    assert third.overall_score == 0.78
-    assert fourth.approach.team.name == 'team_3'
-    assert fourth.approach.name == 'approach_1'
-    assert fourth.overall_score == 0.60
+    assert first['approach__team__name'] == 'team_0'
+    assert first['approach__name'] == 'approach_0'
+    assert first['overall_score'] == 0.95
+    assert second['approach__team__name'] == 'team_0'
+    assert second['approach__name'] == 'approach_1'
+    assert second['overall_score'] == 0.80
+    assert third['approach__team__name'] == 'team_1'
+    assert third['approach__name'] == 'approach_0'
+    assert third['overall_score'] == 0.78
+    assert fourth['approach__team__name'] == 'team_3'
+    assert fourth['approach__name'] == 'approach_1'
+    assert fourth['overall_score'] == 0.60
 
 
 @pytest.mark.django_db
@@ -109,12 +109,12 @@ def test_leaderboard_by_team(task_with_submissions, client):
     submissions = resp.context['submissions']
     first, second, third = submissions[:3]
 
-    assert first.approach.team.name == 'team_5'
-    assert first.approach.name == 'approach_0'
-    assert first.overall_score == 0.95
-    assert second.approach.team.name == 'team_6'
-    assert second.approach.name == 'approach_0'
-    assert second.overall_score == 0.78
-    assert third.approach.team.name == 'team_8'
-    assert third.approach.name == 'approach_1'
-    assert third.overall_score == 0.60
+    assert first['approach__team__name'] == 'team_5'
+    assert first['approach__name'] == 'approach_0'
+    assert first['overall_score'] == 0.95
+    assert second['approach__team__name'] == 'team_6'
+    assert second['approach__name'] == 'approach_0'
+    assert second['overall_score'] == 0.78
+    assert third['approach__team__name'] == 'team_8'
+    assert third['approach__name'] == 'approach_1'
+    assert third['overall_score'] == 0.60

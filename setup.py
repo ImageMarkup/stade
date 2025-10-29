@@ -51,6 +51,7 @@ setup(
         'djangorestframework',
         'drf-yasg',
         'isic-challenge-scoring>=5.8',
+        'orjson',
         'requests',
         'rules',
         # See https://github.com/axnsan12/drf-yasg/issues/874

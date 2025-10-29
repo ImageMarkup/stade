@@ -12,7 +12,7 @@ class ConflictException(APIException):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     default_detail = 'A server error occurred.'
 
-    def __init__(self, detail, field, code):
+    def __init__(self, detail, field, code):  # noqa: B042
         if code is not None:
             self.status_code = code
         if detail is not None:
