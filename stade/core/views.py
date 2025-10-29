@@ -1,5 +1,4 @@
 from datetime import timedelta
-import json
 import logging
 
 from django.conf import settings
@@ -13,8 +12,10 @@ from django.template.loader import TemplateDoesNotExist, get_template
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
+import orjson
 import requests
 from rules.contrib.views import objectgetter, permission_required
+from s3_file_field import S3FileField
 
 from stade.core.forms import (
     AcceptInvitationForm,
@@ -68,28 +69,45 @@ def leaderboard_page(request, challenge):
         submission_ids = list(submissions_by_approach(active_task.id))
 
     submissions = list(
-        Submission.objects.defer(None)  # avoid n+1 queries on the normally deferred score field
-        .select_related('approach', 'approach__team', 'creator')
-        .filter(id__in=submission_ids)
-        .order_by('-overall_score', 'created')
-    )[
-        0:200
-    ]  # leaderboards only show the top 200 results
+        Submission.objects.filter(id__in=submission_ids)
+        .values(
+            'id',
+            'overall_score',
+            'score',
+            'created',
+            'approach__name',
+            'approach__team__name',
+            'approach__team__institution',
+            'approach__uses_external_data',
+            'approach__manuscript',
+        )
+        .order_by('-overall_score', 'created')[:200]
+    )
 
+    field = S3FileField()
     for submission in submissions:
-        if submission.score and isinstance(submission.score, dict):
-            submission.score_json = json.dumps(submission.score)
+        score = submission['score']
+        if score:
+            if isinstance(score, str):
+                submission['score_json'] = score
+            elif isinstance(score, dict):
+                submission['score_json'] = orjson.dumps(score).decode('utf-8')
+            else:
+                submission['score_json'] = '{}'
         else:
-            submission.score_json = '{}'
+            submission['score_json'] = '{}'
+
+        if submission['approach__manuscript']:
+            submission['approach__manuscript_url'] = field.storage.url(
+                submission['approach__manuscript']
+            )
+        else:
+            submission['approach__manuscript_url'] = None
 
     stats = {
         'total_submissions': len(submissions),
-        'unique_teams': len(
-            set(s.approach.team.name for s in submissions if s.approach and s.approach.team)
-        ),
-        'used_external_data': sum(
-            1 for s in submissions if s.approach and s.approach.uses_external_data
-        ),
+        'unique_teams': len(set(s['approach__team__name'] for s in submissions)),
+        'used_external_data': sum(1 for s in submissions if s['approach__uses_external_data']),
     }
 
     return render(

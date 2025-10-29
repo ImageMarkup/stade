@@ -89,17 +89,17 @@
               <tr class="cursor-pointer transition-colors duration-200 hover:bg-gray-100" @click="toggleDetails({{ submission.id }})" data-submission-id="{{ submission.id }}">
                 <td class="py-2 px-4 border-b border-gray-300">{{ forloop.counter }}</td>
                 <td class="py-2 px-4 border-b border-gray-300">
-                  <div>{{ submission.approach.team.name }}</div>
-                  {% if submission.approach.team.institution %}
+                  <div>{{ submission.approach__team__name }}</div>
+                  {% if submission.approach__team__institution %}
                     <div class="text-sm text-gray-600 mt-0.5">
-                      {{ submission.approach.team.institution }}
+                      {{ submission.approach__team__institution }}
                     </div>
                   {% endif %}
                 </td>
-                <td class="py-2 px-4 border-b border-gray-300">{{ submission.approach.name }}</td>
+                <td class="py-2 px-4 border-b border-gray-300">{{ submission.approach__name }}</td>
                 <td class="py-2 px-4 border-b border-gray-300">
-                  {% if submission.approach.manuscript_url %}
-                    <a href="{{ submission.approach.manuscript_url }}" target="_blank" title="View manuscript">
+                  {% if submission.approach__manuscript_url %}
+                    <a href="{{ submission.approach__manuscript_url }}" target="_blank" title="View manuscript">
                       <i class="material-icons text-green-600">description</i>
                     </a>
                   {% else %}
@@ -107,7 +107,7 @@
                   {% endif %}
                 </td>
                 <td class="py-2 px-4 border-b border-gray-300">
-                  {% if submission.approach.uses_external_data %}
+                  {% if submission.approach__uses_external_data %}
                     <div class="flex items-center gap-1">
                       <i class="material-icons text-orange-600">public</i>
                       <span>Yes</span>
