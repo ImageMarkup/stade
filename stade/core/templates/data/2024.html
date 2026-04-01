@@ -1,3 +1,159 @@
-<div style="min-height:400px;">
-    <h3>Download this data at <a href="https://challenge2024.isic-archive.com/">challenge2024.isic-archive.com</a>.</h3>
-</div>
+<table class="table is-hoverable is-bordered">
+    <thead>
+        <tr>
+            <th><abbr title="Dataset">Dataset</abbr></th>
+            <th><abbr title="Training Data">Training Data</abbr></th>
+            <th><abbr title="Training Ground Truth Data">Training Ground Truth</abbr></th>
+            <th><abbr title="Test Data">Test Data</abbr></th>
+            <th><abbr title="Test Ground Truth Data">Test Ground Truth</abbr></th>
+            <th><abbr title="License">License</abbr></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>SLICE-3D</th>
+            <td>
+                <p>
+                    <a href="https://isic-archive.s3.amazonaws.com/challenges/2024/ISIC_2024_Training_Input.zip">
+                        Download (1.2GB)
+                    </a>
+                    <br>
+                    401,059 JPEG images of skin lesion image crops extracted from 3D TBP with metadata entries of age,
+                    sex, general anatomic site, common patient identifier, clinical size, and various data fields from
+                    the TBP Lesion Visualizer.
+                </p>
+                <p>
+                    <a href="https://isic-archive.s3.amazonaws.com/challenges/2024/ISIC_2024_Training_Supplement.csv">
+                        Download Supplemental Metadata (40MB)
+                    </a>
+                    <br>
+                    401,059 metadata entries of attributes which may be useful for training cross-validation.
+                </p>
+            </td>
+            <td>
+                <a href="https://isic-archive.s3.amazonaws.com/challenges/2024/ISIC_2024_Training_GroundTruth.csv">
+                    Download (7MB)
+                </a>
+                <br>
+                401,059 entries of gold standard lesion malignancy values.
+            </td>
+            <td>
+                {% include 'partials/not_available.html' %}
+            </td>
+            <td>
+                {% include 'partials/not_available.html' %}
+            </td>
+            <td>
+                <a href="https://creativecommons.org/licenses/by-nc/4.0/">
+                    CC-BY-NC
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>SLICE-3D Permissive</th>
+            <td>
+                <p>
+                    <a href="https://isic-archive.s3.amazonaws.com/challenges/2024/ISIC_2024_Permissive_Training_Input.zip">
+                        Download (623MB)
+                    </a>
+                    <br>
+                    217,477 JPEG images of skin lesion image crops extracted from 3D TBP with metadata entries of age,
+                    sex, general anatomic site, common patient identifier, clinical size, and various data from the TBP
+                    Lesion Visualizer.
+                </p>
+                <p>
+                    <a href="https://isic-archive.s3.amazonaws.com/challenges/2024/ISIC_2024_Permissive_Training_Supplement.csv">
+                        Download Supplemental Metadata (21MB)
+                    </a>
+                    <br>
+                    217,477 metadata entries of attributes which may be useful for training cross-validation.
+                </p>
+            </td>
+            <td>
+                <a href="https://isic-archive.s3.amazonaws.com/challenges/2024/ISIC_2024_Permissive_Training_GroundTruth.csv">
+                    Download (4MB)
+                </a>
+                <br>
+                217,477 entries of gold standard lesion malignancy values.
+            </td>
+            <td>
+                {% include 'partials/not_available.html' %}
+            </td>
+            <td>
+                {% include 'partials/not_available.html' %}
+            </td>
+            <td>
+                <a href="https://creativecommons.org/licenses/by/4.0/">
+                    CC-BY
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<p>
+    The datasets contain 15mm-by-15mm field-of-view cropped images, centered on distinct lesions, extracted from 3D
+    total body photographs. Datasets were curated by the International Skin Imaging Collaboration (ISIC) from images
+    contributed by: Memorial Sloan Kettering Cancer Center (USA), Hospital Clínic de Barcelona (Spain), The University
+    of Queensland (Australia), Medical University of Vienna (Austria), University of Athens (Greece), Melanoma Institute
+    Australia (Australia), University Hospital of Basel (Switzerland), Alfred Hospital (Australia), and FNQH Cairns
+    (Australia).
+</p>
+
+<p>
+    A dataset descriptor covering the SLICE-3D dataset was published in Scientific Data and is openly available at
+    <a href="https://www.nature.com/articles/s41597-024-03743-w">https://www.nature.com/articles/s41597-024-03743-w</a>.
+</p>
+
+<h3>Citing SLICE-3D dataset:</h3>
+To comply with the attribution requirements of the
+<a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC license</a>,
+the "SLICE-3D" data must be cited as:
+<blockquote>
+    <p>
+        International Skin Imaging Collaboration. SLICE-3D 2024 Challenge Dataset.
+        <i>International Skin Imaging Collaboration</i>
+        <a href="https://doi.org/10.34970/2024-slice-3d">https://doi.org/10.34970/2024-slice-3d</a>
+        (2024).
+    </p>
+    <p>Creative Commons Attribution-Non Commercial 4.0 International License.</p>
+    <p>
+        The dataset was generated by the International Skin Imaging Collaboration (ISIC) and images are from the
+        following sources: Hospital Clínic de Barcelona, Memorial Sloan Kettering Cancer Center, Hospital of Basel,
+        FNQH Cairns, The University of Queensland, Melanoma Institute Australia, Monash University and Alfred Health,
+        University of Athens Medical School, and Medical University of Vienna.
+    </p>
+    <p>You should have received a copy of the license along with this work.</p>
+    <p>
+        If not, see
+        <a href="https://creativecommons.org/licenses/by-nc/4.0/legalcode.txt">
+            https://creativecommons.org/licenses/by-nc/4.0/legalcode.txt
+        </a>.
+    </p>
+</blockquote>
+
+<h3>Citing SLICE-3D Permissive dataset:</h3>
+To comply with the attribution requirements of the
+<a href="https://creativecommons.org/licenses/by/4.0/">CC-BY license</a>,
+the "SLICE-3D Permissive" data must be cited as:
+<blockquote>
+    <p>
+        International Skin Imaging Collaboration. SLICE-3D 2024 Permissive Challenge Dataset.
+        <i>International Skin Imaging Collaboration</i>
+        <a href="https://doi.org/10.34970/2024-slice-3d-permissive">https://doi.org/10.34970/2024-slice-3d-permissive</a>
+        (2024).
+    </p>
+    <p>Creative Commons Attribution 4.0 International License.</p>
+    <p>
+        The dataset was generated by the International Skin Imaging Collaboration (ISIC) and images are from the
+        following sources: Memorial Sloan Kettering Cancer Center, FNQH Cairns, The University of Queensland, Melanoma
+        Institute Australia, and University of Athens Medical School.
+    </p>
+    <p>You should have received a copy of the license along with this work.</p>
+    <p>
+        If not, see
+        <a href="https://creativecommons.org/licenses/by/4.0/legalcode.txt">
+            https://creativecommons.org/licenses/by/4.0/legalcode.txt
+        </a>.
+    </p>
+</blockquote>
