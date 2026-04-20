@@ -48,7 +48,14 @@
             {% for task in live_challenge.stats.tasks %}
               <li>
                 <a href="#">
-                  <span>{{ task.name }}</span>
+                  <span>{{ task.name }}&nbsp;&nbsp;</span>
+                  <span class="submission-timespan">
+                    {% if task.locked %}
+                      ({{ task.submission_timespan.first_submission|date:"M o" }} - {{ task.submission_timespan.last_submission|date:"M o" }})
+                    {% else %}
+                      ({{ task.submission_timespan.first_submission|date:"M o" }} - Present)
+                    {% endif %}
+                  </span>
                 </a>
 
                 <div class="is-flex is-align-items-center pr-4">
