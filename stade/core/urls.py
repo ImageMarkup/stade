@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.urls import path, register_converter
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 
 from stade.core import views
 from stade.core.models import Challenge
@@ -48,6 +48,9 @@ urlpatterns = [
         name='request-submission-bundle',
     ),
     path('data/', TemplateView.as_view(template_name='data/base.html'), name='data'),
+    # The load balancer doesn't support redirecting to URL fragments, so these live here.
+    path('data/2020/', RedirectView.as_view(url='/data/#2020', permanent=True)),
+    path('data/2024/', RedirectView.as_view(url='/data/#2024', permanent=True)),
     path('stats/', views.stats, name='stats'),
     path('challenges/', views.challenges, name='challenges'),
     path('leaderboards/<challenge_slug:challenge>/', views.leaderboard_page, name='leaderboards'),
