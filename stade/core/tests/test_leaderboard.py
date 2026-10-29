@@ -118,3 +118,12 @@ def test_leaderboard_by_team(task_with_submissions, client):
     assert third['approach__team__name'] == 'team_8'
     assert third['approach__name'] == 'approach_1'
     assert third['overall_score'] == 0.60
+
+
+@pytest.mark.django_db
+def test_leaderboard_invalid_task_falls_back_to_first_task(task_with_submissions, client):
+    resp = client.get(
+        f'/leaderboards/{task_with_submissions.challenge.slug}/?task=%27nvOpzp;%20AND%201=1'
+    )
+    assert resp.status_code == 200
+    assert resp.context['active_task'] == task_with_submissions
