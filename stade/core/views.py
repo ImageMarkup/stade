@@ -37,7 +37,10 @@ def handler500(request):
 
 
 def leaderboard_page(request, challenge):
-    task_id = request.GET.get('task')
+    try:
+        task_id = int(request.GET.get('task', ''))
+    except ValueError:
+        task_id = None
     group_by = request.GET.get('group_by')
 
     if group_by not in ['team', 'approach']:
